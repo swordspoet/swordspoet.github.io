@@ -1,0 +1,2459 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Source Han Sans:300,300italic,400,400italic,700,700italic|Source Code Pro:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: 'X3YO6U1DRE',
+      apiKey: '',
+      indexName: 'blog',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="本文的语料库（Corpus）来源于中华人民共和国中央人民政府网站 ，时间跨度为1954年到2016年，以文本挖掘和复杂网络理论为基础，针对该语料库做了一点简单的NLP工作。">
+<meta name="keywords" content="Python,可视化,文本挖掘,文本分析,词同现,复杂网络,爬虫,自然语言处理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="历年（1954-2016）政府工作报告文本分析及可视化">
+<meta property="og:url" content="https://www.libinx.com/2017/Chinese-government-report-text-analysis-over-the-years/index.html">
+<meta property="og:site_name" content="Thinking Realm">
+<meta property="og:description" content="本文的语料库（Corpus）来源于中华人民共和国中央人民政府网站 ，时间跨度为1954年到2016年，以文本挖掘和复杂网络理论为基础，针对该语料库做了一点简单的NLP工作。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://i.imgur.com/P41Cvmj.png">
+<meta property="og:image" content="http://i.imgur.com/L0Q7sHC.png">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fer60ccgvhj20go0b4q30.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fer5hn273kj20ku0gj3zp.jpg">
+<meta property="og:image" content="http://i.imgur.com/1bDa8Rh.png">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fer5b6qheej20sg0sggsi.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fer5b8klquj211x0ig11l.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fer5b7x2y5j211x0igth4.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fer5b7bu00j211x0iggt5.jpg">
+<meta property="og:updated_time" content="2021-03-23T01:25:10.973Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="历年（1954-2016）政府工作报告文本分析及可视化">
+<meta name="twitter:description" content="本文的语料库（Corpus）来源于中华人民共和国中央人民政府网站 ，时间跨度为1954年到2016年，以文本挖掘和复杂网络理论为基础，针对该语料库做了一点简单的NLP工作。">
+<meta name="twitter:image" content="http://i.imgur.com/P41Cvmj.png">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Thinking Realm" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://www.libinx.com/2017/Chinese-government-report-text-analysis-over-the-years/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>历年（1954-2016）政府工作报告文本分析及可视化 | Thinking Realm</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?29c6a6a7d4e694985b961f3ab9357bb3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        
+        <span class="site-title">Thinking Realm</span>
+        
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">308</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">18</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">152</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+    <div class="reading-progress-bar"></div>
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.libinx.com/2017/Chinese-government-report-text-analysis-over-the-years/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="H4ck3r L1">
+      <meta itemprop="description" content="专注机器学习、大数据">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Thinking Realm">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">历年（1954-2016）政府工作报告文本分析及可视化
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-05-14 10:38:51" itemprop="dateCreated datePublished" datetime="2017-05-14T10:38:51+08:00">2017-05-14</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-03-23 09:25:10" itemprop="dateModified" datetime="2021-03-23T09:25:10+08:00">2021-03-23</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Machine-Learning/" itemprop="url" rel="index"><span itemprop="name">Machine-Learning</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文的语料库（Corpus）来源于中华人民共和国中央人民政府网站 ，时间跨度为1954年到2016年，以文本挖掘和复杂网络理论为基础，针对该语料库做了一点简单的NLP工作。</p>
+<a id="more"></a>
+<hr>
+<p><img src="http://i.imgur.com/P41Cvmj.png" alt=""></p>
+<blockquote>
+<p>本项目github地址：<a href="https://github.com/swordspoet/government_report_analysis" target="_blank" rel="noopener">https://github.com/swordspoet/government_report_analysis</a></p>
+<font color="red">**警告：本文版权归Thinking Realm作者李彬所有！！！严禁以任何形式抄袭或转载！！！违者必究！！！**</font>
+
+</blockquote>
+<h1 id="一、文本内容抓取"><a href="#一、文本内容抓取" class="headerlink" title="一、文本内容抓取"></a>一、文本内容抓取</h1><p>网络爬虫（Web Crawler）技术是从网页中抽取可用数据的方式，广泛运用于大规模从网络中提取信息。本文使用Python，通过编写爬虫程序 ，以政府工作报告全文为检索目标，在中华人民共和国中央人民政府网站自动爬取了1954-2016年政府工作报告全文的文本数据，截止2016年12月27日，除掉缺失年份，其中剩余有效年份为48年。</p>
+<p>爬虫代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#===================================================================</span></span><br><span class="line"><span class="comment">#           抓取报告正文部分、词频统计</span></span><br><span class="line"><span class="comment">#===================================================================</span></span><br><span class="line"><span class="comment"># 建立一个空的字典用于存储网页数据，如标题、网页地址等；</span></span><br><span class="line"><span class="comment"># 从历年国务院政府工作报告（1954年至2013年）http://www.gov.cn/test/2006-02/16/content_200719.htm中过滤出历年报告的链接并返回到'ReportLinks'</span></span><br><span class="line"></span><br><span class="line">url = <span class="string">'http://www.gov.cn/guowuyuan/2006-02/16/content_2616810.htm'</span></span><br><span class="line">Report_Links = dict()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 过滤出页面中的网页链接</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">filterReportLinks</span><span class="params">(url)</span>:</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">'过滤1954-2016年政府工作报告网址······'</span></span><br><span class="line">    html_doc = urllib2.urlopen(url).read()</span><br><span class="line">    standard_html = BeautifulSoup(html_doc, <span class="string">"html.parser"</span>)</span><br><span class="line">    <span class="keyword">for</span> link <span class="keyword">in</span> standard_html.find_all(<span class="string">'a'</span>, href = re.compile(<span class="string">r'/content_'</span>)):</span><br><span class="line">        url = link.get(<span class="string">'href'</span>)</span><br><span class="line">        year = link.get_text()</span><br><span class="line">        Report_Links[year] = url</span><br><span class="line">    <span class="keyword">return</span> Report_Links</span><br><span class="line"></span><br><span class="line"><span class="comment"># 提取网页（URL）文本</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">extract_text</span><span class="params">(url)</span>:</span> </span><br><span class="line">    <span class="string">"""Extract html content."""</span> </span><br><span class="line">    page_source = requests.get(url).content</span><br><span class="line">    bs_source = BeautifulSoup(page_source)</span><br><span class="line">    report_text = bs_source.find_all(<span class="string">'p'</span>)</span><br><span class="line">    text = <span class="string">''</span></span><br><span class="line">    <span class="keyword">for</span> p <span class="keyword">in</span> report_text:</span><br><span class="line">        text += p.get_text()</span><br><span class="line">        text += <span class="string">'\n'</span></span><br><span class="line">    <span class="keyword">return</span> text</span><br></pre></td></tr></table></figure>
+<h1 id="二、报告文本预处理"><a href="#二、报告文本预处理" class="headerlink" title="二、报告文本预处理"></a>二、报告文本预处理</h1><p>采用结巴分词系统对48年的全文数据进行分词处理。结巴分词系统在Python中有现成的组件，对文本（Text）进行分词处理时，需要去除停用词和标点符号，停用词是指那些对文本的影响可以忽略不计的，不包含有任何实质性内容的词语，如“的”、“得”、“地”，在这里我们直接从分词完毕后的文本中筛选出长度大于2的字符串就达到期望的效果，得到名为<code>fil_seglist</code>的变量，然后用空格拼接过滤掉停用词和标点符号的<code>fil_seglist</code>变量。如“必须全面深化改革，坚持和完善基本经济制度，建立现代产权制度”一段文本，经过预处理之后，处理之后的文本为“必须 全面 深化改革 坚持 完善 基本 经济 制度 建立 现代 产权制度”。</p>
+<hr>
+<h1 id="三、构建词同现网络"><a href="#三、构建词同现网络" class="headerlink" title="三、构建词同现网络"></a>三、构建词同现网络</h1><p>词同现网络的构造思路比较简单，每一个词语对应网络中的一个节点（node），而同现词组之间的连接则成为连接节点的边（edge）。也就是说，如果在一个句子中，两个词在n阶Markov链的条件下存在同现关系，则可认为网络中的两个节点之间存在一个连接。实践表明，在自然语言处理中，n阶Markov链的n取2比较合适，因为句子中两个词相邻是最常见的，如“发展农业”的“发展”和“农业”，“补贴农村”的“补贴”和“农村”，n太大（两个词在一句话中距离太远）则会引入大量的无关词，导致同现网络准确性的降低，另一方面，又可以使模型的复杂度得到有效的控制。  </p>
+<p>构建词同现网络代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#===================================================================</span></span><br><span class="line"><span class="comment"># 同现词统计并封装在CSV文件中</span></span><br><span class="line"><span class="comment">#===================================================================</span></span><br><span class="line"><span class="comment">#针对每年报告文本结巴分词之后得到的seg_list进行“同现词”统计</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_co_network</span><span class="params">(seg_list)</span>:</span>   </span><br><span class="line">    co_net = defaultdict(<span class="keyword">lambda</span>: defaultdict(int))</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(seg_list)<span class="number">-1</span>):            </span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> range(i+<span class="number">1</span>, i+<span class="number">2</span>):</span><br><span class="line">            w1 = seg_list[i]</span><br><span class="line">            w2 = seg_list[j]</span><br><span class="line">            <span class="keyword">if</span> w1 != w2:</span><br><span class="line">                co_net[w1][w2] += <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> co_net</span><br><span class="line"><span class="comment">#“同现词”统计之后，我们将统计的结果（Top 100）返回到“terms_max”中</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_co_terms</span><span class="params">(co_net)</span>:</span> </span><br><span class="line">    com_max = []</span><br><span class="line">    <span class="keyword">for</span> t1 <span class="keyword">in</span> co_net:</span><br><span class="line">        t1_max_terms = sorted(co_net[t1].items(), key=operator.itemgetter(<span class="number">1</span>), reverse=<span class="keyword">True</span>)</span><br><span class="line">        <span class="keyword">for</span> t2, t2_count <span class="keyword">in</span> t1_max_terms:</span><br><span class="line">            com_max.append(((t1, t2), t2_count))</span><br><span class="line">    terms_max = sorted(com_max, key=operator.itemgetter(<span class="number">1</span>), reverse=<span class="keyword">True</span>)</span><br><span class="line">    <span class="keyword">return</span> terms_max</span><br><span class="line"></span><br><span class="line"><span class="comment">#针对terms_max，将s2,s3,s4写入CSV文件中        </span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_co_network</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">for</span> (year, link) <span class="keyword">in</span> Report_Links.items():</span><br><span class="line">        <span class="comment">#year = str(year)</span></span><br><span class="line">        text = extract_text(link)</span><br><span class="line">        seg_list = jiebait(text)</span><br><span class="line">        co_net = build_co_network(seg_list)</span><br><span class="line">        terms_max = get_co_terms(co_net)</span><br><span class="line">        <span class="keyword">for</span> s1 <span class="keyword">in</span> terms_max:</span><br><span class="line">            s2 = s1[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line">            s3 = s1[<span class="number">0</span>][<span class="number">1</span>]</span><br><span class="line">            s4 = s1[<span class="number">1</span>]</span><br><span class="line">            s2 = s2.encode(<span class="string">'utf-8'</span>) <span class="comment">#s2和s3以Unicode编码存在，故转码为‘utf8’</span></span><br><span class="line">            s3 = s3.encode(<span class="string">'utf-8'</span>)</span><br><span class="line">            s4 = str(s4)</span><br><span class="line">            <span class="keyword">print</span> year,  s4</span><br><span class="line">            terms = open(<span class="string">'terms5.csv'</span>, <span class="string">'ab'</span>)</span><br><span class="line">            terms.write(year + <span class="string">'\t'</span>)</span><br><span class="line">            terms.write(s2 + <span class="string">'\t'</span>)</span><br><span class="line">            terms.write(s3 + <span class="string">'\t'</span>)</span><br><span class="line">            terms.write(s4 + <span class="string">'\n'</span>)</span><br><span class="line">            terms.close()</span><br><span class="line"></span><br><span class="line">get_co_network()</span><br></pre></td></tr></table></figure>
+<p>运行上述代码，本文对语料库分词之后得到的自定义字典进行同现词组的频率统计，得到了1954至2016年语料库中总计273592组共现词组的频率统计数据，包含19468个网络节点和170889条边。表 1截取了统计数据中1954年和2016年的前5行数据，其中Frequency表示某年（Year）中词1（Word1）与词2（Word2）在字典中前后相邻的次数统计，比如2016年政府工作报告中，“经济”和“发展”两个词前后相邻的频率为11次，“国内”和“生产总值”前后相邻出现的频率为10次。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Year</th>
+<th style="text-align:center">Word1</th>
+<th style="text-align:center">Word2</th>
+<th style="text-align:center">Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1954</td>
+<td style="text-align:center">等于</td>
+<td style="text-align:center">一九四九年</td>
+<td style="text-align:center">14</td>
+</tr>
+<tr>
+<td style="text-align:center">1954</td>
+<td style="text-align:center">我们</td>
+<td style="text-align:center">国家</td>
+<td style="text-align:center">14</td>
+</tr>
+<tr>
+<td style="text-align:center">1954</td>
+<td style="text-align:center">经济</td>
+<td style="text-align:center">建设</td>
+<td style="text-align:center">13</td>
+</tr>
+<tr>
+<td style="text-align:center">1954</td>
+<td style="text-align:center">全国</td>
+<td style="text-align:center">人民</td>
+<td style="text-align:center">10</td>
+</tr>
+<tr>
+<td style="text-align:center">1954</td>
+<td style="text-align:center">日内瓦</td>
+<td style="text-align:center">会议</td>
+<td style="text-align:center">10</td>
+</tr>
+<tr>
+<td style="text-align:center">…</td>
+<td style="text-align:center">…</td>
+<td style="text-align:center">…</td>
+<td style="text-align:center">…</td>
+</tr>
+<tr>
+<td style="text-align:center">2016</td>
+<td style="text-align:center">经济</td>
+<td style="text-align:center">发展</td>
+<td style="text-align:center">11</td>
+</tr>
+<tr>
+<td style="text-align:center">2016</td>
+<td style="text-align:center">深入</td>
+<td style="text-align:center">推进</td>
+<td style="text-align:center">10</td>
+</tr>
+<tr>
+<td style="text-align:center">2016</td>
+<td style="text-align:center">国内</td>
+<td style="text-align:center">生产总值</td>
+<td style="text-align:center">10</td>
+</tr>
+<tr>
+<td style="text-align:center">2016</td>
+<td style="text-align:center">结构性</td>
+<td style="text-align:center">改革</td>
+<td style="text-align:center">10</td>
+</tr>
+<tr>
+<td style="text-align:center">2016</td>
+<td style="text-align:center">中国</td>
+<td style="text-align:center">特色</td>
+<td style="text-align:center">9</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+<h1 id="四、可视化分析"><a href="#四、可视化分析" class="headerlink" title="四、可视化分析"></a>四、可视化分析</h1><p>在这一节里，我们主要围绕“农业”、“农村”、“农民”三个主题词进行文本挖掘的统计指标分析、可视化展示等工作。</p>
+<h2 id="主题词词频分析"><a href="#主题词词频分析" class="headerlink" title="主题词词频分析"></a>主题词词频分析</h2><p>词频分析法是利用能够揭示或表达文本核心内容的关键词或主题词在某一研究领域文献中出现的频次高低来确定该领域研究热点和发展动向的文献计量方法，广泛应用于各学科领域。我们在语料库中选取“农业”、“农村”、“农民”3个主题词并对其进行词频统计分析，统计各年政府工作报告中主题词出现频率，具体见图1。</p>
+<p><img src="http://i.imgur.com/L0Q7sHC.png" alt="图1 1954-2016年三个主题词出现频率统计，从上至下分别为“农业”、“农村”、“农民”"></p>
+<p>可以发现词频统计图的起伏涨落对应着同时期的国家对于三农战略或政策的变化：由于国内阶级斗争，政府工作会议曾停滞达10之久，从而20世纪60年代至80年代期间统计数据存在一个明显的缺口；在建国之初制定了“一化三改”过渡时期总路线，国家对重视农业十分重视，如在1954年政府工作报告的文本中，“农业”一词出现的频率就达154次，“农村”一词出现频率为19次，“农民”一词出现频率为61次；1990年至2000年国家对“三农”的重视程度处于比较平稳的状态，而2008年至2009年间爆发的全球金融危机使得政府在“三农”问题上的关注有所降低，在2009年的政府工作报告文本中，“农业”、“农村”、“农民”三个主题词出现频率分别只有3次、9次和5次，为改革开放以来的最低水平。</p>
+<h2 id="主题词网络统计特性分析"><a href="#主题词网络统计特性分析" class="headerlink" title="主题词网络统计特性分析"></a>主题词网络统计特性分析</h2><p>平均路径长度、聚集系数和度分布为复杂网络的三大统计特性[29]，它们比较系统地反映了网络中的节点位置、连接状况、密度、节点间路径远近等各类结构特征。</p>
+<p>Gephi是一款优秀的开源网络分析领域的数据可视化处理软件，本文主要通过Gephi 0.9.1软件对共现网络进行可视化及主要参数的计算工作。</p>
+<p>Gephi软件有几个重要的计算参数，分别是度中心性（Degree centrality）、紧密中心性（Closeness centrality）、平均聚合系数（Average clustering coefficient）。度中心性指节点的度数, 适用于对局部网络节点的中心地位和影响力进行刻画，度中心性关注单个节点；紧密中心性用于度量网络中节点对于中心的紧密程度，是刻画节点通过网络到达其他节点难易程度的指标,节点的紧密度越高，则离其他节点越近，传递信息的难度也就越低，相比节点度指标更能反映网络的全局结构。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">网络</th>
+<th style="text-align:center">节点数</th>
+<th style="text-align:center">边数</th>
+<th style="text-align:center">网络直径</th>
+<th style="text-align:center">平均度</th>
+<th style="text-align:center">平均最短路径</th>
+<th style="text-align:center">平均聚合系数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">共现词组</td>
+<td style="text-align:center">19468</td>
+<td style="text-align:center">170889</td>
+<td style="text-align:center">16</td>
+<td style="text-align:center">17.566</td>
+<td style="text-align:center">3.278</td>
+<td style="text-align:center">0.210</td>
+</tr>
+</tbody>
+</table>
+</div>
+<ol>
+<li>小世界特性。节点网络平均最短路径为3.278，这说明在该词同现网络中的任意两个节点，只用少于4个节点就可以将他们连接起来，具有明显的小世界效应。也就是说，虽然汉语中有大量的词汇，但是人们在语言网络中，只需经过有限路径就可以从一个词迅速跳到另外一个词，并确保语义的完整，从而保证了交流表达的速度。</li>
+<li>节点度分布。节点网络的度分布满足幂率分布，显示了无标度特性。节点度分布如图1所示，少数节点出现频繁，多数节点出现频率较低。</li>
+</ol>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fer60ccgvhj20go0b4q30.jpg" alt="图1"></p>
+<p>在共现词组列表中，以包含“农”字符串为检索条件，筛选出字段中含有“农”的词组，如“工农业”、“农村居民”、“农产品”等字段也统计在内，共计5990对。为了便于观察，将年份（Year）一列剔除，X轴设为Word1列，Y轴设为Word2列，Z轴设为Frequency列，得散点图如图 2所示，可以看出，频率计数最高的共现词组为“农业—生产”、“农业—发展”，其余大多数共现词组的频率低于2次。</p>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fer5hn273kj20ku0gj3zp.jpg" alt="图2"></p>
+<p>我们将筛选出来的字段数据导入Gephi软件中，并利用Convert Excel and csv files to networks插件进行网络中心度计算。经计算，该网络中一共包含1832个节点和3098条边，网络的平均聚集系数为0.302，模块化系数为0.475（系数大于0.4则表明网络有良好的模块化结构），各节点模块化系数分布如图 3所示，</p>
+<p><img src="http://i.imgur.com/1bDa8Rh.png" alt="图3 网络节点度分布"></p>
+<p>然后，我们选取“农业”、“农村”、“农民”三个主题词，选取度、紧密中心性、平均聚集系数三个指标，计算结果如 表 3所示，三个主题词节点的紧密中心性均在0.5左右，节点连接很紧密，说明主题词节点之间沟通良好，信息可以快速在节点之间传播。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">主题词</th>
+<th style="text-align:center">度</th>
+<th style="text-align:center">紧密中心性</th>
+<th style="text-align:center">平均聚集系数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">农业</td>
+<td style="text-align:center">685</td>
+<td style="text-align:center">0.552</td>
+<td style="text-align:center">0.002</td>
+</tr>
+<tr>
+<td style="text-align:center">农村</td>
+<td style="text-align:center">591</td>
+<td style="text-align:center">0.519</td>
+<td style="text-align:center">0.002</td>
+</tr>
+<tr>
+<td style="text-align:center">农民</td>
+<td style="text-align:center">418</td>
+<td style="text-align:center">0.493</td>
+<td style="text-align:center">0.003</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>基于Force Atlas算法生成的三农主题词关系图谱如图 4所示，可以看出关于主题词群体间界限十分明晰，在这些群体中，“农业”、“农村”、“农民”三个群体占据了核心位置，“农民工”、“农产品”、“农民收入”等分别占据次核心位置，并充当三个群体沟通连接的介中心（Between centrality），进一步印证了共现网络具有良好模块化的结论。</p>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fer5b6qheej20sg0sggsi.jpg" alt="图 4 三农主题词关系图谱"></p>
+<hr>
+<h1 id="五、-结论"><a href="#五、-结论" class="headerlink" title="五、 结论"></a>五、 结论</h1><p>本文从共生模式角度切入，构建词同现网络以分析农业、农村、农民三者之间的共生关系。共生模式主要有寄生、偏利共生、非对称性互惠共生和对称互惠共生几种，关于共生模式的判别，国内外的学者主要通过Logistic方程、共生度、共生界面等方法进行分析。</p>
+<p>我们以连通主题词节点个数作为判别共生模式的主要指标，即共生度。如三个主题词分别通过“收入”、“经济”、“改革”、“城市”等中间节点充当物质、信息和能量传导的媒介、通道或载体，建立共生关系，节点数目的多少可以反映主题词之间的共生强度，从而判断共生模式就具备了逻辑上的可能性。从“农业-农村”、“农村-农民”和“农业-农民”三组主题词词组的共生关系的可视化图（见图 5、图 6、图 7）可以看出，大量中间点如发展、经济、城镇等充当沟通媒介，主题词之间联系相当紧密，由此我们可以判断农业、农村、农民三个主题词之间存在互惠共生的关系。但是紧密的程度却存在差别，农业和农村的沟通最为密切，共计有265个节点，与此同时，农业与农民之间有195个节点，农民与农村次之，有114个节点。由此可以进一步判断主题词之间处于非对称性互惠共生关系。</p>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fer5b8klquj211x0ig11l.jpg" alt="图 5 农业-农民关系图谱（局部）"></p>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fer5b7x2y5j211x0igth4.jpg" alt="图 6 农业-农村关系图谱（局部）"></p>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fer5b7bu00j211x0iggt5.jpg" alt="图 7 农村-农民关系图谱（局部）"></p>
+<p>综上，根据模块化系数、紧密中心度和主题词关系图谱以及主题词关系子图谱，我们可以发现三农问题的组成部分之间存在非对称互惠共生的模式。</p>
+<blockquote>
+<font color="red">**警告：本文版权归Thinking Realm作者李彬所有！！！严禁以任何形式抄袭或转载！！！违者必究！！！**</font>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+        
+            <div>
+    
+        <div style="text-align:center;color: #FF0000;font-size:18px;font-family:Helvetica;font-style:oblique">------本文结束，欢迎收藏本站、分享、评论或联系作者！------</div>
+    
+</div>
+
+        
+    </div>
+
+    <!-- 相关文章推荐 -->
+     
+          
+
+  <div class="popular-posts-header">
+    <i class="fa fa-"></i>
+    相关文章
+  </div>
+
+ <details>
+     <summary>点击查看</summary>
+     <ul class="popular-posts">
+     
+       <li class="popular-posts-item">
+         
+         
+         <div class="popular-posts-title"><a href="\2017\a-government-report-crawl-experience\" rel="bookmark">小记在中经网的一次爬虫踩坑经历</a></div>
+         
+       </li>
+     
+       <li class="popular-posts-item">
+         
+         
+         <div class="popular-posts-title"><a href="\2017\2017-03-17-Numpy-broadcasting\" rel="bookmark">理解Numpy中的广播（Broadcasting）机制</a></div>
+         
+       </li>
+     
+       <li class="popular-posts-item">
+         
+         
+         <div class="popular-posts-title"><a href="\2017\python-matplotlib-plot-examples\" rel="bookmark">Matplotlib绘图举例</a></div>
+         
+       </li>
+     
+       <li class="popular-posts-item">
+         
+         
+         <div class="popular-posts-title"><a href="\2017\deep_learning_assignment_1\" rel="bookmark">优达学城-深度学习任务1：notMNIST</a></div>
+         
+       </li>
+     
+       <li class="popular-posts-item">
+         
+         
+         <div class="popular-posts-title"><a href="\2017\what-does--1-mean-in-numpy-reshape\" rel="bookmark">What does -1 mean in numpy reshape?</a></div>
+         
+       </li>
+     
+     </ul>
+ </details>
+
+
+     
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center; color:red;font-family:Helvetica;font-style:oblique">
+  <div>赠人玫瑰 手有余香</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="https://raw.githubusercontent.com/swordspoet/i/img/WeChatpay.png" alt="H4ck3r L1 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1fjuvo2ur08j20a20a2dgi.jpg" alt="H4ck3r L1 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>H4ck3r L1</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.libinx.com/2017/Chinese-government-report-text-analysis-over-the-years/" title="历年（1954-2016）政府工作报告文本分析及可视化">https://www.libinx.com/2017/Chinese-government-report-text-analysis-over-the-years/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Python/" rel="tag"># Python</a>
+          
+            <a href="/tags/可视化/" rel="tag"># 可视化</a>
+          
+            <a href="/tags/文本挖掘/" rel="tag"># 文本挖掘</a>
+          
+            <a href="/tags/文本分析/" rel="tag"># 文本分析</a>
+          
+            <a href="/tags/词同现/" rel="tag"># 词同现</a>
+          
+            <a href="/tags/复杂网络/" rel="tag"># 复杂网络</a>
+          
+            <a href="/tags/爬虫/" rel="tag"># 爬虫</a>
+          
+            <a href="/tags/自然语言处理/" rel="tag"># 自然语言处理</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+          <div class="wp_rating">
+           <div style="color: rgba(0, 0, 0, 0.75); font-size:13px; letter-spacing:3px">(&gt;看完记得五星好评哦亲&lt;)</div>
+            <div id="wpac-rating"></div>
+          </div>
+        
+
+        
+
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/sqlite3-basic-tutorial/" rel="next" title="SQLite 数据库基础教程">
+                <i class="fa fa-chevron-left"></i> SQLite 数据库基础教程
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/machine-learning-algorithm-series-k-means/" rel="prev" title="机器学习算法系列（9）k均值">
+                机器学习算法系列（9）k均值 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-58b8f4ff1eb11c7e" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">H4ck3r L1</p>
+              <p class="site-description motion-element" itemprop="description">专注机器学习、大数据</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">152</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">308</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/swordspoet" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.douban.com/people/53382901/" target="_blank" title="douban" rel="external nofollow"><i class="fa fa-fw fa-book"></i>douban</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank" rel="external nofollow">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友链
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://plushunter.github.io" title="Free will" target="_blank">Free will</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.shuang0420.com" title="徐阿衡" target="_blank">徐阿衡</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://dzzxjl.github.io/" title="十一城" target="_blank">十一城</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://iyaozhen.com" title="yao zhen" target="_blank">yao zhen</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://kba977.github.io/" title="kba977" target="_blank">kba977</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.jianshu.com/u/4007ac46018d" title="Babyzpj" target="_blank">Babyzpj</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://null.w0x7ce.com/" title="w0x7ce" target="_blank">w0x7ce</a>
+                  </li>
+                
+              </ul>
+            </div>
+			<div class="theme-info">
+				<span class="post-count">全站共207.0k字</span>
+			</div>
+			
+			
+
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、文本内容抓取"><span class="nav-text">一、文本内容抓取</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、报告文本预处理"><span class="nav-text">二、报告文本预处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、构建词同现网络"><span class="nav-text">三、构建词同现网络</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、可视化分析"><span class="nav-text">四、可视化分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#主题词词频分析"><span class="nav-text">主题词词频分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主题词网络统计特性分析"><span class="nav-text">主题词网络统计特性分析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、-结论"><span class="nav-text">五、 结论</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+	  
+	  <div class="wechat_OA">
+				<span>欢迎关注我的公众号</span>
+				<br>
+				<!-- 这里添加你的二维码图片 -->
+				<img src="https://raw.githubusercontent.com/swordspoet/i/img/%E6%89%AB%E7%A0%81_%E6%90%9C%E7%B4%A2%E8%81%94%E5%90%88%E4%BC%A0%E6%92%AD%E6%A0%B7%E5%BC%8F-%E6%A0%87%E5%87%86%E8%89%B2%E7%89%88.png">
+			</div>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="contact">
+<span class="fa-stack fa-lg">
+  <a href="https://www.github.com/swordspoet">
+  <i class="fa fa-square fa-stack-2x"></i>
+  <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+  </a>
+</span>
+
+<span class="fa-stack fa-lg">
+<a href="https://zhuanlan.zhihu.com/libinx">
+  <i class="fa fa-square fa-stack-2x"></i>
+  <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+  </a>
+</span>
+
+<span class="fa-stack fa-lg">
+<a href="mailto:libin.data@gmail.com">
+  <i class="fa fa-square fa-stack-2x"></i>
+  <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+  </a>
+</span>
+
+<span class="fa-stack fa-lg">
+<a href="https://t.me/bin_li">
+  <i class="fa fa-square fa-stack-2x"></i>
+  <i class="fa fa-telegram fa-stack-1x fa-inverse"></i>
+  </a>
+</span>
+
+</div>
+
+<div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-cogs"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">All Rights Reserved.</span>
+
+  
+
+  
+</div>
+	
+
+  
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/reading_progress/reading_progress.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+  <script type="text/javascript">
+  wpac_init = window.wpac_init || [];
+  wpac_init.push({widget: 'Rating', id: 8151,
+    el: 'wpac-rating',
+    color: 'ff7600'
+  });
+  (function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = '//embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+  })();
+  </script>
+
+
+  
+  
+  
+    
+  
+  <script src="https://cdn.bootcss.com/pangu/3.3.0/pangu.js"></script>
+  <script type="text/javascript">pangu.spacingPage();</script>
+
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/exturl.js?v=6.3.0"></script>
+
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+</body>
+</html>

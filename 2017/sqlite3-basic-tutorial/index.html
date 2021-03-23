@@ -1,0 +1,2405 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Source Han Sans:300,300italic,400,400italic,700,700italic|Source Code Pro:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: 'X3YO6U1DRE',
+      apiKey: '',
+      indexName: 'blog',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="目录 SQLite 创建数据库 SQLite Like 子句 SQLite Glob 子句 SQLite Limit 子句 SQLite Distinct 关键字 SQLite JOIN 子句 交叉连接 - CROSS JOIN 内连接 - INNER JOIN 外连接 - OUTER JOIN   SQLite Having 子句 SQLite Delete 语句   一、SQLite 创建">
+<meta name="keywords" content="SQL,SQLite,数据库,基础教程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQLite 数据库基础教程">
+<meta property="og:url" content="https://www.libinx.com/2017/sqlite3-basic-tutorial/index.html">
+<meta property="og:site_name" content="Thinking Realm">
+<meta property="og:description" content="目录 SQLite 创建数据库 SQLite Like 子句 SQLite Glob 子句 SQLite Limit 子句 SQLite Distinct 关键字 SQLite JOIN 子句 交叉连接 - CROSS JOIN 内连接 - INNER JOIN 外连接 - OUTER JOIN   SQLite Having 子句 SQLite Delete 语句   一、SQLite 创建">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffk5gz8iy2j20na0acwi8.jpg">
+<meta property="og:updated_time" content="2021-03-23T01:25:10.973Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SQLite 数据库基础教程">
+<meta name="twitter:description" content="目录 SQLite 创建数据库 SQLite Like 子句 SQLite Glob 子句 SQLite Limit 子句 SQLite Distinct 关键字 SQLite JOIN 子句 交叉连接 - CROSS JOIN 内连接 - INNER JOIN 外连接 - OUTER JOIN   SQLite Having 子句 SQLite Delete 语句   一、SQLite 创建">
+<meta name="twitter:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffk5gz8iy2j20na0acwi8.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Thinking Realm" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://www.libinx.com/2017/sqlite3-basic-tutorial/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>SQLite 数据库基础教程 | Thinking Realm</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?29c6a6a7d4e694985b961f3ab9357bb3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        
+        <span class="site-title">Thinking Realm</span>
+        
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">308</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">18</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">152</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+    <div class="reading-progress-bar"></div>
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.libinx.com/2017/sqlite3-basic-tutorial/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="H4ck3r L1">
+      <meta itemprop="description" content="专注机器学习、大数据">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Thinking Realm">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">SQLite 数据库基础教程
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-05-13 23:20:57" itemprop="dateCreated datePublished" datetime="2017-05-13T23:20:57+08:00">2017-05-13</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-03-23 09:25:10" itemprop="dateModified" datetime="2021-03-23T09:25:10+08:00">2021-03-23</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/coding/" itemprop="url" rel="index"><span itemprop="name">coding</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <a id="more"></a>
+<hr>
+<h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><ul>
+<li>SQLite 创建数据库</li>
+<li>SQLite Like 子句</li>
+<li>SQLite Glob 子句</li>
+<li>SQLite Limit 子句</li>
+<li>SQLite Distinct 关键字</li>
+<li>SQLite JOIN 子句<ul>
+<li>交叉连接 - CROSS JOIN</li>
+<li>内连接 - INNER JOIN</li>
+<li>外连接 - OUTER JOIN</li>
+</ul>
+</li>
+<li>SQLite Having 子句</li>
+<li>SQLite Delete 语句</li>
+</ul>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffk5gz8iy2j20na0acwi8.jpg" alt="SQLite"></p>
+<h1 id="一、SQLite-创建数据库"><a href="#一、SQLite-创建数据库" class="headerlink" title="一、SQLite 创建数据库"></a>一、SQLite 创建数据库</h1><p>SQLite 的 sqlite3 命令被用来创建新的 SQLite 数据库。您不需要任何特殊的权限即可创建一个数据。打开cmd，输入</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sqlite3 student.db</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">在当前目录下创建名为student的数据库，</span></span><br><span class="line"><span class="comment">数据库创建成功后会弹出一个 sqlite&gt; 的提示符</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+<p>SQLite 创建表的语法为</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> table_name (</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<p>这时数据库<code>student.db</code>还是空的，我们在数据库中新建三个表：<code>course</code>、<code>sc</code>和<code>student</code>，在当前目录下新建<code>sql_scripts.txt</code>文本文档，并将下列代码写入文本文档，然后在<code>sqlite&gt;</code>的提示符后输入<code>.read data.txt</code>加载，则三个表在<code>student.db</code>中新建完毕。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">PRAGMA</span> foreign_keys=<span class="keyword">OFF</span>;</span><br><span class="line"><span class="keyword">BEGIN</span> <span class="keyword">TRANSACTION</span>;</span><br><span class="line"><span class="comment">/*创建course表*/</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> course (</span><br><span class="line">  cno <span class="built_in">char</span>(<span class="number">2</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>, <span class="comment">--课程编号，不能为空</span></span><br><span class="line">  cname <span class="built_in">char</span>(<span class="number">20</span>),  <span class="comment">--课程名</span></span><br><span class="line">  cpno <span class="built_in">char</span>(<span class="number">2</span>),   <span class="comment">--</span></span><br><span class="line">  ccredit <span class="built_in">char</span>(<span class="number">2</span>),  <span class="comment">--课程学分</span></span><br><span class="line">  primary <span class="keyword">KEY</span> (cno) <span class="comment">--设置课程编号为主键</span></span><br><span class="line">);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"course"</span> <span class="keyword">VALUES</span>(<span class="string">'1'</span>,<span class="string">'数据库'</span>,<span class="string">'5'</span>,<span class="string">'4'</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"course"</span> <span class="keyword">VALUES</span>(<span class="string">'2'</span>,<span class="string">'数学'</span>,<span class="string">''</span>,<span class="string">'2'</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"course"</span> <span class="keyword">VALUES</span>(<span class="string">'3'</span>,<span class="string">'信息系统'</span>,<span class="string">'1'</span>,<span class="string">'4'</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"course"</span> <span class="keyword">VALUES</span>(<span class="string">'4'</span>,<span class="string">'操作系统'</span>,<span class="string">'6'</span>,<span class="string">'3'</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"course"</span> <span class="keyword">VALUES</span>(<span class="string">'5'</span>,<span class="string">'数据结构'</span>,<span class="string">'7'</span>,<span class="string">'4'</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"course"</span> <span class="keyword">VALUES</span>(<span class="string">'6'</span>,<span class="string">'数据处理'</span>,<span class="string">''</span>,<span class="string">'2'</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"course"</span> <span class="keyword">VALUES</span>(<span class="string">'7'</span>,<span class="string">'PASCAL语言'</span>,<span class="string">'6'</span>,<span class="string">'4'</span>);</span><br><span class="line"><span class="comment">/*创建student表*/</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> student(</span><br><span class="line">sno <span class="built_in">char</span>(<span class="number">5</span>) <span class="keyword">not</span> <span class="literal">null</span>,</span><br><span class="line">sname <span class="built_in">char</span>(<span class="number">20</span>),</span><br><span class="line">ssex <span class="built_in">char</span>(<span class="number">2</span>),</span><br><span class="line">sage <span class="built_in">int</span>,</span><br><span class="line">sdept <span class="built_in">char</span>(<span class="number">20</span>)</span><br><span class="line">);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"student"</span> <span class="keyword">VALUES</span>(<span class="string">'95001'</span>,<span class="string">'李勇'</span>,<span class="string">'男'</span>,<span class="number">20</span>,<span class="string">'CS'</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"student"</span> <span class="keyword">VALUES</span>(<span class="string">'95002'</span>,<span class="string">'刘晨'</span>,<span class="string">'女'</span>,<span class="number">19</span>,<span class="string">'IS'</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"student"</span> <span class="keyword">VALUES</span>(<span class="string">'95003'</span>,<span class="string">'王敏'</span>,<span class="string">'女'</span>,<span class="number">18</span>,<span class="string">'MA'</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"student"</span> <span class="keyword">VALUES</span>(<span class="string">'95004'</span>,<span class="string">'张立'</span>,<span class="string">'男'</span>,<span class="number">19</span>,<span class="string">'IS'</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"student"</span> <span class="keyword">VALUES</span>(<span class="string">'95005'</span>,<span class="string">'王强'</span>,<span class="string">'男'</span>,<span class="number">17</span>,<span class="string">'IS'</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"student"</span> <span class="keyword">VALUES</span>(<span class="string">'95015'</span>,<span class="string">'张三'</span>,<span class="string">'男'</span>,<span class="number">20</span>,<span class="string">'CS'</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"student"</span> <span class="keyword">VALUES</span>(<span class="string">'95019'</span>,<span class="string">'李四'</span>,<span class="string">'男'</span>,<span class="number">20</span>,<span class="string">'CS'</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"student"</span> <span class="keyword">VALUES</span>(<span class="string">'95020'</span>,<span class="string">'陈冬'</span>,<span class="string">'男'</span>,<span class="number">18</span>,<span class="string">'IS'</span>);</span><br><span class="line"><span class="comment">/*创建sc表（学生课程成绩）*/</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> sc</span><br><span class="line">(</span><br><span class="line">sno <span class="built_in">char</span>(<span class="number">5</span>), <span class="comment">--学号</span></span><br><span class="line">cno <span class="built_in">char</span>(<span class="number">2</span>), <span class="comment">--课程编号</span></span><br><span class="line">grade <span class="built_in">int</span>, <span class="comment">--成绩</span></span><br><span class="line">primary <span class="keyword">key</span>(sno,cno) <span class="comment">--主键设置为学号和课程编号</span></span><br><span class="line">);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"sc"</span> <span class="keyword">VALUES</span>(<span class="string">'95001'</span>,<span class="string">'1'</span>,<span class="number">65</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"sc"</span> <span class="keyword">VALUES</span>(<span class="string">'95001'</span>,<span class="string">'2'</span>,<span class="number">88</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"sc"</span> <span class="keyword">VALUES</span>(<span class="string">'95001'</span>,<span class="string">'3'</span>,<span class="number">57</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"sc"</span> <span class="keyword">VALUES</span>(<span class="string">'95001'</span>,<span class="string">'4'</span>,<span class="number">79</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"sc"</span> <span class="keyword">VALUES</span>(<span class="string">'95001'</span>,<span class="string">'5'</span>,<span class="number">45</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"sc"</span> <span class="keyword">VALUES</span>(<span class="string">'95001'</span>,<span class="string">'6'</span>,<span class="number">90</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"sc"</span> <span class="keyword">VALUES</span>(<span class="string">'95001'</span>,<span class="string">'7'</span>,<span class="number">81</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"sc"</span> <span class="keyword">VALUES</span>(<span class="string">'95002'</span>,<span class="string">'2'</span>,<span class="number">90</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"sc"</span> <span class="keyword">VALUES</span>(<span class="string">'95002'</span>,<span class="string">'3'</span>,<span class="number">80</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"sc"</span> <span class="keyword">VALUES</span>(<span class="string">'95002'</span>,<span class="string">'4'</span>,<span class="number">55</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"sc"</span> <span class="keyword">VALUES</span>(<span class="string">'95003'</span>,<span class="string">'2'</span>,<span class="number">0</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"sc"</span> <span class="keyword">VALUES</span>(<span class="string">'95019'</span>,<span class="string">'2'</span>,<span class="number">66</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">"sc"</span> <span class="keyword">VALUES</span>(<span class="string">'95020'</span>,<span class="string">'1'</span>,<span class="literal">NULL</span>);</span><br><span class="line"><span class="keyword">COMMIT</span>;</span><br><span class="line"><span class="comment">/*COMMIT用来将事务写入数据库*/</span></span><br></pre></td></tr></table></figure>
+<p>然后，使用<code>SELECT</code>查询语句可以查看各个表中的内容</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">sqlite&gt; select *</span><br><span class="line">   ...&gt; from student;</span><br><span class="line">95001|李勇|男|20|CS</span><br><span class="line">95002|刘晨|女|19|IS</span><br><span class="line">95003|王敏|女|18|MA</span><br><span class="line">95004|张立|男|19|IS</span><br><span class="line">95005|王强|男|17|IS</span><br><span class="line">95015|张三|男|20|CS</span><br><span class="line">95019|李四|男|20|CS</span><br><span class="line">95020|陈冬|男|18|IS</span><br><span class="line">sqlite&gt; select *</span><br><span class="line">   ...&gt; from course;</span><br><span class="line">1|数据库|5|4</span><br><span class="line">2|数学||2</span><br><span class="line">3|信息系统|1|4</span><br><span class="line">4|操作系统|6|3</span><br><span class="line">5|数据结构|7|4</span><br><span class="line">6|数据处理||2</span><br><span class="line">7|PASCAL语言|6|4</span><br><span class="line">sqlite&gt; select *</span><br><span class="line">   ...&gt; from sc;</span><br><span class="line">95001|1|65</span><br><span class="line">95001|2|88</span><br><span class="line">95001|3|57</span><br><span class="line">95001|4|79</span><br><span class="line">95001|5|45</span><br><span class="line">95001|6|90</span><br><span class="line">95001|7|81</span><br><span class="line">95002|2|90</span><br><span class="line">95002|3|80</span><br><span class="line">95002|4|55</span><br><span class="line">95003|2|0</span><br><span class="line">95019|2|66</span><br><span class="line">95020|1|</span><br><span class="line">sqlite&gt;</span><br></pre></td></tr></table></figure>
+<h1 id="二、QLite-Like-子句"><a href="#二、QLite-Like-子句" class="headerlink" title="二、QLite Like 子句"></a>二、QLite Like 子句</h1><p>SQLite 的 LIKE 运算符是用来匹配通配符指定模式的文本值。如果搜索表达式与模式表达式匹配，LIKE 运算符将返回真（true），也就是 1。这里有两个通配符与 LIKE 运算符一起使用：</p>
+<pre><code>-百分号 （%）代表零个、一个或多个数字或字符
+
+-下划线 （_）代表一个单一的数字或字符，这些符号可以被组合使用
+</code></pre><p>比如，查找student表中，所有姓李的学生</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sqlite&gt; SELECT sname</span><br><span class="line">   ...&gt; from student</span><br><span class="line">   ...&gt; WHERE sname LIKE '李%';</span><br><span class="line">李勇</span><br><span class="line">李四</span><br></pre></td></tr></table></figure>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">语句</th>
+<th style="text-align:center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">WHERE SALARY LIKE ‘200%’</td>
+<td style="text-align:center">查找以 200 开头的任意值</td>
+</tr>
+<tr>
+<td style="text-align:center">WHERE SALARY LIKE ‘%200%’</td>
+<td style="text-align:center">查找任意位置包含 200 的任意值</td>
+</tr>
+<tr>
+<td style="text-align:center">WHERE SALARY LIKE ‘_00%’</td>
+<td style="text-align:center">查找第二位和第三位为 00 的任意值</td>
+</tr>
+<tr>
+<td style="text-align:center">WHERE SALARY LIKE ‘2<em>%</em>%’</td>
+<td style="text-align:center">查找以 2 开头，且长度至少为 3 个字符的任意值</td>
+</tr>
+<tr>
+<td style="text-align:center">WHERE SALARY LIKE ‘%2’</td>
+<td style="text-align:center">查找以 2 结尾的任意值</td>
+</tr>
+<tr>
+<td style="text-align:center">WHERE SALARY LIKE ‘_2%3’</td>
+<td style="text-align:center">查找第二位为 2，且以 3 结尾的任意值</td>
+</tr>
+<tr>
+<td style="text-align:center">WHERE SALARY LIKE ‘2___3’</td>
+<td style="text-align:center">查找长度为 5 位数，且以 2 开头以 3 结尾的任意值</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h1 id="三、SQLite-Glob-子句"><a href="#三、SQLite-Glob-子句" class="headerlink" title="三、SQLite Glob 子句"></a>三、SQLite Glob 子句</h1><p>SQLite 的 GLOB 运算符是用来匹配通配符指定模式的文本值。如果搜索表达式与模式表达式匹配，GLOB 运算符将返回真（true），也就是 1。与 LIKE 运算符不同的是，<strong>GLOB 是大小写敏感的</strong>，对于下面的通配符，它遵循 UNIX 的语法。</p>
+<pre><code>-星号 （*）代表零个、一个或多个数字或字符
+-问号 （?）代表一个单一的数字或字符
+</code></pre><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center">语句</th>
+<th style="text-align:center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">WHERE SALARY GLOB ‘200*’</td>
+<td style="text-align:center">查找以 200 开头的任意值</td>
+</tr>
+<tr>
+<td style="text-align:center">WHERE SALARY GLOB ‘<em>200</em>‘</td>
+<td style="text-align:center">查找任意位置包含 200 的任意值</td>
+</tr>
+<tr>
+<td style="text-align:center">WHERE SALARY GLOB ‘?00*’</td>
+<td style="text-align:center">查找第二位和第三位为 00 的任意值</td>
+</tr>
+<tr>
+<td style="text-align:center">WHERE SALARY GLOB ‘2??’</td>
+<td style="text-align:center">查找以 2 开头，且长度至少为 3 个字符的任意值</td>
+</tr>
+<tr>
+<td style="text-align:center">WHERE SALARY GLOB ‘*2’</td>
+<td style="text-align:center">查找以 2 结尾的任意值</td>
+</tr>
+<tr>
+<td style="text-align:center">WHERE SALARY GLOB ‘?2*3’</td>
+<td style="text-align:center">查找第二位为 2，且以 3 结尾的任意值</td>
+</tr>
+<tr>
+<td style="text-align:center">WHERE SALARY GLOB ‘2???3’</td>
+<td style="text-align:center">查找长度为 5 位数，且以 2 开头以 3 结尾的任意值</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h1 id="四、SQLite-Limit-子句"><a href="#四、SQLite-Limit-子句" class="headerlink" title="四、SQLite Limit 子句"></a>四、SQLite Limit 子句</h1><p>SQLite 的 LIMIT 子句用于限制由 SELECT 语句返回的数据数量。带有 LIMIT 子句的 SELECT 语句的基本语法如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> column1, column2, columnN </span><br><span class="line"><span class="keyword">FROM</span> table_name</span><br><span class="line"><span class="keyword">LIMIT</span> [<span class="keyword">no</span> <span class="keyword">of</span> <span class="keyword">rows</span>]</span><br></pre></td></tr></table></figure>
+<p>下面是 LIMIT 子句与 OFFSET 子句一起使用时的语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> column1, column2, columnN </span><br><span class="line"><span class="keyword">FROM</span> table_name</span><br><span class="line"><span class="keyword">LIMIT</span> [<span class="keyword">no</span> <span class="keyword">of</span> <span class="keyword">rows</span>] <span class="keyword">OFFSET</span> [<span class="keyword">row</span> <span class="keyword">num</span>]</span><br></pre></td></tr></table></figure>
+<p>SQLite 引擎将返回从下一行开始直到给定的 OFFSET 为止的所有行，如下一个实例所示</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">sqlite&gt; SELECT *</span><br><span class="line">   ...&gt; FROM student</span><br><span class="line">   ...&gt; LIMIT 3;</span><br><span class="line">95001|李勇|男|20|CS</span><br><span class="line">95002|刘晨|女|19|IS</span><br><span class="line">95003|王敏|女|18|MA</span><br><span class="line">sqlite&gt; SELECT grade</span><br><span class="line">   ...&gt; FROM sc</span><br><span class="line">   ...&gt; LIMIT 3 OFFSET 2;</span><br><span class="line">57</span><br><span class="line">79</span><br><span class="line">45</span><br></pre></td></tr></table></figure>
+<h1 id="五、SQLite-Distinct-关键字"><a href="#五、SQLite-Distinct-关键字" class="headerlink" title="五、SQLite Distinct 关键字"></a>五、SQLite Distinct 关键字</h1><p>SQLite 的 DISTINCT 关键字与 SELECT 语句一起使用，来消除所有重复的记录，并只获取唯一一次记录。</p>
+<p>有可能出现一种情况，在一个表中有多个重复的记录。当提取这样的记录时，DISTINCT 关键字就显得特别有意义，它只获取唯一一次记录，而不是获取重复记录。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">sqlite&gt; SELECT ssex</span><br><span class="line">   ...&gt; FROM student;</span><br><span class="line">男</span><br><span class="line">女</span><br><span class="line">女</span><br><span class="line">男</span><br><span class="line">男</span><br><span class="line">男</span><br><span class="line">男</span><br><span class="line">男</span><br></pre></td></tr></table></figure>
+<p>用于消除重复记录的 DISTINCT 关键字的基本语法如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">DISTINCT</span> column1, column2,.....columnN </span><br><span class="line"><span class="keyword">FROM</span> table_name</span><br><span class="line"><span class="keyword">WHERE</span> [condition]</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sqlite&gt; SELECT DISTINCT ssex</span><br><span class="line">   ...&gt; FROM student;</span><br><span class="line">男</span><br><span class="line">女</span><br></pre></td></tr></table></figure>
+<h1 id="六、SQLite-JOIN-子句"><a href="#六、SQLite-JOIN-子句" class="headerlink" title="六、SQLite JOIN 子句"></a>六、SQLite JOIN 子句</h1><p>SQLite 的 Joins 子句用于结合两个或多个数据库中表的记录。JOIN 是一种通过共同值来结合两个表中字段的手段。</p>
+<p>SQL 定义了三种主要类型的连接：</p>
+<ul>
+<li>交叉连接 CROSS JOIN</li>
+<li>内连接 INNER JOIN</li>
+<li>外连接 OUTER JOIN</li>
+</ul>
+<h2 id="交叉连接-CROSS-JOIN"><a href="#交叉连接-CROSS-JOIN" class="headerlink" title="交叉连接 - CROSS JOIN"></a>交叉连接 - CROSS JOIN</h2><p>交叉连接（CROSS JOIN）把第一个表的每一行与第二个表的每一行进行匹配。如果两个输入表分别有 x 和 y 列，则结果表有 x+y 列。由于交叉连接（CROSS JOIN）有可能产生非常大的表，使用时必须谨慎，只在适当的时候使用它们。</p>
+<p>下面是交叉连接（CROSS JOIN）的语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ... <span class="keyword">FROM</span> table1 <span class="keyword">CROSS</span> <span class="keyword">JOIN</span> table2 ...</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*student表中的sname和course表中的cname cross join*/</span></span><br><span class="line">sqlite&gt; SELECT sname,cname</span><br><span class="line">   ...&gt; FROM student</span><br><span class="line">   ...&gt; CROSS JOIN course;</span><br><span class="line">李勇|数据库</span><br><span class="line">李勇|数学</span><br><span class="line">李勇|信息系统</span><br><span class="line">李勇|操作系统</span><br><span class="line">李勇|数据结构</span><br><span class="line">李勇|数据处理</span><br><span class="line">李勇|PASCAL语言</span><br><span class="line">刘晨|数据库</span><br><span class="line">刘晨|数学</span><br><span class="line">刘晨|信息系统</span><br><span class="line">刘晨|操作系统</span><br><span class="line">刘晨|数据结构</span><br><span class="line">刘晨|数据处理</span><br><span class="line">刘晨|PASCAL语言</span><br><span class="line">王敏|数据库</span><br><span class="line">王敏|数学</span><br><span class="line">王敏|信息系统</span><br><span class="line">王敏|操作系统</span><br><span class="line">王敏|数据结构</span><br><span class="line">王敏|数据处理</span><br><span class="line">王敏|PASCAL语言</span><br><span class="line">张立|数据库</span><br><span class="line">张立|数学</span><br><span class="line">张立|信息系统</span><br><span class="line">张立|操作系统</span><br><span class="line">张立|数据结构</span><br><span class="line">张立|数据处理</span><br><span class="line">张立|PASCAL语言</span><br><span class="line">王强|数据库</span><br><span class="line">王强|数学</span><br><span class="line">王强|信息系统</span><br><span class="line">王强|操作系统</span><br><span class="line">王强|数据结构</span><br><span class="line">王强|数据处理</span><br><span class="line">王强|PASCAL语言</span><br><span class="line">张三|数据库</span><br><span class="line">张三|数学</span><br><span class="line">张三|信息系统</span><br><span class="line">张三|操作系统</span><br><span class="line">张三|数据结构</span><br><span class="line">张三|数据处理</span><br><span class="line">张三|PASCAL语言</span><br><span class="line">李四|数据库</span><br><span class="line">李四|数学</span><br><span class="line">李四|信息系统</span><br><span class="line">李四|操作系统</span><br><span class="line">李四|数据结构</span><br><span class="line">李四|数据处理</span><br><span class="line">李四|PASCAL语言</span><br><span class="line">陈冬|数据库</span><br><span class="line">陈冬|数学</span><br><span class="line">陈冬|信息系统</span><br><span class="line">陈冬|操作系统</span><br><span class="line">陈冬|数据结构</span><br><span class="line">陈冬|数据处理</span><br><span class="line">陈冬|PASCAL语言</span><br></pre></td></tr></table></figure>
+<h2 id="内连接-INNER-JOIN"><a href="#内连接-INNER-JOIN" class="headerlink" title="内连接 - INNER JOIN"></a>内连接 - INNER JOIN</h2><p>内连接（INNER JOIN）根据连接条件结合两个表（table1 和 table2）的列值来创建一个新的结果表。查询会把 table1 中的每一行与 table2 中的每一行进行比较，找到所有满足连接条件的行的匹配对。当满足连接谓词时，A 和 B 行的每个匹配对的列值会合并成一个结果行。</p>
+<p>内连接（INNER JOIN）是最常见的连接类型，是默认的连接类型。INNER 关键字是可选的。</p>
+<p>下面是内连接（INNER JOIN）的语法：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ... <span class="keyword">FROM</span> table1 [<span class="keyword">INNER</span>] <span class="keyword">JOIN</span> table2 <span class="keyword">ON</span> conditional_expression ...</span><br></pre></td></tr></table></figure></p>
+<p>比如要查询有选修课学生的考试成绩（有的有选修课，有的没有）</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">sqlite&gt; SELECT student.sno,sname,grade</span><br><span class="line">   ...&gt; FROM student</span><br><span class="line">   ...&gt; INNER JOIN sc</span><br><span class="line">   ...&gt; ON student.sno = sc.sno;</span><br><span class="line">95001|李勇|65</span><br><span class="line">95001|李勇|88</span><br><span class="line">95001|李勇|57</span><br><span class="line">95001|李勇|79</span><br><span class="line">95001|李勇|45</span><br><span class="line">95001|李勇|90</span><br><span class="line">95001|李勇|81</span><br><span class="line">95002|刘晨|90</span><br><span class="line">95002|刘晨|80</span><br><span class="line">95002|刘晨|55</span><br><span class="line">95003|王敏|0</span><br><span class="line">95019|李四|66</span><br><span class="line">95020|陈冬|</span><br></pre></td></tr></table></figure>
+<p>如果还需要查找得到该学生的选修课程名，那么就需要连接多个表，还用到了AND运算符</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">sqlite&gt; SELECT sname,student.sno,cname,grade</span><br><span class="line">   ...&gt; FROM sc INNER JOIN student,course</span><br><span class="line">   ...&gt; ON sc.cno = course.cno AND student.sno =  sc.sno;</span><br><span class="line">李勇|95001|数据库|65</span><br><span class="line">李勇|95001|数学|88</span><br><span class="line">李勇|95001|信息系统|57</span><br><span class="line">李勇|95001|操作系统|79</span><br><span class="line">李勇|95001|数据结构|45</span><br><span class="line">李勇|95001|数据处理|90</span><br><span class="line">李勇|95001|PASCAL语言|81</span><br><span class="line">刘晨|95002|数学|90</span><br><span class="line">刘晨|95002|信息系统|80</span><br><span class="line">刘晨|95002|操作系统|55</span><br><span class="line">王敏|95003|数学|0</span><br><span class="line">李四|95019|数学|66</span><br><span class="line">陈冬|95020|数据库|</span><br></pre></td></tr></table></figure>
+<h2 id="外连接-OUTER-JOIN"><a href="#外连接-OUTER-JOIN" class="headerlink" title="外连接 - OUTER JOIN"></a>外连接 - OUTER JOIN</h2><p>外连接（OUTER JOIN）是内连接（INNER JOIN）的扩展。虽然 SQL 标准定义了三种类型的外连接：LEFT、RIGHT、FULL，<strong>但 SQLite 只支持 左外连接（LEFT OUTER JOIN）</strong>。</p>
+<p>外连接（OUTER JOIN）声明条件的方法与内连接（INNER JOIN）是相同的，使用 ON、USING 或 NATURAL 关键字来表达。最初的结果表以相同的方式进行计算。一旦主连接计算完成，外连接（OUTER JOIN）将从一个或两个表中任何未连接的行合并进来（有的时候需要包含没有关联行的那些行），外连接的列使用 NULL 值，将它们附加到结果表中。</p>
+<p>下面是左外连接（LEFT OUTER JOIN）的语法：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> ... <span class="keyword">FROM</span> table1 <span class="keyword">LEFT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> table2 <span class="keyword">ON</span> conditional_expression ...</span><br></pre></td></tr></table></figure>
+<p>左外连接（LEFT OUTER JOIN）的左边的表是参照的主体，即根据连接条件，除了返回主体表与非主体中连接成功的行外，还返回主体表与非主体表连接不成功的记录。所以，左外连接中表的连接先后会导致不同的结果。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">sqlite&gt; SELECT student.sno,sname,grade</span><br><span class="line">   ...&gt; FROM student LEFT OUTER JOIN sc</span><br><span class="line">   ...&gt; ON student.sno = sc.sno;</span><br><span class="line">95001|李勇|65</span><br><span class="line">95001|李勇|88</span><br><span class="line">95001|李勇|57</span><br><span class="line">95001|李勇|79</span><br><span class="line">95001|李勇|45</span><br><span class="line">95001|李勇|90</span><br><span class="line">95001|李勇|81</span><br><span class="line">95002|刘晨|90</span><br><span class="line">95002|刘晨|80</span><br><span class="line">95002|刘晨|55</span><br><span class="line">95003|王敏|0</span><br><span class="line">95004|张立|</span><br><span class="line">95005|王强|</span><br><span class="line">95015|张三|</span><br><span class="line">95019|李四|66</span><br><span class="line">95020|陈冬|</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">sqlite&gt; SELECT student.sno,sname,grade</span><br><span class="line">   ...&gt; FROM sc LEFT OUTER JOIN student</span><br><span class="line">   ...&gt; ON student.sno = sc.sno;</span><br><span class="line">95001|李勇|65</span><br><span class="line">95001|李勇|88</span><br><span class="line">95001|李勇|57</span><br><span class="line">95001|李勇|79</span><br><span class="line">95001|李勇|45</span><br><span class="line">95001|李勇|90</span><br><span class="line">95001|李勇|81</span><br><span class="line">95002|刘晨|90</span><br><span class="line">95002|刘晨|80</span><br><span class="line">95002|刘晨|55</span><br><span class="line">95003|王敏|0</span><br><span class="line">95019|李四|66</span><br><span class="line">95020|陈冬|</span><br></pre></td></tr></table></figure>
+<h1 id="七、SQLite-Having-子句"><a href="#七、SQLite-Having-子句" class="headerlink" title="七、SQLite Having 子句"></a>七、SQLite Having 子句</h1><p>HAVING 子句允许指定条件来过滤将出现在最终结果中的分组结果。</p>
+<p>WHERE 子句在所选列上设置条件，而 HAVING 子句则在由 GROUP BY 子句创建的分组上设置条件。</p>
+<blockquote>
+<p>有必要说清楚分组GROUP BY与排序ORDER BY的区别，分组是将输出的结果以分组的形式呈现，而排序则是让输出结果按照顺序进行排列，换言之，分组的结果不一定是按照顺序排列的。where和having的功能也差不多，区别在于where是在数据分组前进行过滤，而having是在数据分组后进行过滤的。</p>
+</blockquote>
+<p>下面是 HAVING 子句在 SELECT 查询中的位置：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span></span><br><span class="line"><span class="keyword">FROM</span></span><br><span class="line"><span class="keyword">WHERE</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span></span><br><span class="line"><span class="keyword">HAVING</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">sqlite&gt; SELECT *</span><br><span class="line">   ...&gt; FROM student</span><br><span class="line">   ...&gt; GROUP BY sage</span><br><span class="line">   ...&gt; HAVING sage &gt; 18</span><br><span class="line">   ...&gt; ORDER BY sdept;</span><br><span class="line">95019|李四|男|20|CS</span><br><span class="line">95004|张立|男|19|IS</span><br></pre></td></tr></table></figure>
+<h1 id="八、SQLite-Delete-语句"><a href="#八、SQLite-Delete-语句" class="headerlink" title="八、SQLite Delete 语句"></a>八、SQLite Delete 语句</h1><p>SQLite 的 DELETE 查询用于删除表中已有的记录。可以使用带有 WHERE 子句的 DELETE 查询来删除选定行，否则所有的记录都会被删除。</p>
+<p>带有 WHERE 子句的 DELETE 查询的基本语法如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DELETE</span> <span class="keyword">FROM</span> table_name</span><br><span class="line"><span class="keyword">WHERE</span> [condition];</span><br></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+        
+            <div>
+    
+        <div style="text-align:center;color: #FF0000;font-size:18px;font-family:Helvetica;font-style:oblique">------本文结束，欢迎收藏本站、分享、评论或联系作者！------</div>
+    
+</div>
+
+        
+    </div>
+
+    <!-- 相关文章推荐 -->
+     
+          
+
+  <div class="popular-posts-header">
+    <i class="fa fa-"></i>
+    相关文章
+  </div>
+
+ <details>
+     <summary>点击查看</summary>
+     <ul class="popular-posts">
+     
+       <li class="popular-posts-item">
+         
+         
+         <div class="popular-posts-title"><a href="\2017\mysql-study-note-1\" rel="bookmark">MySQL 学习笔记（一）基本操作</a></div>
+         
+       </li>
+     
+       <li class="popular-posts-item">
+         
+         
+         <div class="popular-posts-title"><a href="\2017\spending-13-tomatoes-getting-sql-done\" rel="bookmark">13个“番茄”搞定SQL</a></div>
+         
+       </li>
+     
+       <li class="popular-posts-item">
+         
+         
+         <div class="popular-posts-title"><a href="\2017\notes-in-a-mess\" rel="bookmark">备忘录（一）</a></div>
+         
+       </li>
+     
+     </ul>
+ </details>
+
+
+     
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center; color:red;font-family:Helvetica;font-style:oblique">
+  <div>赠人玫瑰 手有余香</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="https://raw.githubusercontent.com/swordspoet/i/img/WeChatpay.png" alt="H4ck3r L1 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1fjuvo2ur08j20a20a2dgi.jpg" alt="H4ck3r L1 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>H4ck3r L1</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.libinx.com/2017/sqlite3-basic-tutorial/" title="SQLite 数据库基础教程">https://www.libinx.com/2017/sqlite3-basic-tutorial/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SQL/" rel="tag"># SQL</a>
+          
+            <a href="/tags/SQLite/" rel="tag"># SQLite</a>
+          
+            <a href="/tags/数据库/" rel="tag"># 数据库</a>
+          
+            <a href="/tags/基础教程/" rel="tag"># 基础教程</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+          <div class="wp_rating">
+           <div style="color: rgba(0, 0, 0, 0.75); font-size:13px; letter-spacing:3px">(&gt;看完记得五星好评哦亲&lt;)</div>
+            <div id="wpac-rating"></div>
+          </div>
+        
+
+        
+
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/five-steps-win10-ubuntu-dual-boot/" rel="next" title="五步完美实现Win10 + Ubuntu 17.04双系统启动">
+                <i class="fa fa-chevron-left"></i> 五步完美实现Win10 + Ubuntu 17.04双系统启动
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/Chinese-government-report-text-analysis-over-the-years/" rel="prev" title="历年（1954-2016）政府工作报告文本分析及可视化">
+                历年（1954-2016）政府工作报告文本分析及可视化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-58b8f4ff1eb11c7e" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">H4ck3r L1</p>
+              <p class="site-description motion-element" itemprop="description">专注机器学习、大数据</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">152</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">308</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/swordspoet" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.douban.com/people/53382901/" target="_blank" title="douban" rel="external nofollow"><i class="fa fa-fw fa-book"></i>douban</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank" rel="external nofollow">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友链
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://plushunter.github.io" title="Free will" target="_blank">Free will</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.shuang0420.com" title="徐阿衡" target="_blank">徐阿衡</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://dzzxjl.github.io/" title="十一城" target="_blank">十一城</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://iyaozhen.com" title="yao zhen" target="_blank">yao zhen</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://kba977.github.io/" title="kba977" target="_blank">kba977</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.jianshu.com/u/4007ac46018d" title="Babyzpj" target="_blank">Babyzpj</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://null.w0x7ce.com/" title="w0x7ce" target="_blank">w0x7ce</a>
+                  </li>
+                
+              </ul>
+            </div>
+			<div class="theme-info">
+				<span class="post-count">全站共207.0k字</span>
+			</div>
+			
+			
+
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#目录"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一、SQLite-创建数据库"><span class="nav-text">一、SQLite 创建数据库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、QLite-Like-子句"><span class="nav-text">二、QLite Like 子句</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、SQLite-Glob-子句"><span class="nav-text">三、SQLite Glob 子句</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、SQLite-Limit-子句"><span class="nav-text">四、SQLite Limit 子句</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、SQLite-Distinct-关键字"><span class="nav-text">五、SQLite Distinct 关键字</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#六、SQLite-JOIN-子句"><span class="nav-text">六、SQLite JOIN 子句</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#交叉连接-CROSS-JOIN"><span class="nav-text">交叉连接 - CROSS JOIN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内连接-INNER-JOIN"><span class="nav-text">内连接 - INNER JOIN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#外连接-OUTER-JOIN"><span class="nav-text">外连接 - OUTER JOIN</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#七、SQLite-Having-子句"><span class="nav-text">七、SQLite Having 子句</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#八、SQLite-Delete-语句"><span class="nav-text">八、SQLite Delete 语句</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+	  
+	  <div class="wechat_OA">
+				<span>欢迎关注我的公众号</span>
+				<br>
+				<!-- 这里添加你的二维码图片 -->
+				<img src="https://raw.githubusercontent.com/swordspoet/i/img/%E6%89%AB%E7%A0%81_%E6%90%9C%E7%B4%A2%E8%81%94%E5%90%88%E4%BC%A0%E6%92%AD%E6%A0%B7%E5%BC%8F-%E6%A0%87%E5%87%86%E8%89%B2%E7%89%88.png">
+			</div>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="contact">
+<span class="fa-stack fa-lg">
+  <a href="https://www.github.com/swordspoet">
+  <i class="fa fa-square fa-stack-2x"></i>
+  <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+  </a>
+</span>
+
+<span class="fa-stack fa-lg">
+<a href="https://zhuanlan.zhihu.com/libinx">
+  <i class="fa fa-square fa-stack-2x"></i>
+  <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+  </a>
+</span>
+
+<span class="fa-stack fa-lg">
+<a href="mailto:libin.data@gmail.com">
+  <i class="fa fa-square fa-stack-2x"></i>
+  <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+  </a>
+</span>
+
+<span class="fa-stack fa-lg">
+<a href="https://t.me/bin_li">
+  <i class="fa fa-square fa-stack-2x"></i>
+  <i class="fa fa-telegram fa-stack-1x fa-inverse"></i>
+  </a>
+</span>
+
+</div>
+
+<div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-cogs"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">All Rights Reserved.</span>
+
+  
+
+  
+</div>
+	
+
+  
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/reading_progress/reading_progress.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+  <script type="text/javascript">
+  wpac_init = window.wpac_init || [];
+  wpac_init.push({widget: 'Rating', id: 8151,
+    el: 'wpac-rating',
+    color: 'ff7600'
+  });
+  (function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = '//embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+  })();
+  </script>
+
+
+  
+  
+  
+    
+  
+  <script src="https://cdn.bootcss.com/pangu/3.3.0/pangu.js"></script>
+  <script type="text/javascript">pangu.spacingPage();</script>
+
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/exturl.js?v=6.3.0"></script>
+
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+</body>
+</html>

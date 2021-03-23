@@ -1,0 +1,2547 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Source Han Sans:300,300italic,400,400italic,700,700italic|Source Code Pro:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: 'X3YO6U1DRE',
+      apiKey: '',
+      indexName: 'blog',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="原文链接：https://www.analyticsvidhya.com/blog/2017/03/questions-dimensionality-reduction-data-scientist/  前言 你有没有遇到过拥有几百列的数据集而对其建立预测模型不知所措？或者数据集的变量大量相关？在现实的工程问题中这些问题是很难避免的。 幸亏，降维技术帮了我们大忙，在数据科学中，降维是一门很重要">
+<meta name="keywords" content="翻译,主成分分析,降维,PCA,LDA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【译】数据科学家降维技术测试 40 题">
+<meta property="og:url" content="https://www.libinx.com/2017/questions-dimensionality-reduction-data-scientist/index.html">
+<meta property="og:site_name" content="Thinking Realm">
+<meta property="og:description" content="原文链接：https://www.analyticsvidhya.com/blog/2017/03/questions-dimensionality-reduction-data-scientist/  前言 你有没有遇到过拥有几百列的数据集而对其建立预测模型不知所措？或者数据集的变量大量相关？在现实的工程问题中这些问题是很难避免的。 幸亏，降维技术帮了我们大忙，在数据科学中，降维是一门很重要">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1fk5ckldux8j20c4072t8z.jpg">
+<meta property="og:image" content="https://static.analyticsvidhya.com/wp-content/uploads/2017/03/06064637/Image_24.jpg">
+<meta property="og:image" content="https://static.analyticsvidhya.com/wp-content/uploads/2017/03/06064252/Image_cont_26.jpg">
+<meta property="og:image" content="https://static.analyticsvidhya.com/wp-content/uploads/2017/03/17140918/Image_291.jpg">
+<meta property="og:image" content="https://static.analyticsvidhya.com/wp-content/uploads/2017/03/06062621/Image32.jpg">
+<meta property="og:image" content="https://static.analyticsvidhya.com/wp-content/uploads/2017/03/06062945/Image33_B.jpg">
+<meta property="og:image" content="https://static.analyticsvidhya.com/wp-content/uploads/2017/03/06062131/Image_37.jpg">
+<meta property="og:image" content="https://static.analyticsvidhya.com/wp-content/uploads/2017/03/06061642/Image_Context39.jpg">
+<meta property="og:image" content="https://static.analyticsvidhya.com/wp-content/uploads/2017/03/06061851/Image_40.jpg">
+<meta property="og:updated_time" content="2021-03-23T01:25:10.978Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【译】数据科学家降维技术测试 40 题">
+<meta name="twitter:description" content="原文链接：https://www.analyticsvidhya.com/blog/2017/03/questions-dimensionality-reduction-data-scientist/  前言 你有没有遇到过拥有几百列的数据集而对其建立预测模型不知所措？或者数据集的变量大量相关？在现实的工程问题中这些问题是很难避免的。 幸亏，降维技术帮了我们大忙，在数据科学中，降维是一门很重要">
+<meta name="twitter:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1fk5ckldux8j20c4072t8z.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Thinking Realm" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://www.libinx.com/2017/questions-dimensionality-reduction-data-scientist/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>【译】数据科学家降维技术测试 40 题 | Thinking Realm</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?29c6a6a7d4e694985b961f3ab9357bb3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        
+        <span class="site-title">Thinking Realm</span>
+        
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">308</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">18</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">152</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+    <div class="reading-progress-bar"></div>
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.libinx.com/2017/questions-dimensionality-reduction-data-scientist/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="H4ck3r L1">
+      <meta itemprop="description" content="专注机器学习、大数据">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Thinking Realm">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">【译】数据科学家降维技术测试 40 题
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-10-03 21:07:28" itemprop="dateCreated datePublished" datetime="2017-10-03T21:07:28+08:00">2017-10-03</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-03-23 09:25:10" itemprop="dateModified" datetime="2021-03-23T09:25:10+08:00">2021-03-23</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Machine-Learning/" itemprop="url" rel="index"><span itemprop="name">Machine-Learning</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <a id="more"></a>
+<blockquote>
+<p><em>原文链接：<a href="https://www.analyticsvidhya.com/blog/2017/03/questions-dimensionality-reduction-data-scientist/" target="_blank" rel="noopener">https://www.analyticsvidhya.com/blog/2017/03/questions-dimensionality-reduction-data-scientist/</a></em></p>
+</blockquote>
+<p>前言</p>
+<p>你有没有遇到过拥有几百列的数据集而对其建立预测模型不知所措？或者数据集的变量大量相关？在现实的工程问题中这些问题是很难避免的。</p>
+<p>幸亏，降维技术帮了我们大忙，在数据科学中，降维是一门很重要的技术。对于任何数据科学家来说，降维技术是必备的。为了检测我们在降维技术中的知识，我们组织了这次技能测试。这些问题包括主成分分析、t-SNE 和 LDA。</p>
+<h1 id="Q-amp-A"><a href="#Q-amp-A" class="headerlink" title="Q &amp; A"></a>Q &amp; A</h1><ol>
+<li><p>假如你在机器学习问题中有 1000 个输入特征和一个目标特征，基于输入特征和目标特征之间的关系，要求你选出100个最重要的输出特征，请问这是一个降维的例子吗？</p>
+<ul>
+<li><strong>是</strong></li>
+<li>否</li>
+</ul>
+</li>
+<li><p>【判断题】在应用降维算法时没有必要设置目标变量【对】</p>
+<ul>
+<li>解析：LDA 是有监督降维算法</li>
+</ul>
+</li>
+<li><p>数据集中有 4 个变量 A、B、C、D，执行下列步骤</p>
+<ul>
+<li><strong>step1</strong>：使用以上变量创建两个新的变量，$E=A+3B$ 和 $F = B + 5*C + D$</li>
+<li><p><strong>step2</strong>：只用 E 和 F 两个变量建立随机森林模型</p>
+<p>问：以上步骤是否属于降维手段的一种</p>
+</li>
+<li><strong>对</strong></li>
+<li>错</li>
+<li>解析：因为在第一个步骤中使得数据降低到只有两个维度</li>
+</ul>
+</li>
+<li>下列哪种方法降维的效果更好？<ul>
+<li><strong>A. 去除缺失值多的列</strong>（如果数据集中某一列缺失值太多，可以肯定的是一定要去掉）</li>
+<li>B. 去除高方差的列</li>
+<li>C. 去除数据趋势不同的列</li>
+<li>D. 以上都不是</li>
+</ul>
+</li>
+<li>【判断题】降维算法是建立模型时减少运算时间的一种可行方法。【对】</li>
+<li>下列哪种算法不能用于数据的降维？<ul>
+<li>A. t-SNE </li>
+<li>B. PCA</li>
+<li>C. LDA False</li>
+<li><strong>D. 以上都不是</strong></li>
+</ul>
+</li>
+<li>【判断题】PCA 可用于将数据映射和可视化到低维空间。【对】<ul>
+<li>有的时候有必要将数据集在低维空间中可视化出来，我们可以用前两个主成分并画出它们的散点图</li>
+</ul>
+</li>
+<li>PCA 是非常受欢迎的降维算法，下列对于PCA的说法正确的是？【全部都是】<ol>
+<li>PCA 是无监督方法</li>
+<li>寻找原始数据中方差最大的方向（原理解释参考：<a href="http://www.libinx.com/2017/05/22/machine-learning-algorithm-series-pca/#more">机器学习算法系列（10）主成分分析（PCA）</a>）</li>
+<li>主成分最大个数小于等于特征个数</li>
+<li>所有的主成分相互正交（协方差矩阵是对称的）</li>
+</ol>
+</li>
+<li><p>假设用降维算法给数据预处理，将数据降到只有 k 个维度之后，然后用这些 PCA 映射作为特征，下列陈述正确的是？</p>
+<ul>
+<li>A. k 越大则正则化效果越强</li>
+<li><strong>B. k 越大则正则化效果越弱</strong>（k 越大意味着要保留数据中的更多特征，所以正则化效果越弱）</li>
+</ul>
+</li>
+<li><p>考虑一台计算能力不强的计算机，下列哪种降维场景中，t-SNE 比 PCA 表现得要好？</p>
+<ul>
+<li>A. 数据集有 100 万 entries，300 个特征</li>
+<li>B. 数据集有 10 万 entries，310 个特征</li>
+<li><strong>C. 数据集有 1 万 entries，8 个特征</strong></li>
+<li>D. 数据集有 1 万 entries，200 个特征</li>
+</ul>
+<blockquote>
+<p>t-SNE 有着$O(n^2)$的时间和空间复杂度，考虑计算能力有限的系统资源，则必须选择 c，因为它只有 8 个特征，并且在这样一个小特征的数据集降维重要信息的丢失是很少的</p>
+</blockquote>
+</li>
+<li><p>对于 t-SNE 的损失函数，下列陈述正确的是？</p>
+<ul>
+<li>A. 不对称</li>
+<li><strong>B. 对称</strong></li>
+<li>C. 与SNE的损失函数一样</li>
+</ul>
+<blockquote>
+<p>SNE的损失函数本质上是不对称的，故使用梯度下降算法很难收敛。损失函数是不是对称是 SNE 与 t-SNE 最大的区别</p>
+</blockquote>
+</li>
+<li><p>假设在处理文本数据中使用词嵌入（Word2vec），得到一个 1000 个维度的词向量。现在，你想要降低它的维度，这样最近邻空间的单词具有同样的含义。在这种情况下，你会选择哪个算法？</p>
+<ul>
+<li><strong>t-SNE</strong></li>
+<li>PCA</li>
+<li>LDA</li>
+</ul>
+</li>
+<li><p>【判断题】t-SNE 学习的是非参映射【对】</p>
+</li>
+<li>对 PCA 和 t-SNE 说法正确的是<ul>
+<li>t-SNE 是线性的，PCA 是非线性的</li>
+<li>t-SNE 和 PCA 都是线性的</li>
+<li>t-SNE 和 PCA 都是非线性的</li>
+<li><strong>t-SNE 是非线性的，PCA 是线性的</strong></li>
+</ul>
+</li>
+<li>在 t-SNE 算法中，哪个高维参数可以调参？<ul>
+<li>维度的个数</li>
+<li>Smooth measure of effective number of neighbours</li>
+<li>最大迭代次数</li>
+<li><strong>以上所有</strong></li>
+</ul>
+</li>
+<li>t-SNE 与 PCA 相比，下列说法正确的是？<ul>
+<li><strong>数据集很大的时候，t-SNE 可能产生不了较好的结果</strong></li>
+<li>不管数据集大或者小，t-SNE 总能产生更好的结果</li>
+<li>针对小规模数据，PCA 总是比 t-SNE 表现得更好</li>
+<li>以上都不是</li>
+</ul>
+</li>
+<li><p>$x_i$和$x_j$是高维数据中的两个不同的点，$y_i$和$y_j$是$x_i$和$x_j$在低维空间的映射</p>
+<ol>
+<li>$x_i$和$x_j$的相似度等于条件概率$p(j|i)$</li>
+<li>$y_i$和$y_j$的相似度等于条件概率$q(j|i)$</li>
+</ol>
+<ul>
+<li>$p(j|i)=0$，$q(j|i)=0$</li>
+<li>$p(j|i) \lt q(j|i)$</li>
+<li><strong>$p(j|i) = q(j|i)$</strong></li>
+<li>$p(j|i) \gt q(j|i)$</li>
+</ul>
+</li>
+<li><p>关于 LDA 正确的是？<br><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1fk5ckldux8j20c4072t8z.jpg" alt=""></p>
+<ul>
+<li><strong>LDA 的目标在于最大化不同类之间的距离且最小化相同类之间的距离</strong></li>
+<li>LDA 的目标在于同时最小化相同和不相同类之间的距离</li>
+<li>LDA 的目标在于最小化不同类之间的距离且最大化相同类之间的距离</li>
+<li>LDA 的目标在于同时最小化相同和不相同类之间的距离</li>
+</ul>
+</li>
+<li><p>哪种情形下，LDA 会失败？</p>
+<ul>
+<li><strong>如果 discriminatory information 不在数据的方差中而在均值中</strong></li>
+<li>如果 discriminatory information 不在数据的均值中而在方差中</li>
+<li>如果 discriminatory information 都在数据的方差和均值中</li>
+<li>都不是</li>
+</ul>
+</li>
+<li>下列关于 PCA 和 LDA 的比较,正确的是？<ul>
+<li><strong>LDA 和 PCA 都是线性转换的手段</strong></li>
+<li><strong>LDA 是监督学习而 PCA 是无监督</strong></li>
+<li><strong>PCA 最大化数据的方差，而 LDA 最大化不同类别之间的间隔</strong></li>
+</ul>
+</li>
+<li>当特征值都大致相等时？<ul>
+<li>PCA 表现很好</li>
+<li><strong>PCA 表现不好</strong></li>
+<li>不确定<blockquote>
+<p>当特征向量都相同时，在这种情况下你不可能选择主成分因为主成分都是相等的</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>满足下列哪种条件，PCA 会表现得更好？<ul>
+<li><strong>数据集有线性结构</strong></li>
+<li>如果数据集在弧面而不是平面</li>
+<li><strong>变量都在同一个单位空间</strong></li>
+</ul>
+</li>
+<li>低维空间中使用 PCA 得到的特征？<ul>
+<li>特征仍有解释性</li>
+<li><strong>特征将失去解释性</strong></li>
+<li>特征一定携带目前数据的所有信息</li>
+<li><strong>特征可能没有携带目前数据的所有信息</strong></li>
+</ul>
+</li>
+<li>给定以下高度和重量的散点图，<br><img src="https://static.analyticsvidhya.com/wp-content/uploads/2017/03/06064637/Image_24.jpg" alt=""><ul>
+<li>0</li>
+<li><strong>45</strong></li>
+<li>60</li>
+<li>90</li>
+</ul>
+</li>
+<li>下列哪个选项是正确的？<ul>
+<li>PCA 需要初始化参数</li>
+<li><strong>PCA 不需要初始化参数</strong></li>
+<li>PCA可能会陷入局部最小化问题</li>
+<li><strong>PCA 不会陷入局部最小化问题</strong></li>
+</ul>
+</li>
+<li>下图是两个特征的散点图，PCA 和 LDA 的方向，哪种方法能够得到比较好的分类结果？<br><img src="https://static.analyticsvidhya.com/wp-content/uploads/2017/03/06064252/Image_cont_26.jpg" alt=""><ul>
+<li>用 PCA 建立分类算法</li>
+<li><strong>用 LDA 建立分类算法</strong></li>
+<li>不确定<blockquote>
+<p>如果任务的目标是划分点集，PCA 映射会得不偿失</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>针对图像数据运用 PCA 时，下列哪个选项是正确的？<ul>
+<li>检测变形的物体会很有效率</li>
+<li>It is invariant to affine transforms</li>
+<li><strong>可以用于lossy图像压缩</strong></li>
+<li><strong>not invariant to shadows</strong></li>
+</ul>
+</li>
+<li>在何种情形下，SVD 和 PCA 产生一样的结果<ul>
+<li>数据中位数为 0</li>
+<li><strong>数据均值为 0</strong></li>
+<li>都是一样的<blockquote>
+<p>如果数据拥有零均值，在使用SVD的时候首先你得center the data </p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>考虑二维空间下的三个数据点，数据的第一个主成分是？<br><img src="https://static.analyticsvidhya.com/wp-content/uploads/2017/03/17140918/Image_291.jpg" alt=""><ul>
+<li>[$\sqrt2/2, \sqrt2/2$]√</li>
+<li>[$1/\sqrt3, 1/\sqrt3$]</li>
+<li>[$-\sqrt2/2, \sqrt2/2$]√</li>
+<li>[$-1/\sqrt3, -1/\sqrt3$]</li>
+</ul>
+</li>
+<li>如果用主成分把原始数据投影到一维子空间，它的坐标是多少？<ul>
+<li>$(-\sqrt2,0,\sqrt2)$√</li>
+<li>$(\sqrt2,0,\sqrt2)$</li>
+<li>$(\sqrt2,0,-\sqrt2)$</li>
+<li>$(-\sqrt2,0,-\sqrt2)$</li>
+</ul>
+</li>
+<li>根据29-31对于你从$(-\sqrt2,0,\sqrt2)$得到的数据，如果你要将它们呈现在二维空间中，损失会是多大？<ul>
+<li><strong>0%</strong></li>
+<li>10%</li>
+<li>30%</li>
+<li>40%</li>
+</ul>
+</li>
+<li>在 LDA 中，最理想的是找到划分两个类别的线。在给定图像中哪个映射是最好的？<br><img src="https://static.analyticsvidhya.com/wp-content/uploads/2017/03/06062621/Image32.jpg" alt=""><ul>
+<li><strong>LD1</strong></li>
+<li>LD2</li>
+</ul>
+</li>
+<li>PCA 是一门很好的降维技术，因为它易于理解并且被广泛应用。观察f(M)是如何随着M的移动而变化的，见下图。问，上面两幅图中 PCA 的表现更佳？<br><img src="https://static.analyticsvidhya.com/wp-content/uploads/2017/03/06062945/Image33_B.jpg" alt=""><ul>
+<li><strong>左图</strong></li>
+<li>右图</li>
+</ul>
+</li>
+<li><p>下列哪个选项是正确的？</p>
+<ul>
+<li><strong>LDA 尝试找出数据类之间的不同，PCA 则不是</strong></li>
+<li>LDA 和 PCA 两者都尝试找出数据类的不同</li>
+</ul>
+</li>
+<li><p>应用 PCA 之后，下列选项哪个是前两个主成分？</p>
+<ul>
+<li>(0.5,0.5,0.5,0.5),(0.71,0.71,0,0)</li>
+<li>(0.5,0.5,0.5,0.5),(0,0,-0.71,-0.71)</li>
+<li><strong>(0.5,0.5,0.5,0.5),(0.5,0.5,-0.5,-0.5)</strong></li>
+<li><strong>(0.5,0.5,0.5,0.5),(-0.5,-0.5,0.5,0.5)</strong></li>
+</ul>
+</li>
+<li><p>下列哪个选项给出了 LR 和 LDA 之间的差别？</p>
+<ol>
+<li><strong>如果类别都被很好地切割了，LR 的参数估计可能会不太稳定</strong></li>
+<li><strong>如果样本集数据太小并且每个类别数据特征都服从正态分布。在这种情况下，LDA 比 LR 要更稳定</strong></li>
+</ol>
+</li>
+<li><p>下列两种补偿需要考虑 PCA？<br><img src="https://static.analyticsvidhya.com/wp-content/uploads/2017/03/06062131/Image_37.jpg" alt=""></p>
+<ul>
+<li>垂直补偿（vertical offset）</li>
+<li><strong>垂直面补偿（perpendicular offset）</strong></li>
+</ul>
+</li>
+<li><p>如果你在处理10类别分类问题，LDA 最多可以生成多少个discriminate向量？</p>
+<ul>
+<li>20</li>
+<li><strong>9</strong></li>
+<li>21</li>
+<li>10</li>
+</ul>
+</li>
+<li><p>根据下图，使用 PCA 和最近邻方法构造预测是否为“Hoover”的分类器，需要哪些数据预处理？<br><img src="https://static.analyticsvidhya.com/wp-content/uploads/2017/03/06061642/Image_Context39.jpg" alt=""></p>
+<ol>
+<li><strong>将图片中的塔放置在图片中央</strong></li>
+<li><strong>将所有图片处理至相同尺寸</strong></li>
+</ol>
+</li>
+<li><p>下图中最优主成分数目为多少？<br><img src="https://static.analyticsvidhya.com/wp-content/uploads/2017/03/06061851/Image_40.jpg" alt=""></p>
+<ul>
+<li>7</li>
+<li><strong>30</strong>（方差最大主成分数目最少）</li>
+<li>40</li>
+</ul>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+        
+            <div>
+    
+        <div style="text-align:center;color: #FF0000;font-size:18px;font-family:Helvetica;font-style:oblique">------本文结束，欢迎收藏本站、分享、评论或联系作者！------</div>
+    
+</div>
+
+        
+    </div>
+
+    <!-- 相关文章推荐 -->
+     
+          
+
+  <div class="popular-posts-header">
+    <i class="fa fa-"></i>
+    相关文章
+  </div>
+
+ <details>
+     <summary>点击查看</summary>
+     <ul class="popular-posts">
+     
+       <li class="popular-posts-item">
+         
+         
+         <div class="popular-posts-title"><a href="\2017\machine-learning-algorithm-series-pca\" rel="bookmark">机器学习算法系列（10）主成分分析（PCA）</a></div>
+         
+       </li>
+     
+       <li class="popular-posts-item">
+         
+         
+         <div class="popular-posts-title"><a href="\2017\2017-03-07-how-to-choose-right-algorithm-for-your-machine-learning-problem\" rel="bookmark">【译】如何给你的机器学习问题选择正确的算法</a></div>
+         
+       </li>
+     
+       <li class="popular-posts-item">
+         
+         
+         <div class="popular-posts-title"><a href="\2017\Deep-Learning-for-Natural-Language-Processing\" rel="bookmark">【译】自然语言处理中的深度学习：优势与挑战</a></div>
+         
+       </li>
+     
+       <li class="popular-posts-item">
+         
+         
+         <div class="popular-posts-title"><a href="\2017\machine-learning-algorithm-series-svd\" rel="bookmark">机器学习算法系列（12）奇异值分解——以图像压缩为例</a></div>
+         
+       </li>
+     
+     </ul>
+ </details>
+
+
+     
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center; color:red;font-family:Helvetica;font-style:oblique">
+  <div>赠人玫瑰 手有余香</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="https://raw.githubusercontent.com/swordspoet/i/img/WeChatpay.png" alt="H4ck3r L1 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1fjuvo2ur08j20a20a2dgi.jpg" alt="H4ck3r L1 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>H4ck3r L1</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.libinx.com/2017/questions-dimensionality-reduction-data-scientist/" title="【译】数据科学家降维技术测试 40 题">https://www.libinx.com/2017/questions-dimensionality-reduction-data-scientist/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/翻译/" rel="tag"># 翻译</a>
+          
+            <a href="/tags/主成分分析/" rel="tag"># 主成分分析</a>
+          
+            <a href="/tags/降维/" rel="tag"># 降维</a>
+          
+            <a href="/tags/PCA/" rel="tag"># PCA</a>
+          
+            <a href="/tags/LDA/" rel="tag"># LDA</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+          <div class="wp_rating">
+           <div style="color: rgba(0, 0, 0, 0.75); font-size:13px; letter-spacing:3px">(&gt;看完记得五星好评哦亲&lt;)</div>
+            <div id="wpac-rating"></div>
+          </div>
+        
+
+        
+
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/Java-parameter-transfer-mechanism/" rel="next" title="Java 的参数传递方式">
+                <i class="fa fa-chevron-left"></i> Java 的参数传递方式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/Deep-Learning-for-Natural-Language-Processing/" rel="prev" title="【译】自然语言处理中的深度学习：优势与挑战">
+                【译】自然语言处理中的深度学习：优势与挑战 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-58b8f4ff1eb11c7e" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">H4ck3r L1</p>
+              <p class="site-description motion-element" itemprop="description">专注机器学习、大数据</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">152</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">308</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/swordspoet" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.douban.com/people/53382901/" target="_blank" title="douban" rel="external nofollow"><i class="fa fa-fw fa-book"></i>douban</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank" rel="external nofollow">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友链
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://plushunter.github.io" title="Free will" target="_blank">Free will</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.shuang0420.com" title="徐阿衡" target="_blank">徐阿衡</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://dzzxjl.github.io/" title="十一城" target="_blank">十一城</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://iyaozhen.com" title="yao zhen" target="_blank">yao zhen</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://kba977.github.io/" title="kba977" target="_blank">kba977</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.jianshu.com/u/4007ac46018d" title="Babyzpj" target="_blank">Babyzpj</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://null.w0x7ce.com/" title="w0x7ce" target="_blank">w0x7ce</a>
+                  </li>
+                
+              </ul>
+            </div>
+			<div class="theme-info">
+				<span class="post-count">全站共207.0k字</span>
+			</div>
+			
+			
+
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Q-amp-A"><span class="nav-text">Q &amp; A</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+	  
+	  <div class="wechat_OA">
+				<span>欢迎关注我的公众号</span>
+				<br>
+				<!-- 这里添加你的二维码图片 -->
+				<img src="https://raw.githubusercontent.com/swordspoet/i/img/%E6%89%AB%E7%A0%81_%E6%90%9C%E7%B4%A2%E8%81%94%E5%90%88%E4%BC%A0%E6%92%AD%E6%A0%B7%E5%BC%8F-%E6%A0%87%E5%87%86%E8%89%B2%E7%89%88.png">
+			</div>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="contact">
+<span class="fa-stack fa-lg">
+  <a href="https://www.github.com/swordspoet">
+  <i class="fa fa-square fa-stack-2x"></i>
+  <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+  </a>
+</span>
+
+<span class="fa-stack fa-lg">
+<a href="https://zhuanlan.zhihu.com/libinx">
+  <i class="fa fa-square fa-stack-2x"></i>
+  <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+  </a>
+</span>
+
+<span class="fa-stack fa-lg">
+<a href="mailto:libin.data@gmail.com">
+  <i class="fa fa-square fa-stack-2x"></i>
+  <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+  </a>
+</span>
+
+<span class="fa-stack fa-lg">
+<a href="https://t.me/bin_li">
+  <i class="fa fa-square fa-stack-2x"></i>
+  <i class="fa fa-telegram fa-stack-1x fa-inverse"></i>
+  </a>
+</span>
+
+</div>
+
+<div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-cogs"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">All Rights Reserved.</span>
+
+  
+
+  
+</div>
+	
+
+  
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/reading_progress/reading_progress.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+  <script type="text/javascript">
+  wpac_init = window.wpac_init || [];
+  wpac_init.push({widget: 'Rating', id: 8151,
+    el: 'wpac-rating',
+    color: 'ff7600'
+  });
+  (function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = '//embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+  })();
+  </script>
+
+
+  
+  
+  
+    
+  
+  <script src="https://cdn.bootcss.com/pangu/3.3.0/pangu.js"></script>
+  <script type="text/javascript">pangu.spacingPage();</script>
+
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/exturl.js?v=6.3.0"></script>
+
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+</body>
+</html>

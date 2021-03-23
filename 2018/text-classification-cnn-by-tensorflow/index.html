@@ -1,0 +1,2318 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Source Han Sans:300,300italic,400,400italic,700,700italic|Source Code Pro:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: 'X3YO6U1DRE',
+      apiKey: '',
+      indexName: 'blog',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="这篇文章记录了从零开始用 tensorflow 构建卷积神经网络模型，并对搜狗的新闻数据做的文本分类实践。众所周知，tensorflow 是一个开源的机器学习框架，它的出现大大降低了机器学习的门槛，即使你没有太多的数学知识，它也可以允许你用“搭积木”的方式快速实现一个神经网络，即使没有调节太多的参数，模型的表现一般还不错。目前，tensorflow 的安装已经变得非常简单，一个简单的pip ins">
+<meta name="keywords" content="卷积神经网络,TensorFlow,textcnn,搜狗新闻数据,文本分类">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于 Tensorflow 的 TextCNN 在搜狗新闻数据的文本分类实践">
+<meta property="og:url" content="https://www.libinx.com/2018/text-classification-cnn-by-tensorflow/index.html">
+<meta property="og:site_name" content="Thinking Realm">
+<meta property="og:description" content="这篇文章记录了从零开始用 tensorflow 构建卷积神经网络模型，并对搜狗的新闻数据做的文本分类实践。众所周知，tensorflow 是一个开源的机器学习框架，它的出现大大降低了机器学习的门槛，即使你没有太多的数学知识，它也可以允许你用“搭积木”的方式快速实现一个神经网络，即使没有调节太多的参数，模型的表现一般还不错。目前，tensorflow 的安装已经变得非常简单，一个简单的pip ins">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fwludzq38bj20qm0eh78h.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fwlwild3dcj20hm0ccq3g.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fwlwvw2b42j20hr0ahaaf.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fwm0uen4g9j20jw09141r.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fwn2waxx4gj20eo0c03yp.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fwn4x956dij20qm0bl0wu.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fwn51g9aofj20gf0gl75f.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fwo046ludaj20py0bzaas.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fwo05ang6aj20q60c4dgc.jpg">
+<meta property="og:updated_time" content="2021-03-23T01:25:10.990Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于 Tensorflow 的 TextCNN 在搜狗新闻数据的文本分类实践">
+<meta name="twitter:description" content="这篇文章记录了从零开始用 tensorflow 构建卷积神经网络模型，并对搜狗的新闻数据做的文本分类实践。众所周知，tensorflow 是一个开源的机器学习框架，它的出现大大降低了机器学习的门槛，即使你没有太多的数学知识，它也可以允许你用“搭积木”的方式快速实现一个神经网络，即使没有调节太多的参数，模型的表现一般还不错。目前，tensorflow 的安装已经变得非常简单，一个简单的pip ins">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fwludzq38bj20qm0eh78h.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Thinking Realm" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://www.libinx.com/2018/text-classification-cnn-by-tensorflow/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>基于 Tensorflow 的 TextCNN 在搜狗新闻数据的文本分类实践 | Thinking Realm</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?29c6a6a7d4e694985b961f3ab9357bb3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        
+        <span class="site-title">Thinking Realm</span>
+        
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">308</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">18</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">152</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+    <div class="reading-progress-bar"></div>
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.libinx.com/2018/text-classification-cnn-by-tensorflow/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="H4ck3r L1">
+      <meta itemprop="description" content="专注机器学习、大数据">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Thinking Realm">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">基于 Tensorflow 的 TextCNN 在搜狗新闻数据的文本分类实践
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-10-26 18:52:28" itemprop="dateCreated datePublished" datetime="2018-10-26T18:52:28+08:00">2018-10-26</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-03-23 09:25:10" itemprop="dateModified" datetime="2021-03-23T09:25:10+08:00">2021-03-23</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这篇文章记录了从零开始用 tensorflow 构建卷积神经网络模型，并对搜狗的新闻数据做的文本分类实践。众所周知，tensorflow 是一个开源的机器学习框架，它的出现大大降低了机器学习的门槛，即使你没有太多的数学知识，它也可以允许你用“搭积木”的方式快速实现一个神经网络，即使没有调节太多的参数，模型的表现一般还不错。目前，tensorflow 的安装已经变得非常简单，一个简单的<code>pip install tensorflow</code>即可，然后<code>import tensorflow as tf</code>就能愉快玩耍了。</p>
+<a id="more"></a>
+<h1 id="1-背景"><a href="#1-背景" class="headerlink" title="1. 背景"></a>1. 背景</h1><p>卷积神经网络，即CNN，它的核心思想是捕捉数据的局部特征（感兴趣的同学可以阅读我先前写的一篇关于CNN的笔记：<a href="https://www.libinx.com/2017/2017-08-13-machine-learning-algorithm-series-understanding-cnn/">机器学习算法系列（13）理解卷积神经网络 | Thinking Realm</a>），不仅仅在图像领域大放异彩，CNN在文本分类领域也有很强的表现。在Yoon Kim的这篇<a href="http://www.aclweb.org/anthology/D14-1181" target="_blank" rel="noopener">论文</a>中，比较清楚地解释了CNN用于文本分类的原理，关键在于如何将文本向量化，如下图，即把每个词都表示为一个 1×k的向量，对长度为N的文本则表示为N×K的矩阵，经过这一步处理，那么我们就可以把图像上的分类经验应用到文本上来了。</p>
+<p><img src="" alt="机器学习算法系列(13)理解卷积神经网络 \| Thinking Realm"></p>
+<p>现在有预训练好的中文词向量，但这不是本文的重点，因为这里不需要用到预训练好的词向量，本文的文本分类是基于字符级的CNN实现，也就是并没有对文本数据做分词处理，而是从原始文本中建立词汇表，然后把文本中的每个字符都对应编码。比如，“我爱北京天安门。”，我们就会把这段文本全部打散成为“我”、“爱”、“北”、“京”、“天”、“安”、“门”、“。”，甚至标点符号、特殊字符都会有对应的编码，一开始还有怀疑，不过从模型的表现来看，真香。</p>
+<p>本文用到的数据集来自<a href="https://www.sogou.com/labs/resource/cs.php" target="_blank" rel="noopener">搜狗实验室（Sogou Labs）</a>提供的新闻数据，涵盖了国内，国际，体育，社会，娱乐等18个频道的新闻数据，不过数据集的质量不是特别高，存在大量的分类不清晰、文不对题数据。限于单机的性能，又没有 GPU，所以我只下载了精简版的<a href="https://www.sogou.com/labs/resource/ftp.php?dir=/Data/SogouCS/SogouCS.reduced.tar.gz" target="_blank" rel="noopener">一个月数据</a>，大约 347M。用 sublime 打开原始数据是乱码的，解决的方案见：<a href="https://segmentfault.com/a/1190000002461891" target="_blank" rel="noopener">如何解决Sublime Text 3不能正确显示中文的问题 - 冷编程 - SegmentFault 思否</a>，然后，打开长这样：</p>
+<p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fwludzq38bj20qm0eh78h.jpg" alt=""></p>
+<p>xml的格式，gbk编码，每一个<code>&lt;doc&gt;</code>与<code>&lt;/doc&gt;</code>之间是一篇单独的新闻，包含URL、文档编号、标题和正文，其中新闻的分类类别在URL的子域名中，如sports代表体育，house代表房产等等，所以本文只需要拿到URL和content之间的内容就行。</p>
+<h1 id="2-代码解析"><a href="#2-代码解析" class="headerlink" title="2. 代码解析"></a>2. 代码解析</h1><p>OK，背景介绍差不多到这里就结束了，下面是代码实现的解读：</p>
+<h2 id="2-1-数据清洗"><a href="#2-1-数据清洗" class="headerlink" title="2.1 数据清洗"></a>2.1 数据清洗</h2><p>下载下来的原始数据分为129个TXT文件，每个文件中包含有不同类别的新闻数据，我要做的是遍历每个文件，然后把相同类别的新闻提取出来并写入新的文件中。读取中文txt文档乱码依旧是个头疼的问题，话说我至今仍然弄不是很清楚Python的编码模式。读取完成后，提取出URL和content，我们还需要用正则表达式把子域名拿出来，最后得到15个按类别分好的文件，最终留下了11个类别。</p>
+<p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fwlwild3dcj20hm0ccq3g.jpg" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fwlwvw2b42j20hr0ahaaf.jpg" alt="image"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/python</span></span><br><span class="line"><span class="comment"># coding: utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">_read_file</span><span class="params">(txt_file)</span>:</span></span><br><span class="line">    <span class="string">"""读取txt文件"""</span></span><br><span class="line">    <span class="keyword">return</span> open(txt_file, <span class="string">'rb'</span>).read().decode(<span class="string">"gbk"</span>, <span class="string">'ignore'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">extract_class_content</span><span class="params">(doc)</span>:</span></span><br><span class="line">    <span class="string">"""提取分类和内容"""</span></span><br><span class="line">    url = doc.split(<span class="string">'&lt;url&gt;'</span>)[<span class="number">1</span>].split(<span class="string">'&lt;/url&gt;'</span>)[<span class="number">0</span>]</span><br><span class="line">    content = doc.split(<span class="string">'&lt;content&gt;'</span>)[<span class="number">1</span>].split(<span class="string">'&lt;/content&gt;'</span>)[<span class="number">0</span>]</span><br><span class="line">    category = re.findall(<span class="string">r"http://(.*?).sohu.com/"</span>, url)</span><br><span class="line">    <span class="keyword">return</span> category[<span class="number">0</span>], content</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">file_writer</span><span class="params">(category, content)</span>:</span></span><br><span class="line">    dir_name = <span class="string">'/home/libin/data/'</span></span><br><span class="line">    path = os.path.join(dir_name, category)</span><br><span class="line">    f = open(path, <span class="string">'a'</span>, encoding=<span class="string">'utf-8'</span>)</span><br><span class="line">    f.write(category + <span class="string">'\t'</span> + content + <span class="string">'\n'</span>)</span><br><span class="line">    f.close()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">category_data</span><span class="params">(txt_file)</span>:</span></span><br><span class="line">    <span class="string">"""将每个文件中不同类别的新闻分别存储"""</span></span><br><span class="line">    f = _read_file(txt_file)</span><br><span class="line">    docs_xmls = f.split(<span class="string">'&lt;doc&gt;\n'</span>)</span><br><span class="line">    <span class="keyword">for</span> doc <span class="keyword">in</span> docs_xmls:</span><br><span class="line">        <span class="keyword">if</span> doc:</span><br><span class="line">            category, content = extract_class_content(doc)</span><br><span class="line">            file_writer(category, content)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="keyword">for</span> file <span class="keyword">in</span> os.listdir(<span class="string">'/home/libin/data/SogouCS.reduced/'</span>):</span><br><span class="line">        file_path = os.path.join(<span class="string">'/home/libin/data/SogouCS.reduced'</span>, file)</span><br><span class="line">        category_data(file_path)</span><br></pre></td></tr></table></figure>
+<p>然后，看看各个类别下数据量的分布，发现体育、商业、新闻的数量较多，文化类的比较少，数据分布不太平衡，但这并不影响，因为我们并不会用到全部的数据，而是从每个类别中抽取一部分来训练模型。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> 7241 auto</span><br><span class="line">61843 business</span><br><span class="line"> 3291 cul</span><br><span class="line"> 5482 health</span><br><span class="line">12353 it</span><br><span class="line">10673 learning</span><br><span class="line"> 2930 mil.news</span><br><span class="line">82740 news</span><br><span class="line">85984 sports</span><br><span class="line"> 8957 travel</span><br><span class="line">33091 yule</span><br></pre></td></tr></table></figure>
+<h2 id="2-2-准备数据"><a href="#2-2-准备数据" class="headerlink" title="2.2 准备数据"></a>2.2 准备数据</h2><p>数据清洗完成后，下一步就是为模型准备训练集、验证集和测试集数据， 训练集和测试集按照4:1的比例分配。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">save_file</span><span class="params">(dir_name)</span>:</span></span><br><span class="line">    f_train = open(<span class="string">'../data/news_train.txt'</span>, <span class="string">'w'</span>, encoding=<span class="string">'utf-8'</span>)</span><br><span class="line">    f_test = open(<span class="string">'../data/news_test.txt'</span>, <span class="string">'w'</span>, encoding=<span class="string">'utf-8'</span>)</span><br><span class="line">    f_val = open(<span class="string">'../data/news_val.txt'</span>, <span class="string">'w'</span>, encoding=<span class="string">'utf-8'</span>)</span><br><span class="line">    <span class="keyword">for</span> category <span class="keyword">in</span> os.listdir(dir_name):</span><br><span class="line">        cat_file = os.path.join(dir_name, category)</span><br><span class="line">        fp = _read_file(cat_file)</span><br><span class="line">        count = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> fp:</span><br><span class="line">            category, content = _unpack_line(line)</span><br><span class="line">            <span class="keyword">if</span> category <span class="keyword">and</span> content:</span><br><span class="line">                <span class="keyword">if</span> count &lt; <span class="number">400</span>:</span><br><span class="line">                    f_train.write(category + <span class="string">'\t'</span> + content + <span class="string">'\n'</span>)</span><br><span class="line">                <span class="keyword">elif</span> count &lt; <span class="number">500</span>:</span><br><span class="line">                    f_test.write(category + <span class="string">'\t'</span> + content + <span class="string">'\n'</span>)</span><br><span class="line">                <span class="keyword">elif</span> count &lt; <span class="number">550</span>:</span><br><span class="line">                    f_val.write(category + <span class="string">'\t'</span> + content + <span class="string">'\n'</span>)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line">            count += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        print(<span class="string">'Finished'</span>, category)</span><br><span class="line"></span><br><span class="line">    f_train.close()</span><br><span class="line">    f_test.close()</span><br><span class="line">    f_val.close()</span><br></pre></td></tr></table></figure>
+<p>考虑到单机的计算能力，一开始我没有抽取太多的数据，仅仅从每个类别抽取400条作为训练集，100条作为测试集，50条作为验证集。第一组数据测试训练模型时，物理内存占用率并不高，CPU才是最占用计算资源的。下图中显示CPU已经在超负荷工作，而内存无动于衷，在这个基础上开始试着增大数据量。</p>
+<p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fwm0uen4g9j20jw09141r.jpg" alt="内存和CPU占用"></p>
+<h3 id="构建词汇表：vocab"><a href="#构建词汇表：vocab" class="headerlink" title="构建词汇表：vocab"></a>构建词汇表：vocab</h3><p>上述的准备工作做完了之后，数据的准备并没有结束，因为我们还没有为<strong>字符-&gt;向量</strong>做好铺垫，通常的做法是加入已经训练好的词向量（比如，这个<a href="Chinese Word Vectors：目前最全的中文预训练词向量集合 | 机器之心 https://www.jiqizhixin.com/articles/2018-05-15-10">链接</a>归纳总结的预训练好的词向量就比较全）。在本文呢我没有用它们，而是筛选出的训练集语料中出现频次较高的5000个字符作为词汇表，我比较好奇的是我并没有对原始语料做任何的清洗、去噪，却丝毫不影响分类器的表现。添加一个 <code>&lt;PAD&gt;</code>来将所有文本pad为同一长度</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">build_vocab</span><span class="params">(train_path, vocab_path, vocab_size=<span class="number">5000</span>)</span>:</span></span><br><span class="line">    <span class="string">"""构建词汇表"""</span></span><br><span class="line">    data_train, _ = read_file(train_path)</span><br><span class="line"></span><br><span class="line">    all_data = []</span><br><span class="line">    <span class="keyword">for</span> content <span class="keyword">in</span> data_train:</span><br><span class="line">        all_data.extend(content)</span><br><span class="line"></span><br><span class="line">    counter = Counter(all_data)</span><br><span class="line">    counter_pairs = counter.most_common(vocab_size<span class="number">-1</span>)</span><br><span class="line">    words, _ = list(zip(*counter_pairs))</span><br><span class="line">    words = [<span class="string">'&lt;PAD&gt;'</span>] + list(words)</span><br><span class="line">    open_file(vocab_path, mode=<span class="string">'w'</span>).write(<span class="string">'\n'</span>.join(words) + <span class="string">'\n'</span>)</span><br></pre></td></tr></table></figure>
+<p>提取出来的词汇表长这样，停用词、标点符号居多。</p>
+<p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fwn2waxx4gj20eo0c03yp.jpg" alt="image"></p>
+<p>词汇表建立好了，txt文件并不适合查询，所以这里用字符在文件的顺序作为其标识的id，存储到字典<code>word_to_id</code>中，这样以来就方便查找了。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_vocab</span><span class="params">(vocab_path)</span>:</span></span><br><span class="line">    <span class="keyword">with</span> open(vocab_path) <span class="keyword">as</span> f:</span><br><span class="line">        words = [_.strip() <span class="keyword">for</span> _ <span class="keyword">in</span> f.readlines()]</span><br><span class="line">        word_to_id = dict(zip(words, range(len(words))))</span><br><span class="line">    <span class="keyword">return</span> words, word_to_id</span><br></pre></td></tr></table></figure>
+<h3 id="类别编码（因变量）"><a href="#类别编码（因变量）" class="headerlink" title="类别编码（因变量）"></a>类别编码（因变量）</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">read_category</span><span class="params">()</span>:</span></span><br><span class="line">    categories = [<span class="string">'mil.news'</span>, <span class="string">'cul'</span>, <span class="string">'health'</span>, <span class="string">'travel'</span>, <span class="string">'auto'</span>, <span class="string">'learning'</span>, <span class="string">'it'</span>, <span class="string">'yule'</span>, <span class="string">'sports'</span>, <span class="string">'business'</span>, <span class="string">'news'</span>]</span><br><span class="line">    cat_to_id = dict(zip(categories, range(len(categories))))</span><br><span class="line">    <span class="keyword">return</span> categories, cat_to_id</span><br></pre></td></tr></table></figure>
+<h3 id="处理数据"><a href="#处理数据" class="headerlink" title="处理数据"></a>处理数据</h3><p>做完构建词汇表、类别转换为one-hot编码的准备工作，终于要进入正题了，数据进入模型训练、验证、测试前的准备工作还没有做。下面，<code>process_file()</code>函数首先读取数据文件，将正文和标签分别对应存储在<code>contents</code>和<code>labels</code>两个列表中，然后再处理<code>contents</code>中的每一段文本，把文本中每一个字符在词汇表中找到其对应的id，完成文本数值化操作。类别转换为one-hot表示：<code>y_pad = kr.utils.to_categorical(label_id, num_classes=len(cat_to_id))</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">process_file</span><span class="params">(file_name, word_to_id, cat_to_id, max_length=<span class="number">600</span>)</span>:</span></span><br><span class="line">    contents, labels = read_file(file_name)</span><br><span class="line"></span><br><span class="line">    data_id, label_id = [], []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(contents)):</span><br><span class="line">        data_id.append([word_to_id[x] <span class="keyword">for</span> x <span class="keyword">in</span> contents[i] <span class="keyword">if</span> x <span class="keyword">in</span> word_to_id])</span><br><span class="line">        label_id.append(cat_to_id[labels[i]])</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 使用keras提供的pad_sequences来将文本pad为固定长度</span></span><br><span class="line">    x_pad = kr.preprocessing.sequence.pad_sequences(data_id, max_length)</span><br><span class="line">    y_pad = kr.utils.to_categorical(label_id, num_classes=len(cat_to_id))  <span class="comment"># 将标签转换为one-hot表示</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> x_pad, y_pad</span><br></pre></td></tr></table></figure>
+<h2 id="2-3-CNN模型设置"><a href="#2-3-CNN模型设置" class="headerlink" title="2.3 CNN模型设置"></a>2.3 CNN模型设置</h2><p><strong>CNN参数设置</strong></p>
+<p>区别于传统的机器学习，现有任务下，一般的深度学习即使没有经过参数调节也可以达到不错的效果，可见其强大之处。由于上述的原因，往往深度学习也被诟病为“黑箱操作”，因为它比较难以理解，比如对于不太了解深度学习的人，从字符-&gt;向量转化过程的理解就比较困难，字符怎么就可以转化成为可以计算的数值呢？就算字符的向量化过程完成了，当有新的数据进入训练模型，它们又是如何从已有的词汇表中匹配到对应的向量？这些都是需要考虑的问题……</p>
+<p>解释一下CNN常见的配置参数：</p>
+<ul>
+<li><code>seq_length</code>是输入矩阵的宽度，由输入数据的长度决定，考虑到新闻长度会很长，所以我把矩阵的宽度设置为1000</li>
+<li><code>embedding_dim</code>，词向量的宽度，即由现有语料训练得到字向量的宽度，默认设置为64</li>
+<li><code>num_classes</code>则根据你实际的类别来设定，设置为11</li>
+<li><code>dropout_keep_prob</code>是dropout的比例，一般设置为0.5</li>
+<li><code>num_epochs</code>全部数据通过神经网络的次数，决定经过多少轮后停止训练，我在模型中设置为10，实际中有可能没有到10轮就停止了</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TCNNConfig</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">"""CNN配置参数"""</span></span><br><span class="line"></span><br><span class="line">    embedding_dim = <span class="number">64</span>  <span class="comment"># 词向量宽度</span></span><br><span class="line">    seq_length = <span class="number">1000</span>  <span class="comment"># 输入矩阵的宽度</span></span><br><span class="line">    num_classes = <span class="number">11</span>  <span class="comment"># 类别数</span></span><br><span class="line">    num_filters = <span class="number">256</span>  <span class="comment"># 卷积核数目</span></span><br><span class="line">    kernel_size = <span class="number">5</span>  <span class="comment"># 卷积核尺寸，即卷积核覆盖的词汇数量</span></span><br><span class="line">    vocab_size = <span class="number">6000</span>  <span class="comment"># 词汇表大小</span></span><br><span class="line"></span><br><span class="line">    hidden_dim = <span class="number">128</span>  <span class="comment"># 全连接层神经元</span></span><br><span class="line"></span><br><span class="line">    dropout_keep_prob = <span class="number">0.5</span>  <span class="comment"># dropout保留比例</span></span><br><span class="line">    learning_rate = <span class="number">1e-3</span>  <span class="comment"># 学习率</span></span><br><span class="line"></span><br><span class="line">    batch_size = <span class="number">64</span>  <span class="comment"># 每批训练大小</span></span><br><span class="line">    num_epochs = <span class="number">10</span>  <span class="comment"># 总迭代轮次</span></span><br><span class="line"></span><br><span class="line">    print_per_batch = <span class="number">100</span>  <span class="comment"># 每多少轮输出一次结果</span></span><br><span class="line">    save_per_batch = <span class="number">10</span>  <span class="comment"># 每多少轮存入tensorboard</span></span><br></pre></td></tr></table></figure>
+<p><strong>文本分类模型</strong></p>
+<p><code>tf.placeholder()</code>是创建占位符，给输入数据腾出空间，第二个参数是占位符的形状，设置为None是为了使模型可以接受任意数量的数据。<code>self.input_x = tf.placeholder(tf.int32, [None, self.config.seq_length], name=&#39;input_x&#39;)</code>代表创建大小为[None, seq_length]的空间，其中这个空间中的每一行代表了一条输入数据，在CNN模型中我们将其设置为1000，表示只取文本的前1000个字符，之后会用字符在词汇表中的id来对<code>self.input_x</code>填充。</p>
+<p>网络的第一层是嵌入层，将词汇映射到低维向量，设置为64，嵌入操作<code>tf.nn.embedding_lookup(embedding, self.input_x)</code>完成后，输出结果是3D张量，形如<code>[None, sequence_length, embedding_dim]</code>，对应了下图：</p>
+<p><img src="" alt="机器学习算法系列(13)理解卷积神经网络 \| Thinking Realm"></p>
+<p>嵌入操作完成后，紧接着便是卷积和池化层，卷积核大小设置为5，表示卷积核每次扫过5个字符，一共有256个卷积核，然后对卷积核生成的feature map做最大池化，池化之后便是第一个全连接层，计算之后dropout掉一些元素，接着是修正线性单元激活函数和softmax层，最后返回softmax层最大值的索引，即预测类别的id。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TextCNN</span><span class="params">(object)</span>:</span></span><br><span class="line">    <span class="string">"""文本分类，CNN模型"""</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, config)</span>:</span></span><br><span class="line">        self.config = config</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 三个待输入的数据，腾出占位符</span></span><br><span class="line">        <span class="comment"># input_x 为 n * seq_length 的矩阵，n 大小不固定</span></span><br><span class="line">        <span class="comment"># input_y 同</span></span><br><span class="line">        self.input_x = tf.placeholder(tf.int32, [<span class="keyword">None</span>, self.config.seq_length], name=<span class="string">'input_x'</span>)</span><br><span class="line">        self.input_y = tf.placeholder(tf.float32, [<span class="keyword">None</span>, self.config.num_classes], name=<span class="string">'input_y'</span>)</span><br><span class="line">        self.keep_prob = tf.placeholder(tf.float32, name=<span class="string">'keep_prob'</span>)</span><br><span class="line"></span><br><span class="line">        self.cnn()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">cnn</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="string">"""CNN模型"""</span></span><br><span class="line">        <span class="comment"># 词向量映射</span></span><br><span class="line">        <span class="keyword">with</span> tf.device(<span class="string">'/cpu:0'</span>): <span class="comment"># 强制使用CPU</span></span><br><span class="line">            embedding = tf.get_variable(<span class="string">'embedding'</span>, [self.config.vocab_size, self.config.embedding_dim])</span><br><span class="line">            embedding_inputs = tf.nn.embedding_lookup(embedding, self.input_x)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">with</span> tf.name_scope(<span class="string">"cnn"</span>):</span><br><span class="line">            <span class="comment"># CNN layer</span></span><br><span class="line">            conv = tf.layers.conv1d(embedding_inputs, self.config.num_filters, self.config.kernel_size, name=<span class="string">'conv'</span>)</span><br><span class="line">            <span class="comment"># global max pooling layer</span></span><br><span class="line">            gmp = tf.reduce_max(conv, reduction_indices=[<span class="number">1</span>], name=<span class="string">'gmp'</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">with</span> tf.name_scope(<span class="string">"score"</span>):</span><br><span class="line">            <span class="comment"># 全连接层，后面接dropout以及relu激活</span></span><br><span class="line">            <span class="comment"># 激活函数后得到第二个全连接层</span></span><br><span class="line">            fc = tf.layers.dense(gmp, self.config.hidden_dim, name=<span class="string">'fc1'</span>)</span><br><span class="line">            fc = tf.contrib.layers.dropout(fc, self.keep_prob)</span><br><span class="line">            fc = tf.nn.relu(fc) <span class="comment"># 修正线性单元激活函数，大于零才被激活</span></span><br><span class="line"></span><br><span class="line">            <span class="comment"># 分类器</span></span><br><span class="line">            self.logits = tf.layers.dense(fc, self.config.num_classes, name=<span class="string">'fc2'</span>)</span><br><span class="line">            self.y_pred_cls = tf.argmax(tf.nn.softmax(self.logits), <span class="number">1</span>)  <span class="comment"># 预测类别，返回最大值的索引</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">with</span> tf.name_scope(<span class="string">"optimize"</span>):</span><br><span class="line">            <span class="comment"># 损失函数，交叉熵	</span></span><br><span class="line">            cross_entropy = tf.nn.softmax_cross_entropy_with_logits_v2(logits=self.logits, labels=self.input_y)</span><br><span class="line">            self.loss = tf.reduce_mean(cross_entropy)</span><br><span class="line">            <span class="comment"># 优化器</span></span><br><span class="line">            self.optim = tf.train.AdamOptimizer(learning_rate=self.config.learning_rate).minimize(self.loss)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">with</span> tf.name_scope(<span class="string">"accuracy"</span>):</span><br><span class="line">            <span class="comment"># 准确率</span></span><br><span class="line">            correct_pred = tf.equal(tf.argmax(self.input_y, <span class="number">1</span>), self.y_pred_cls)</span><br><span class="line">            self.acc = tf.reduce_mean(tf.cast(correct_pred, tf.float32))</span><br></pre></td></tr></table></figure>
+<h2 id="2-4-训练和测试"><a href="#2-4-训练和测试" class="headerlink" title="2.4 训练和测试"></a>2.4 训练和测试</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">train</span><span class="params">()</span>:</span></span><br><span class="line">    print(<span class="string">"Configuring TensorBoard and Saver..."</span>)</span><br><span class="line">    <span class="comment"># 配置 Tensorboard，重新训练时，请将tensorboard文件夹删除，不然图会覆盖</span></span><br><span class="line">    tensorboard_dir = <span class="string">'tensorboard/textcnn'</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(tensorboard_dir):</span><br><span class="line">        os.makedirs(tensorboard_dir)</span><br><span class="line"></span><br><span class="line">    tf.summary.scalar(<span class="string">"loss"</span>, model.loss)</span><br><span class="line">    tf.summary.scalar(<span class="string">"accuracy"</span>, model.acc)</span><br><span class="line">    merged_summary = tf.summary.merge_all()</span><br><span class="line">    writer = tf.summary.FileWriter(tensorboard_dir)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 配置 Saver</span></span><br><span class="line">    saver = tf.train.Saver()</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(save_dir):</span><br><span class="line">        os.makedirs(save_dir)</span><br><span class="line"></span><br><span class="line">    print(<span class="string">"Loading training and validation data..."</span>)</span><br><span class="line">    <span class="comment"># 载入训练集与验证集</span></span><br><span class="line">    start_time = time.time()</span><br><span class="line">    x_train, y_train = process_file(train_dir, word_to_id, cat_to_id, config.seq_length)</span><br><span class="line">    x_val, y_val = process_file(val_dir, word_to_id, cat_to_id, config.seq_length)</span><br><span class="line">    time_dif = get_time_dif(start_time)</span><br><span class="line">    print(<span class="string">"Time usage:"</span>, time_dif)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 创建session</span></span><br><span class="line">    session = tf.Session()</span><br><span class="line">    session.run(tf.global_variables_initializer())</span><br><span class="line">    writer.add_graph(session.graph)</span><br><span class="line"></span><br><span class="line">    print(<span class="string">'Training and evaluating...'</span>)</span><br><span class="line">    start_time = time.time()</span><br><span class="line">    total_batch = <span class="number">0</span>  <span class="comment"># 总批次</span></span><br><span class="line">    best_acc_val = <span class="number">0.0</span>  <span class="comment"># 最佳验证集准确率</span></span><br><span class="line">    last_improved = <span class="number">0</span>  <span class="comment"># 记录上一次提升批次</span></span><br><span class="line">    require_improvement = <span class="number">1000</span>  <span class="comment"># 如果超过1000轮未提升，提前结束训练</span></span><br><span class="line"></span><br><span class="line">    flag = <span class="keyword">False</span></span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> range(config.num_epochs):</span><br><span class="line">        print(<span class="string">'Epoch:'</span>, epoch + <span class="number">1</span>)</span><br><span class="line">        batch_train = batch_iter(x_train, y_train, config.batch_size)</span><br><span class="line">        <span class="keyword">for</span> x_batch, y_batch <span class="keyword">in</span> batch_train:</span><br><span class="line">            feed_dict = feed_data(x_batch, y_batch, config.dropout_keep_prob)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> total_batch % config.save_per_batch == <span class="number">0</span>:</span><br><span class="line">                <span class="comment"># 每多少轮次将训练结果写入tensorboard scalar</span></span><br><span class="line">                s = session.run(merged_summary, feed_dict=feed_dict)</span><br><span class="line">                writer.add_summary(s, total_batch)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> total_batch % config.print_per_batch == <span class="number">0</span>:</span><br><span class="line">                <span class="comment"># 每多少轮次输出在训练集和验证集上的性能</span></span><br><span class="line">                feed_dict[model.keep_prob] = <span class="number">1.0</span></span><br><span class="line">                loss_train, acc_train = session.run([model.loss, model.acc], feed_dict=feed_dict)</span><br><span class="line">                loss_val, acc_val = evaluate(session, x_val, y_val)  <span class="comment"># todo</span></span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> acc_val &gt; best_acc_val:</span><br><span class="line">                    <span class="comment"># 保存最好结果</span></span><br><span class="line">                    best_acc_val = acc_val</span><br><span class="line">                    last_improved = total_batch</span><br><span class="line">                    saver.save(sess=session, save_path=save_path)</span><br><span class="line">                    improved_str = <span class="string">'*'</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    improved_str = <span class="string">''</span></span><br><span class="line"></span><br><span class="line">                time_dif = get_time_dif(start_time)</span><br><span class="line">                msg = <span class="string">'Iter: &#123;0:&gt;6&#125;, Train Loss: &#123;1:&gt;6.2&#125;, Train Acc: &#123;2:&gt;7.2%&#125;,'</span> \</span><br><span class="line">                      + <span class="string">' Val Loss: &#123;3:&gt;6.2&#125;, Val Acc: &#123;4:&gt;7.2%&#125;, Time: &#123;5&#125; &#123;6&#125;'</span></span><br><span class="line">                print(msg.format(total_batch, loss_train, acc_train, loss_val, acc_val, time_dif, improved_str))</span><br><span class="line"></span><br><span class="line">            session.run(model.optim, feed_dict=feed_dict)  <span class="comment"># 运行优化</span></span><br><span class="line">            total_batch += <span class="number">1</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> total_batch - last_improved &gt; require_improvement:</span><br><span class="line">                <span class="comment"># 验证集正确率长期不提升，提前结束训练</span></span><br><span class="line">                print(<span class="string">"No optimization for a long time, auto-stopping..."</span>)</span><br><span class="line">                flag = <span class="keyword">True</span></span><br><span class="line">                <span class="keyword">break</span>  <span class="comment"># 跳出循环</span></span><br><span class="line">        <span class="keyword">if</span> flag:  <span class="comment"># 同上</span></span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span><span class="params">()</span>:</span></span><br><span class="line">    print(<span class="string">"Loading test data..."</span>)</span><br><span class="line">    start_time = time.time()</span><br><span class="line">    x_test, y_test = process_file(test_dir, word_to_id, cat_to_id, config.seq_length)</span><br><span class="line"></span><br><span class="line">    session = tf.Session()</span><br><span class="line">    session.run(tf.global_variables_initializer())</span><br><span class="line">    saver = tf.train.Saver()</span><br><span class="line">    saver.restore(sess=session, save_path=save_path)  <span class="comment"># 读取保存的模型</span></span><br><span class="line"></span><br><span class="line">    print(<span class="string">'Testing...'</span>)</span><br><span class="line">    loss_test, acc_test = evaluate(session, x_test, y_test)</span><br><span class="line">    msg = <span class="string">'Test Loss: &#123;0:&gt;6.2&#125;, Test Acc: &#123;1:&gt;7.2%&#125;'</span></span><br><span class="line">    print(msg.format(loss_test, acc_test))</span><br><span class="line"></span><br><span class="line">    batch_size = <span class="number">128</span></span><br><span class="line">    data_len = len(x_test)</span><br><span class="line">    num_batch = int((data_len - <span class="number">1</span>) / batch_size) + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">    y_test_cls = np.argmax(y_test, <span class="number">1</span>)</span><br><span class="line">    y_pred_cls = np.zeros(shape=len(x_test), dtype=np.int32)  <span class="comment"># 保存预测结果</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(num_batch):  <span class="comment"># 逐批次处理</span></span><br><span class="line">        start_id = i * batch_size</span><br><span class="line">        end_id = min((i + <span class="number">1</span>) * batch_size, data_len)</span><br><span class="line">        feed_dict = &#123;</span><br><span class="line">            model.input_x: x_test[start_id:end_id],</span><br><span class="line">            model.keep_prob: <span class="number">1.0</span></span><br><span class="line">        &#125;</span><br><span class="line">        y_pred_cls[start_id:end_id] = session.run(model.y_pred_cls, feed_dict=feed_dict)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 评估</span></span><br><span class="line">    print(<span class="string">"Precision, Recall and F1-Score..."</span>)</span><br><span class="line">    print(metrics.classification_report(y_test_cls, y_pred_cls, target_names=categories))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 混淆矩阵</span></span><br><span class="line">    print(<span class="string">"Confusion Matrix..."</span>)</span><br><span class="line">    cm = metrics.confusion_matrix(y_test_cls, y_pred_cls)</span><br><span class="line">    print(cm)</span><br><span class="line"></span><br><span class="line">    time_dif = get_time_dif(start_time)</span><br><span class="line">    print(<span class="string">"Time usage:"</span>, time_dif)</span><br></pre></td></tr></table></figure>
+<h1 id="3-模型训练测试结果"><a href="#3-模型训练测试结果" class="headerlink" title="3. 模型训练测试结果"></a>3. 模型训练测试结果</h1><p>经过10轮的训练，训练集的准确率为98.4%，验证集的最佳准确率94.23%，可能跟数据集较小的缘故，训练收敛得比较快，并且仅仅用了11分钟。</p>
+<p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fwn4x956dij20qm0bl0wu.jpg" alt="image"></p>
+<p>模型在测试集的表现也尚可，达到了94.15%，除了文化类，其他类别的新闻预测准确率都达到了90%以上，召回率也表现不错。</p>
+<p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fwn51g9aofj20gf0gl75f.jpg" alt="image"></p>
+<p>训练过程准确率和损失的可视化结果可以在tensorboard中查看，命令行输入：<code>tensorboard --logdir path/to/eventfile</code>（是文件夹目录）。</p>
+<p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fwo046ludaj20py0bzaas.jpg" alt="准确率"></p>
+<p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fwo05ang6aj20q60c4dgc.jpg" alt="损失"></p>
+<h1 id="参考资源"><a href="#参考资源" class="headerlink" title="参考资源"></a>参考资源</h1><ol>
+<li><a href="https://www.jiqizhixin.com/articles/2018-05-15-10" target="_blank" rel="noopener">Chinese Word Vectors：目前最全的中文预训练词向量集合 | 机器之心</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/26729228" target="_blank" rel="noopener">新闻上的文本分类：机器学习大乱斗 - 知乎</a></li>
+<li><a href="https://github.com/gaussic/text-classification-cnn-rnn" target="_blank" rel="noopener">gaussic/text-classification-cnn-rnn: CNN-RNN中文文本分类，基于TensorFlow</a></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+        
+            <div>
+    
+        <div style="text-align:center;color: #FF0000;font-size:18px;font-family:Helvetica;font-style:oblique">------本文结束，欢迎收藏本站、分享、评论或联系作者！------</div>
+    
+</div>
+
+        
+    </div>
+
+    <!-- 相关文章推荐 -->
+     
+          
+
+  <div class="popular-posts-header">
+    <i class="fa fa-"></i>
+    相关文章
+  </div>
+
+ <details>
+     <summary>点击查看</summary>
+     <ul class="popular-posts">
+     
+       <li class="popular-posts-item">
+         
+         
+         <div class="popular-posts-title"><a href="\2018\text-classification-rnn-by-tensorflow\" rel="bookmark">基于 Tensorflow 的 TextRNN 在搜狗新闻数据的文本分类实践</a></div>
+         
+       </li>
+     
+       <li class="popular-posts-item">
+         
+         
+         <div class="popular-posts-title"><a href="\2018\text-classification-classic-ml-by-sklearn\" rel="bookmark">基于 sklearn 的传统机器学习在搜狗新闻数据的文本分类实践</a></div>
+         
+       </li>
+     
+       <li class="popular-posts-item">
+         
+         
+         <div class="popular-posts-title"><a href="\2017\deep-learning-assignment-4-cnn\" rel="bookmark">优达学城-深度学习任务4：卷积神经网络</a></div>
+         
+       </li>
+     
+       <li class="popular-posts-item">
+         
+         
+         <div class="popular-posts-title"><a href="\2017\2017-08-13-machine-learning-algorithm-series-understanding-cnn\" rel="bookmark">机器学习算法系列（13）理解卷积神经网络</a></div>
+         
+       </li>
+     
+     </ul>
+ </details>
+
+
+     
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center; color:red;font-family:Helvetica;font-style:oblique">
+  <div>赠人玫瑰 手有余香</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="https://raw.githubusercontent.com/swordspoet/i/img/WeChatpay.png" alt="H4ck3r L1 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1fjuvo2ur08j20a20a2dgi.jpg" alt="H4ck3r L1 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>H4ck3r L1</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.libinx.com/2018/text-classification-cnn-by-tensorflow/" title="基于 Tensorflow 的 TextCNN 在搜狗新闻数据的文本分类实践">https://www.libinx.com/2018/text-classification-cnn-by-tensorflow/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/卷积神经网络/" rel="tag"># 卷积神经网络</a>
+          
+            <a href="/tags/TensorFlow/" rel="tag"># TensorFlow</a>
+          
+            <a href="/tags/textcnn/" rel="tag"># textcnn</a>
+          
+            <a href="/tags/搜狗新闻数据/" rel="tag"># 搜狗新闻数据</a>
+          
+            <a href="/tags/文本分类/" rel="tag"># 文本分类</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+          <div class="wp_rating">
+           <div style="color: rgba(0, 0, 0, 0.75); font-size:13px; letter-spacing:3px">(&gt;看完记得五星好评哦亲&lt;)</div>
+            <div id="wpac-rating"></div>
+          </div>
+        
+
+        
+
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/learn-flask-7/" rel="next" title="Flask 入门（7）：添加文章编辑器">
+                <i class="fa fa-chevron-left"></i> Flask 入门（7）：添加文章编辑器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/create-swap-partition/" rel="prev" title="Linux 工具箱系列（2）：创建交换空间">
+                Linux 工具箱系列（2）：创建交换空间 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-58b8f4ff1eb11c7e" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">H4ck3r L1</p>
+              <p class="site-description motion-element" itemprop="description">专注机器学习、大数据</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">152</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">308</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/swordspoet" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.douban.com/people/53382901/" target="_blank" title="douban" rel="external nofollow"><i class="fa fa-fw fa-book"></i>douban</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank" rel="external nofollow">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友链
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://plushunter.github.io" title="Free will" target="_blank">Free will</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.shuang0420.com" title="徐阿衡" target="_blank">徐阿衡</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://dzzxjl.github.io/" title="十一城" target="_blank">十一城</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://iyaozhen.com" title="yao zhen" target="_blank">yao zhen</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://kba977.github.io/" title="kba977" target="_blank">kba977</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.jianshu.com/u/4007ac46018d" title="Babyzpj" target="_blank">Babyzpj</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://null.w0x7ce.com/" title="w0x7ce" target="_blank">w0x7ce</a>
+                  </li>
+                
+              </ul>
+            </div>
+			<div class="theme-info">
+				<span class="post-count">全站共207.0k字</span>
+			</div>
+			
+			
+
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-背景"><span class="nav-text">1. 背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-代码解析"><span class="nav-text">2. 代码解析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#2-1-数据清洗"><span class="nav-text">2.1 数据清洗</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-2-准备数据"><span class="nav-text">2.2 准备数据</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#构建词汇表：vocab"><span class="nav-text">构建词汇表：vocab</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类别编码（因变量）"><span class="nav-text">类别编码（因变量）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#处理数据"><span class="nav-text">处理数据</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-3-CNN模型设置"><span class="nav-text">2.3 CNN模型设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-4-训练和测试"><span class="nav-text">2.4 训练和测试</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-模型训练测试结果"><span class="nav-text">3. 模型训练测试结果</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资源"><span class="nav-text">参考资源</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+	  
+	  <div class="wechat_OA">
+				<span>欢迎关注我的公众号</span>
+				<br>
+				<!-- 这里添加你的二维码图片 -->
+				<img src="https://raw.githubusercontent.com/swordspoet/i/img/%E6%89%AB%E7%A0%81_%E6%90%9C%E7%B4%A2%E8%81%94%E5%90%88%E4%BC%A0%E6%92%AD%E6%A0%B7%E5%BC%8F-%E6%A0%87%E5%87%86%E8%89%B2%E7%89%88.png">
+			</div>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="contact">
+<span class="fa-stack fa-lg">
+  <a href="https://www.github.com/swordspoet">
+  <i class="fa fa-square fa-stack-2x"></i>
+  <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+  </a>
+</span>
+
+<span class="fa-stack fa-lg">
+<a href="https://zhuanlan.zhihu.com/libinx">
+  <i class="fa fa-square fa-stack-2x"></i>
+  <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+  </a>
+</span>
+
+<span class="fa-stack fa-lg">
+<a href="mailto:libin.data@gmail.com">
+  <i class="fa fa-square fa-stack-2x"></i>
+  <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+  </a>
+</span>
+
+<span class="fa-stack fa-lg">
+<a href="https://t.me/bin_li">
+  <i class="fa fa-square fa-stack-2x"></i>
+  <i class="fa fa-telegram fa-stack-1x fa-inverse"></i>
+  </a>
+</span>
+
+</div>
+
+<div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-cogs"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">All Rights Reserved.</span>
+
+  
+
+  
+</div>
+	
+
+  
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/reading_progress/reading_progress.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+  <script type="text/javascript">
+  wpac_init = window.wpac_init || [];
+  wpac_init.push({widget: 'Rating', id: 8151,
+    el: 'wpac-rating',
+    color: 'ff7600'
+  });
+  (function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = '//embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+  })();
+  </script>
+
+
+  
+  
+  
+    
+  
+  <script src="https://cdn.bootcss.com/pangu/3.3.0/pangu.js"></script>
+  <script type="text/javascript">pangu.spacingPage();</script>
+
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/exturl.js?v=6.3.0"></script>
+
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+</body>
+</html>

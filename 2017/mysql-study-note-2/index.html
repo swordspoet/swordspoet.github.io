@@ -1,0 +1,2326 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next mist" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+
+  
+
+  
+    
+      
+    
+
+    
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic|Source Han Sans:300,300italic,400,400italic,700,700italic|Source Code Pro:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.ico?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+  <meta name="msapplication-config" content="/images/browserconfig.xml">
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":true,"onmobile":true},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: 'X3YO6U1DRE',
+      apiKey: '',
+      indexName: 'blog',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="MySQL 中所谓的数据类型，是从系统的角度出发，为了方便对数据进行统一的分类，能够使用统一的方式进行管理，更好地利用有限的空间的一种手段。在 SQL 中数据类型分成了三大类：数值类型、字符串类型和时间日期类型。">
+<meta name="keywords" content="数据库,SQL,MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL 学习笔记（二）数据类型">
+<meta property="og:url" content="https://www.libinx.com/2017/mysql-study-note-2/index.html">
+<meta property="og:site_name" content="Thinking Realm">
+<meta property="og:description" content="MySQL 中所谓的数据类型，是从系统的角度出发，为了方便对数据进行统一的分类，能够使用统一的方式进行管理，更好地利用有限的空间的一种手段。在 SQL 中数据类型分成了三大类：数值类型、字符串类型和时间日期类型。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6imqm5qj20gi0ao42j.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6is4i39j20cw05077b.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6igrh7dj20ef05975r.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6iokpa1j20g7051dhg.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6iil702j20lt057dib.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6io00egj20fn09yjt6.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6it8vqdj20jj0a3tba.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6ijbukpj20ey073jrm.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6ijbukpj20ey073jrm.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6iokpa1j20g7051dhg.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffzrq8n7dsj20im0ag74s.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6iq379bj20i502k3yg.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6if7blpj20eu08aglw.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6icx95qj20o107z3yr.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6ihztutj20jq03k3ye.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6idyweoj20qm0c5jrz.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6ig8r1yj20f106uwen.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6ihn5nqj20l606naaa.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6isuog7j20ev05y3ym.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6ina3nxj20ma0hoq5i.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6ifqvt2j20j707xdgo.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6id5sr8j20f208smyh.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6ilmmwyj20hq08g3zl.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6itx7ibj20ma0b9jsk.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6ikk2bjj20gw0a4di6.jpg">
+<meta property="og:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6iuimgkj20hm07vmxs.jpg">
+<meta property="og:updated_time" content="2021-03-23T01:25:10.974Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL 学习笔记（二）数据类型">
+<meta name="twitter:description" content="MySQL 中所谓的数据类型，是从系统的角度出发，为了方便对数据进行统一的分类，能够使用统一的方式进行管理，更好地利用有限的空间的一种手段。在 SQL 中数据类型分成了三大类：数值类型、字符串类型和时间日期类型。">
+<meta name="twitter:image" content="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6imqm5qj20gi0ao42j.jpg">
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Thinking Realm" type="application/atom+xml">
+
+
+
+
+  <link rel="canonical" href="https://www.libinx.com/2017/mysql-study-note-2/">
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>MySQL 学习笔记（二）数据类型 | Thinking Realm</title>
+  
+
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?29c6a6a7d4e694985b961f3ab9357bb3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        
+        <span class="site-title">Thinking Realm</span>
+        
+      </a>
+    </div>
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+    <a href="/tags/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">308</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">18</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">152</span></a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+    <a href="/about/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+  </li>
+
+      
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>搜索</a>
+        </li>
+      
+    </ul>
+  
+
+  
+    
+
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+    <div class="reading-progress-bar"></div>
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.libinx.com/2017/mysql-study-note-2/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="H4ck3r L1">
+      <meta itemprop="description" content="专注机器学习、大数据">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Thinking Realm">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">MySQL 学习笔记（二）数据类型
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-05-27 11:31:41" itemprop="dateCreated datePublished" datetime="2017-05-27T11:31:41+08:00">2017-05-27</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2021-03-23 09:25:10" itemprop="dateModified" datetime="2021-03-23T09:25:10+08:00">2021-03-23</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/coding/" itemprop="url" rel="index"><span itemprop="name">coding</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon">
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>MySQL 中所谓的数据类型，是从系统的角度出发，为了方便对数据进行统一的分类，能够使用统一的方式进行管理，更好地利用有限的空间的一种手段。在 SQL 中数据类型分成了三大类：<strong>数值类型、字符串类型和时间日期类型</strong>。</p>
+<a id="more"></a>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6imqm5qj20gi0ao42j.jpg" alt=""></p>
+<p>数值型数据都是数据，系统将数据型分为<strong>整数型和小数型</strong>。</p>
+<h1 id="一、整数型"><a href="#一、整数型" class="headerlink" title="一、整数型"></a>一、整数型</h1><p>在 UTF-8 编码环境下，一个英文字符等于一个字节，一个中文字符（含繁体）等于三个字节。</p>
+<p>在 SQL 中要更多考虑如何节省磁盘空间，所以系统将整型又细分成了5类</p>
+<ul>
+<li>tinyint：迷你整型，1个字节存储，表示的状态最多为255种</li>
+<li>smallint：小整型，2个字节存储，表示的状态最多为65535种</li>
+<li>mediumint：中整型，3个字节存储</li>
+<li>int、integer：标准整型，使用4个字节存储（常用）</li>
+<li>bigint：大整形，使用8个字节存储</li>
+</ul>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6is4i39j20cw05077b.jpg" alt=""></p>
+<blockquote>
+<p>创建一张整型表</p>
+</blockquote>
+<p>SQL 中的数值类型全部都是默认有符号，区分正负，有的时候需要给数据类型限定：int unsigned，无符号，从零开始。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建整型表</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> my_int(</span><br><span class="line">int_1 tinyint,</span><br><span class="line">int_2 <span class="built_in">smallint</span>,</span><br><span class="line">int_3 <span class="built_in">int</span>,</span><br><span class="line">int_4 <span class="built_in">bigint</span></span><br><span class="line">)<span class="keyword">charset</span> utf8;</span><br></pre></td></tr></table></figure>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6igrh7dj20ef05975r.jpg" alt=""></p>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6iokpa1j20g7051dhg.jpg" alt=""></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 插入数据</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_int <span class="keyword">values</span>(<span class="number">100</span>,<span class="number">100</span>,<span class="number">100</span>,<span class="number">100</span>); <span class="comment">-- 有效数据</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_int <span class="keyword">values</span>(<span class="string">'a'</span>,<span class="string">'b'</span>,<span class="string">'199'</span>,<span class="string">'f'</span>); <span class="comment">-- 无效数据</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_int <span class="keyword">values</span>(<span class="number">255</span>,<span class="number">10000</span>,<span class="number">100000</span>,<span class="number">1000000</span>); <span class="comment">-- 错误：255超出tinyint的范围</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 给表增加一个无符号类型</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> my_int <span class="keyword">add</span> int_5 tinyint <span class="keyword">unsigned</span>; <span class="comment">-- 添加无符号类型</span></span><br><span class="line"></span><br><span class="line"><span class="comment">-- 再次插入数据</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_int <span class="keyword">values</span>(<span class="number">127</span>,<span class="number">10000</span>,<span class="number">100000</span>,<span class="number">1000000</span>,<span class="number">255</span>);</span><br></pre></td></tr></table></figure>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6iil702j20lt057dib.jpg" alt=""></p>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6io00egj20fn09yjt6.jpg" alt=""></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 指定字段显示宽度</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> my_int <span class="keyword">add</span> int_6 tinyint(<span class="number">1</span>) <span class="keyword">unsigned</span>; <span class="comment">-- 指定显示宽度为1</span></span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> my_int <span class="keyword">add</span> int_7 tinyint(<span class="number">2</span>) zerofill; <span class="comment">-- 显示宽度为2,0填充</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_int <span class="keyword">values</span>(<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6it8vqdj20jj0a3tba.jpg" alt=""><br><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6ijbukpj20ey073jrm.jpg" alt=""><br><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6ijbukpj20ey073jrm.jpg" alt=""></p>
+<p>查看表结构的时候后，发现每个字段的数据类型之后都会自带一个括号，代表显示宽度，显示宽度没有特别的含义，只是默认的告诉用户可以显示的形式而已，不会改变数据本身的数值大小。显示宽度的意义在于当数据不够显示宽度的时候，会自动让数据变成对应的显示宽度。零填充（zerofill参数）会自动导致数值添加无符号（unsigned）属性，保证数据格式。</p>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6iokpa1j20g7051dhg.jpg" alt=""></p>
+<h1 id="二、-小数型"><a href="#二、-小数型" class="headerlink" title="二、 小数型"></a>二、 小数型</h1><p>小数型，带有小数点或者范围超出整型的数值类型。SQL 中将小数型分为<strong>浮点型和定点型</strong>。浮点型：小数点浮动，精度有限；定点型：小数点固定，精度固定，不会丢失精度。</p>
+<h2 id="浮点型（float）"><a href="#浮点型（float）" class="headerlink" title="浮点型（float）"></a>浮点型（float）</h2><p>浮点型数据是一种精度型数据，超出指定范围之后会丢失精度（会自动四舍五入），分为<code>float</code>单精度（占4个字节）和<code>double</code>双精度（占用8个字节）。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建浮点数据表</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> my_float(</span><br><span class="line">f1 <span class="built_in">float</span>,</span><br><span class="line">f2 <span class="built_in">float</span>(<span class="number">10</span>,<span class="number">2</span>),</span><br><span class="line">f3 <span class="built_in">float</span>(<span class="number">6</span>,<span class="number">2</span>)  <span class="comment">-- 6位在精度范围之内</span></span><br><span class="line">)<span class="keyword">charset</span> utf8;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 插入数据</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_float <span class="keyword">values</span>(<span class="number">1000.10</span>,<span class="number">1000.10</span>,<span class="number">1000.10</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_float <span class="keyword">values</span>(<span class="number">1234567890</span>,<span class="number">12345678.90</span>,<span class="number">1234.56</span>);	</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_float <span class="keyword">values</span>(<span class="number">3e38</span>,<span class="number">3.01e7</span>,<span class="number">1234.56</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_float <span class="keyword">values</span>(<span class="number">9999999999</span>,<span class="number">99999999.99</span>,<span class="number">9999.99</span>); </span><br><span class="line"></span><br><span class="line"><span class="comment">-- 超出长度插入数据</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_float <span class="keyword">values</span>(<span class="number">123456</span>,<span class="number">1234.12345678</span>,<span class="number">123.9876543</span>); <span class="comment">-- 小数部分超出没有问题，自动四舍五入</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_float <span class="keyword">values</span>(<span class="number">123456</span>,<span class="number">1234.12</span>,<span class="number">12345.56</span>); <span class="comment">-- 整数部分超出</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffzrq8n7dsj20im0ag74s.jpg" alt=""></p>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6iq379bj20i502k3yg.jpg" alt=""></p>
+<p> 浮点数如果不写精度和标度，则会按照实际的精度值显示；<code>float(M,D)</code>则表示标注了精度和标度，M 代表数据总长度（精度），D 代表小数部分长度（标度），整数部分长度为M-D。浮点型数据的插入，整型部分是不能超出长度的；但是小数部分是可以超出长度的，超出范围的小数的部分系统会自动四舍五入并保留合法的小数部分长度。</p>
+<h2 id="定点型（decimal）"><a href="#定点型（decimal）" class="headerlink" title="定点型（decimal）"></a>定点型（decimal）</h2><p>绝对保证整数部分不会被四舍五入，不会丢失精度，小数部分有可能会丢失精度。定点型在不指定精度时，<strong>默认的整数位为10，默认的小数位为0</strong>。定点数的整数部分一定不能超出长度，小数部分的长度可以随意，超出的部分会被系统自动截断。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建定点数表</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> my_decimal(</span><br><span class="line">f1 <span class="built_in">float</span>(<span class="number">10</span>,<span class="number">2</span>),</span><br><span class="line">d1 <span class="built_in">decimal</span>(<span class="number">10</span>,<span class="number">2</span>)</span><br><span class="line">)<span class="keyword">charset</span> utf8;</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6if7blpj20eu08aglw.jpg" alt=""></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 插入数据</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_decimal <span class="keyword">values</span>(<span class="number">12345678.90</span>,<span class="number">12345678.90</span>); <span class="comment">-- 有效数据</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_decimal <span class="keyword">values</span>(<span class="number">1234.123456</span>,<span class="number">1234.1234567</span>); <span class="comment">--  小数部分超出没事</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6icx95qj20o107z3yr.jpg" alt=""></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_decimal <span class="keyword">values</span>(<span class="number">99999999.99</span>,<span class="number">99999999.99</span>); <span class="comment">-- 有效数据</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_decimal <span class="keyword">values</span>(<span class="number">99999999.99</span>,<span class="number">99999999.999</span>); <span class="comment">-- 进位超出范围</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6ihztutj20jq03k3ye.jpg" alt=""></p>
+<h1 id="三、时间日期类型"><a href="#三、时间日期类型" class="headerlink" title="三、时间日期类型"></a>三、时间日期类型</h1><ul>
+<li>datatime：年月日时分秒，YYYY-MM-DD HH:MM:SS，显示宽度固定为19个字符，表示的范围从1000到9999年</li>
+<li>date：年月日，datetime中的date部分</li>
+<li>time：时分秒，指某个区间之内</li>
+<li>timestamp：时间戳，在更新数据的时候会自动更新为当前系统时间</li>
+<li>year：年份，在4位格式中，允许的值是1901-2155之间的年份</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建时间日期表</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> my_date(</span><br><span class="line">d1 datetime,</span><br><span class="line">d2 <span class="built_in">date</span>,</span><br><span class="line">d3 <span class="keyword">time</span>,</span><br><span class="line">d4 <span class="keyword">timestamp</span>,</span><br><span class="line">d5 <span class="keyword">year</span></span><br><span class="line">)<span class="keyword">charset</span> utf8;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 插入数据</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_date <span class="keyword">values</span>(<span class="string">'2017-05-25 21:28:54'</span>,<span class="string">'2017-05-25 '</span>,<span class="string">'21:28:54'</span>,<span class="string">'2017-05-25 21:28:54'</span>,<span class="number">2017</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 时间改为负数</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_date <span class="keyword">values</span>(<span class="string">'2017-05-25 21:28:54'</span>,<span class="string">'2017-05-25 '</span>,<span class="string">'-21:28:54'</span>,<span class="string">'2017-05-25 21:28:54'</span>,<span class="number">2017</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_date <span class="keyword">values</span>(<span class="string">'2017-05-25 21:28:54'</span>,<span class="string">'2017-05-25 '</span>,<span class="string">'-211:28:54'</span>,<span class="string">'2017-05-25 21:28:54'</span>,<span class="number">2017</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_date <span class="keyword">values</span>(<span class="string">'2017-05-25 21:28:54'</span>,<span class="string">'2017-05-25 '</span>,<span class="string">'-2 11:28:54'</span>,<span class="string">'2017-05-25 21:28:54'</span>,<span class="number">2017</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- year可以使用两位或者四位</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_date <span class="keyword">values</span>(<span class="string">'2017-05-25 21:28:54'</span>,<span class="string">'2017-05-25 '</span>,<span class="string">'21:28:54'</span>,<span class="string">'2017-05-25 21:28:54'</span>,<span class="number">69</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_date <span class="keyword">values</span>(<span class="string">'2017-05-25 21:28:54'</span>,<span class="string">'2017-05-25 '</span>,<span class="string">'21:28:54'</span>,<span class="string">'2017-05-25 21:28:54'</span>,<span class="number">70</span>);</span><br></pre></td></tr></table></figure>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6idyweoj20qm0c5jrz.jpg" alt=""></p>
+<h1 id="四、字符串类型"><a href="#四、字符串类型" class="headerlink" title="四、字符串类型"></a>四、字符串类型</h1><p>在 SQL 中，将字符串类型分成了6类：char,varchar,text,blob,enum和set。</p>
+<h2 id="定长字符型（char）"><a href="#定长字符型（char）" class="headerlink" title="定长字符型（char）"></a>定长字符型（char）</h2><p>char 磁盘在定义结构的时候，就已经确定了最终的数据的存储长度。<code>char(L)</code>，L代表长度，可以存储的长度，单位为字符，最大长度可以为255。比如在 utf8 环境下，中文字段char(4)需要4*3=12个字节。</p>
+<h2 id="变长字符串（varchar）"><a href="#变长字符串（varchar）" class="headerlink" title="变长字符串（varchar）"></a>变长字符串（varchar）</h2><p>varchar，变长字符串，在分配空间的时候，按照最大的分配空间，但是实际上用了多少，是根据具体的数据来确定的。<code>varchar(L)</code>，L 表示字符长度，理论长度是65536个字节，会多出1到2个字节来确定存储的实际长度。varchar(10)：确实存了 10 个汉字，utf8环境，10*3+1=31个字节，好处是可以节省存储空间。</p>
+<p>如果字符串实际上长度超过255，则既不使用定长也不使用变长，使用文本字符串text。</p>
+<p>定长与变长的实际存储空间（UTF8），假设实际存储数据是abcd，在char(4)下占用4<em>3个字节，在varchar(4)下占用4</em>3+1个字节。假设实际存储数据是a，在char(4)下占用4<em>3（长度固定）（长度是可以变化的），varchar(4)下占用1</em>3+1个字节。假设实际存储数据是abcde，在char(4)和varchar(4)下是无法存储成功的，因为数据全部超出了长度4。</p>
+<blockquote>
+<p>如何选择定长或者变长字符串？？？</p>
+</blockquote>
+<p>数据基本上长度都一样，如身份证号码、手机号码、电话号码，一般选择定长型字符串，如果选用定长字符串，查找的效率比较高，但是比较浪费磁盘空间。</p>
+<p>如果不同数据的长度有变化，比如姓名、地址等的长度就会有两个或者三个，一般选用变长型字符串。变长型字符串则比较节省磁盘空间，但是效率比较低。</p>
+<h2 id="文本型字符串（text）"><a href="#文本型字符串（text）" class="headerlink" title="文本型字符串（text）"></a>文本型字符串（text）</h2><p>通常说超过255个字符就会使用文本字符串，也就是数据量非常大。文本字符串根据存储的数据格式进行分类：text（存储文字）和blob（二进制数据，通常不用）。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- text占用10个字节长度</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> my_text(</span><br><span class="line"><span class="keyword">name</span> <span class="built_in">varchar</span>(<span class="number">21841</span>) <span class="keyword">not</span> <span class="literal">null</span>, <span class="comment">-- 21841 * 3 + 2 = 65525</span></span><br><span class="line"><span class="keyword">content</span> <span class="built_in">text</span> <span class="keyword">not</span> <span class="literal">null</span>         <span class="comment">-- 10 </span></span><br><span class="line">)<span class="keyword">charset</span> utf8;</span><br></pre></td></tr></table></figure>
+<h2 id="枚举类型（enum）"><a href="#枚举类型（enum）" class="headerlink" title="枚举类型（enum）"></a>枚举类型（enum）</h2><p>枚举类型（enum）是将所有可能出现的结果都设计好，实际上存储的数据必须是规定好数据中的一个。按照元素出现的顺序，从1开始编号。枚举在进行数据规范的时候，系统会自动建立一个数字会枚举元素的对应关系，然后在进行数据插入的时候，系统自动将字符转换成对应的数字存储，然后在进行数据提取的时候，系统自动将数值转换成对应的字符串显示（这也是效率比较低的原因）。</p>
+<p>枚举的使用方式：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 定义：enum（可能出现的元素列表） </span><br><span class="line"># 存储数据，只能存储定义好的数据</span><br><span class="line">enum('男','女','不男不女','保密');</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 创建枚举表</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> my_enum(</span><br><span class="line">gender enum(<span class="string">'男'</span>,<span class="string">'女'</span>,<span class="string">'保密'</span>)</span><br><span class="line">)<span class="keyword">charset</span> utf8;</span><br></pre></td></tr></table></figure>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6ig8r1yj20f106uwen.jpg" alt=""></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 加入数据</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_enum <span class="keyword">values</span>(<span class="string">'男'</span>),(<span class="string">'保密'</span>); <span class="comment">-- 有效数据</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_enum <span class="keyword">values</span>(<span class="string">'male'</span>); <span class="comment">-- 无效数据</span></span><br></pre></td></tr></table></figure>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6ihn5nqj20l606naaa.jpg" alt=""></p>
+<p>枚举数据类型的作用之一是规范数据格式，数据只能是规定的数据中的一个，作用之二是节省存储空间（枚举通常有一个别名：单选框），在 MySQL 中系统会自动转换数据格式的</p>
+<p>枚举实际存储的是数值，所以在插入时可以直接插入数值。证明字段存储的数据是数值：将数据加上0，如果能够正常返回则证明字段存储的是数值。</p>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6isuog7j20ev05y3ym.jpg" alt=""></p>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6ina3nxj20ma0hoq5i.jpg" alt=""></p>
+<h2 id="集合字符串（set）"><a href="#集合字符串（set）" class="headerlink" title="集合字符串（set）"></a>集合字符串（set）</h2><p>集合字符串与枚举十分相似，两者实际存储的都是数值，而不是字符串（集合是多选）<br>集合中每一个元素都是对应一个二进制位。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 集合使用方式</span><br><span class="line"># 定义：set(元素列表)</span><br><span class="line"># 元素列表可以是一个或者多个，使用逗号分隔</span><br></pre></td></tr></table></figure>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6ifqvt2j20j707xdgo.jpg" alt=""></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- 插入数据</span></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_set <span class="keyword">values</span>(<span class="string">'篮球,足球,乒乓球'</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> my_set <span class="keyword">values</span>(<span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6id5sr8j20f208smyh.jpg" alt=""></p>
+<p>每一个元素都是对应一个二进制位，被选中为1没有则为0，最后反过来；集合中插入数据时与插入的顺序没有关系；集合的强大在于能够规范数据和节省空间。</p>
+<h1 id="五、MySQL-记录长度"><a href="#五、MySQL-记录长度" class="headerlink" title="五、MySQL 记录长度"></a>五、MySQL 记录长度</h1><p>MySQL 中规定任何一条记录最长不能超过65535个字节，utf8下varchar的实际最多有21844个字符，gbk下最多32766个字符。</p>
+<p>MySQL 记录中如果有任何一个字段允许为空，那么系统会自动从整个记录中保留一个字节来存储null，如果想释放null这个字节，必须保证所有的字段都不能为空。所以我们可以通过这种方式来占用utf8或gbk下全部的65535个字符。</p>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6ilmmwyj20hq08g3zl.jpg" alt=""></p>
+<h1 id="列属性"><a href="#列属性" class="headerlink" title="列属性"></a>列属性</h1><p>真正约束字段的是数据类型，但是数据类型的约束十分单一，需要有一些额外的约束来更加保证数据的合法性。</p>
+<blockquote>
+<p>空属性</p>
+</blockquote>
+<p>NULL（默认）和NOT NULL（不为空），尽可能在数据库汇总要保证所有的数据不能为空，空数据没有意义并且不能参与运算。</p>
+<blockquote>
+<p>列描述</p>
+</blockquote>
+<p>列描述<code>comment</code>用来给数据库管理员了解列属性，没有实际意义，是专门来描述字段，会根据表创建语句保存</p>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6itx7ibj20ma0b9jsk.jpg" alt=""></p>
+<blockquote>
+<p>默认值</p>
+</blockquote>
+<p>某一种数据会经常性地出现某个具体的值，可以在一开始就指定好</p>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6ikk2bjj20gw0a4di6.jpg" alt=""></p>
+<p><img src="http://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffz6iuimgkj20hm07vmxs.jpg" alt=""></p>
+
+      
+    </div>
+
+    <div>
+        
+            <div>
+    
+        <div style="text-align:center;color: #FF0000;font-size:18px;font-family:Helvetica;font-style:oblique">------本文结束，欢迎收藏本站、分享、评论或联系作者！------</div>
+    
+</div>
+
+        
+    </div>
+
+    <!-- 相关文章推荐 -->
+     
+          
+
+     
+
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center; color:red;font-family:Helvetica;font-style:oblique">
+  <div>赠人玫瑰 手有余香</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="https://raw.githubusercontent.com/swordspoet/i/img/WeChatpay.png" alt="H4ck3r L1 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1fjuvo2ur08j20a20a2dgi.jpg" alt="H4ck3r L1 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>H4ck3r L1</li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.libinx.com/2017/mysql-study-note-2/" title="MySQL 学习笔记（二）数据类型">https://www.libinx.com/2017/mysql-study-note-2/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明出处！</li>
+</ul>
+
+      </div>
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/数据库-SQL-MySQL/" rel="tag"># 数据库,SQL,MySQL</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+          <div class="wp_rating">
+           <div style="color: rgba(0, 0, 0, 0.75); font-size:13px; letter-spacing:3px">(&gt;看完记得五星好评哦亲&lt;)</div>
+            <div id="wpac-rating"></div>
+          </div>
+        
+
+        
+
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/mysql-study-note-1/" rel="next" title="MySQL 学习笔记（一）基本操作">
+                <i class="fa fa-chevron-left"></i> MySQL 学习笔记（一）基本操作
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/machine-learning-algorithm-series-adaboost/" rel="prev" title="机器学习算法系列（11）Adaboost 算法及其参数解释">
+                机器学习算法系列（11）Adaboost 算法及其参数解释 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-58b8f4ff1eb11c7e" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+      <div id="sidebar-dimmer"></div>
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">H4ck3r L1</p>
+              <p class="site-description motion-element" itemprop="description">专注机器学习、大数据</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">152</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">18</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">308</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          
+            <div class="links-of-author motion-element">
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/swordspoet" target="_blank" title="GitHub" rel="external nofollow"><i class="fa fa-fw fa-github"></i>GitHub</a>
+                  
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.douban.com/people/53382901/" target="_blank" title="douban" rel="external nofollow"><i class="fa fa-fw fa-book"></i>douban</a>
+                  
+                </span>
+              
+            </div>
+          
+
+          
+          
+            <div class="cc-license motion-element" itemprop="license">
+              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" target="_blank" rel="external nofollow">
+                <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons">
+              </a>
+            </div>
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                友链
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://plushunter.github.io" title="Free will" target="_blank">Free will</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.shuang0420.com" title="徐阿衡" target="_blank">徐阿衡</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://dzzxjl.github.io/" title="十一城" target="_blank">十一城</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://iyaozhen.com" title="yao zhen" target="_blank">yao zhen</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://kba977.github.io/" title="kba977" target="_blank">kba977</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://www.jianshu.com/u/4007ac46018d" title="Babyzpj" target="_blank">Babyzpj</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://null.w0x7ce.com/" title="w0x7ce" target="_blank">w0x7ce</a>
+                  </li>
+                
+              </ul>
+            </div>
+			<div class="theme-info">
+				<span class="post-count">全站共207.0k字</span>
+			</div>
+			
+			
+
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#一、整数型"><span class="nav-text">一、整数型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二、-小数型"><span class="nav-text">二、 小数型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#浮点型（float）"><span class="nav-text">浮点型（float）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#定点型（decimal）"><span class="nav-text">定点型（decimal）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#三、时间日期类型"><span class="nav-text">三、时间日期类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四、字符串类型"><span class="nav-text">四、字符串类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#定长字符型（char）"><span class="nav-text">定长字符型（char）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#变长字符串（varchar）"><span class="nav-text">变长字符串（varchar）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文本型字符串（text）"><span class="nav-text">文本型字符串（text）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#枚举类型（enum）"><span class="nav-text">枚举类型（enum）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#集合字符串（set）"><span class="nav-text">集合字符串（set）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#五、MySQL-记录长度"><span class="nav-text">五、MySQL 记录长度</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#列属性"><span class="nav-text">列属性</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+	  
+	  <div class="wechat_OA">
+				<span>欢迎关注我的公众号</span>
+				<br>
+				<!-- 这里添加你的二维码图片 -->
+				<img src="https://raw.githubusercontent.com/swordspoet/i/img/%E6%89%AB%E7%A0%81_%E6%90%9C%E7%B4%A2%E8%81%94%E5%90%88%E4%BC%A0%E6%92%AD%E6%A0%B7%E5%BC%8F-%E6%A0%87%E5%87%86%E8%89%B2%E7%89%88.png">
+			</div>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="contact">
+<span class="fa-stack fa-lg">
+  <a href="https://www.github.com/swordspoet">
+  <i class="fa fa-square fa-stack-2x"></i>
+  <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+  </a>
+</span>
+
+<span class="fa-stack fa-lg">
+<a href="https://zhuanlan.zhihu.com/libinx">
+  <i class="fa fa-square fa-stack-2x"></i>
+  <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+  </a>
+</span>
+
+<span class="fa-stack fa-lg">
+<a href="mailto:libin.data@gmail.com">
+  <i class="fa fa-square fa-stack-2x"></i>
+  <i class="fa fa-envelope fa-stack-1x fa-inverse"></i>
+  </a>
+</span>
+
+<span class="fa-stack fa-lg">
+<a href="https://t.me/bin_li">
+  <i class="fa fa-square fa-stack-2x"></i>
+  <i class="fa fa-telegram fa-stack-1x fa-inverse"></i>
+  </a>
+</span>
+
+</div>
+
+<div class="copyright">&copy; 2016 &mdash; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-cogs"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">All Rights Reserved.</span>
+
+  
+
+  
+</div>
+	
+
+  
+
+
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+          <span id="scrollpercent"><span>0</span>%</span>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/reading_progress/reading_progress.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  
+
+  
+  
+
+  
+
+
+  
+  
+  <script type="text/javascript">
+  wpac_init = window.wpac_init || [];
+  wpac_init.push({widget: 'Rating', id: 8151,
+    el: 'wpac-rating',
+    color: 'ff7600'
+  });
+  (function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = '//embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+  })();
+  </script>
+
+
+  
+  
+  
+    
+  
+  <script src="https://cdn.bootcss.com/pangu/3.3.0/pangu.js"></script>
+  <script type="text/javascript">pangu.spacingPage();</script>
+
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/exturl.js?v=6.3.0"></script>
+
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+</body>
+</html>
