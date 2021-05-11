@@ -150,21 +150,21 @@
 
 
 
-  <meta name="description" content="1. GBDT与AdaBoost的联系与区别在前面的文章中，我们了解到了一种提升方法 —— AdaBoost，它是一类能够从训练数据中学习一组弱分类器，并将弱分类器组合成强分类器的算法，通俗一点解释就是“三个臭皮匠顶个诸葛亮”。GBDT跟AdaBoost一样都属于集成学习中的提升方法（另一种是Bagging），特殊之处在于GBDT的基分类器限定为了决策树（分类树或回归树），提升树可以看做是多颗决策">
+  <meta name="description" content="1. GBDT与AdaBoost的联系与区别在前面的文章中，我们了解到了一种提升方法 —— AdaBoost，它是一类能够从训练数据中学习一组弱分类器，并将弱分类器组合成强分类器的算法，通俗一点解释就是“三个臭皮匠顶个诸葛亮”。GBDT跟AdaBoost一样都属于集成学习中的提升方法（另一种是Bagging），特殊之处在于GBDT的弱学习器限定为了决策树（分类树或回归树），提升树可以看做是多颗决策">
 <meta name="keywords" content="决策树,机器学习算法系列,Machine-Learning,梯度提升">
 <meta property="og:type" content="article">
 <meta property="og:title" content="机器学习算法系列（14）梯度提升决策树">
 <meta property="og:url" content="https://www.libinx.com/2017/machine-learning-algorithm-series-gbdt/index.html">
 <meta property="og:site_name" content="Thinking Realm">
-<meta property="og:description" content="1. GBDT与AdaBoost的联系与区别在前面的文章中，我们了解到了一种提升方法 —— AdaBoost，它是一类能够从训练数据中学习一组弱分类器，并将弱分类器组合成强分类器的算法，通俗一点解释就是“三个臭皮匠顶个诸葛亮”。GBDT跟AdaBoost一样都属于集成学习中的提升方法（另一种是Bagging），特殊之处在于GBDT的基分类器限定为了决策树（分类树或回归树），提升树可以看做是多颗决策">
+<meta property="og:description" content="1. GBDT与AdaBoost的联系与区别在前面的文章中，我们了解到了一种提升方法 —— AdaBoost，它是一类能够从训练数据中学习一组弱分类器，并将弱分类器组合成强分类器的算法，通俗一点解释就是“三个臭皮匠顶个诸葛亮”。GBDT跟AdaBoost一样都属于集成学习中的提升方法（另一种是Bagging），特殊之处在于GBDT的弱学习器限定为了决策树（分类树或回归树），提升树可以看做是多颗决策">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1fktodqkl1nj20q40ckq54.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1fktodr8p4nj20qs0ga0va.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/20210323155700.png">
-<meta property="og:updated_time" content="2021-03-23T08:19:28.575Z">
+<meta property="og:updated_time" content="2021-05-10T14:07:34.479Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习算法系列（14）梯度提升决策树">
-<meta name="twitter:description" content="1. GBDT与AdaBoost的联系与区别在前面的文章中，我们了解到了一种提升方法 —— AdaBoost，它是一类能够从训练数据中学习一组弱分类器，并将弱分类器组合成强分类器的算法，通俗一点解释就是“三个臭皮匠顶个诸葛亮”。GBDT跟AdaBoost一样都属于集成学习中的提升方法（另一种是Bagging），特殊之处在于GBDT的基分类器限定为了决策树（分类树或回归树），提升树可以看做是多颗决策">
+<meta name="twitter:description" content="1. GBDT与AdaBoost的联系与区别在前面的文章中，我们了解到了一种提升方法 —— AdaBoost，它是一类能够从训练数据中学习一组弱分类器，并将弱分类器组合成强分类器的算法，通俗一点解释就是“三个臭皮匠顶个诸葛亮”。GBDT跟AdaBoost一样都属于集成学习中的提升方法（另一种是Bagging），特殊之处在于GBDT的弱学习器限定为了决策树（分类树或回归树），提升树可以看做是多颗决策">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1fktodqkl1nj20q40ckq54.jpg">
 
 
@@ -288,7 +288,7 @@
           
           <li class="menu-item menu-item-tags">
     <a href="/tags/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">308</span></a>
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">309</span></a>
   </li>
         
         
@@ -304,7 +304,7 @@
           
           <li class="menu-item menu-item-archives">
     <a href="/archives/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">152</span></a>
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">153</span></a>
   </li>
         
         
@@ -453,7 +453,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-03-23 16:19:28" itemprop="dateModified" datetime="2021-03-23T16:19:28+08:00">2021-03-23</time>
+                <time title="修改时间：2021-05-10 22:07:34" itemprop="dateModified" datetime="2021-05-10T22:07:34+08:00">2021-05-10</time>
               
             
           </span>
@@ -511,8 +511,9 @@
       
 
       
-        <h1 id="1-GBDT与AdaBoost的联系与区别"><a href="#1-GBDT与AdaBoost的联系与区别" class="headerlink" title="1. GBDT与AdaBoost的联系与区别"></a>1. GBDT与AdaBoost的联系与区别</h1><p>在前面的文章中，我们了解到了一种提升方法 —— <a href="https://www.libinx.com/2017/machine-learning-algorithm-series-adaboost/">AdaBoost</a>，它是一类能够从训练数据中学习一组弱分类器，并将弱分类器组合成强分类器的算法，通俗一点解释就是“三个臭皮匠顶个诸葛亮”。GBDT跟AdaBoost一样都属于集成学习中的提升方法（另一种是Bagging），特殊之处在于GBDT的基分类器限定为了决策树（分类树或回归树），提升树可以看做是多颗决策树的线性组合。</p>
-<p>另外，它们两者在迭代上有所区别。AdaBoost利用的是上一轮学习器的误差率来更新数据的权重，在每一轮的迭代中误分类的数据和分类误差率小的模型会获得更高的权重，理论上AdaBoost的学习器可以选择任何分类模型，只是由于树形模型比较简单且容易产生随机性所以通常被用于基分类器。而GBDT的基学习分类器限定只能是CART回归树，顾名思义，它可以解决回归和分类问题，<strong>GBDT的迭代思路是使用前向分布算法，基本思想是根据上一轮学习器损失函数的负梯度来训练本轮的学习器，本轮学习器$f_{t}(x)$的优化的目标是将上一轮学习器的损失函数L优化得到一个最小值</strong>。而如何拟合GBDT的损失函数则是一个GBDT需要考虑的关键问题。</p>
+        <h4 id="1-GBDT与AdaBoost的联系与区别"><a href="#1-GBDT与AdaBoost的联系与区别" class="headerlink" title="1. GBDT与AdaBoost的联系与区别"></a>1. GBDT与AdaBoost的联系与区别</h4><p>在前面的文章中，我们了解到了一种提升方法 —— <a href="https://www.libinx.com/2017/machine-learning-algorithm-series-adaboost/">AdaBoost</a>，它是一类能够从训练数据中学习一组弱分类器，并将弱分类器组合成强分类器的算法，通俗一点解释就是“三个臭皮匠顶个诸葛亮”。GBDT跟AdaBoost一样都属于集成学习中的提升方法（另一种是Bagging），特殊之处在于GBDT的弱学习器限定为了决策树（分类树或回归树），提升树可以看做是多颗决策树的<strong>线性组合</strong>。不过AdaBoost算是年代比较久远的集成学习算法，现在基本上很少用到了。</p>
+<p>除了弱学习器的不同，另外，它们两者在迭代上有所区别。AdaBoost利用的是上一轮学习器的误差率来更新数据的权重，在每一轮的迭代中误分类的数据和分类误差率小的模型会获得更高的权重，理论上AdaBoost的学习器可以选择任何分类模型，只是由于树形模型比较简单且容易产生随机性所以通常被用于基分类器。而GBDT的基学习分类器限定只能是CART回归树，顾名思义，它可以解决回归和分类问题，<strong>GBDT的迭代思路是使用前向分布算法，基本思想是根据上一轮学习器损失函数的负梯度来训练本轮的学习器，本轮学习器$f_{t}(x)$的优化的目标是将上一轮学习器的损失函数L优化得到一个最小值</strong>。如果这样解释还不太清楚，那我举一个例子，比如现在给你k次机会猜测我的真实年龄，并且下一次猜测的数字需要跟上一次猜测的数字相加才能成为下一次猜测的最终结果，第一次你猜测20岁，我说小了，然后第二次你说加10岁，我说大了，然后第三次你说减5岁，我说小了……</p>
+<p>而如何拟合GBDT的损失函数则是一个GBDT需要考虑的关键问题。</p>
 <p>总结一下Adaboost 与 GBDT的区别：</p>
 <ol>
 <li>Adaboost 是基于样本权重更新，误分类的样本和误差率低的学习器可以获得更高的权重</li>
@@ -520,16 +521,17 @@
 <li>理论上AdaBoost的分类器可以选择任何分类模型，GBDT的学习器则限定于分类回归树</li>
 </ol>
 <p>可以这样说，如果限定提升树的基分类器为分类回归树（CART），那么此时的<strong>GBDT跟AdaBoost就没有差别了</strong>。</p>
-<h1 id="2-回归问题的提升树算法"><a href="#2-回归问题的提升树算法" class="headerlink" title="2. 回归问题的提升树算法"></a>2. 回归问题的提升树算法</h1><p>下面讨论回归问题的提升树，其实相比分类问题，回归问题更好计算，没有 AdaBoost 那一套复杂的权重更新过程，每一次的迭代只需要拟合残差，每一棵新树的建立都是基于残差的负梯度方向。残差是什么？<strong>残差是实际值与预测值之差</strong>：</p>
-<script type="math/tex; mode=display">r = y_i - f(x_i)</script><p>回归问题的提升树有两个值得关注的点：</p>
-<p>一、寻找使得残差最小的切分节点</p>
+<h4 id="2-回归问题的提升树算法"><a href="#2-回归问题的提升树算法" class="headerlink" title="2. 回归问题的提升树算法"></a>2. 回归问题的提升树算法</h4><p>下面讨论回归问题的提升树，其实相比分类问题，回归问题更好计算，没有 AdaBoost 那一套复杂的权重更新过程，每一次的迭代只需要拟合残差，每一棵新树的建立都是基于残差的负梯度方向。残差是什么？<strong>残差是实际值与预测值之差</strong>：</p>
+<script type="math/tex; mode=display">r = y_i - f(x_i)</script><p>打个比方，假设一个人真实年龄是30岁，第一颗回归树预测的结果是27岁，残差是3，下一颗树的目标就是假定预测一个年龄等于3岁的人，如果第二棵树预测的结果是2岁，那么第一颗和第二棵树相加的结果29就是两棵树的预测结果。</p>
+<p>回归问题的提升树有两个值得关注的点：</p>
+<p>一、寻找使得<strong>残差最小</strong>的切分节点</p>
 <p>二、平方损失误差 $L$ 达到要求后即可停止。</p>
 <p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1fktodqkl1nj20q40ckq54.jpg" alt=""></p>
-<h1 id="3-梯度提升（Gradient-Boosting）"><a href="#3-梯度提升（Gradient-Boosting）" class="headerlink" title="3. 梯度提升（Gradient Boosting）"></a>3. 梯度提升（Gradient Boosting）</h1><p>上面一节中，可以知道，平方损失函数的情形很简单，但是对于更一般的损失函数，优化就没有那么简单了，于是我们需要在提升树算法中引入梯度下降的优化算法，即所谓的GBDT。GBDT的损失函数，如果是对于分类算法，其损失函数有对数损失和指数损失，如果是回归算法，其损失函数一般有平方损失、绝对值损失、Huber损失函数（对异常值的鲁棒性比较强）等等。<strong>梯度下降优化算法的关键是计算其负梯度在当前模型的值</strong>，并将该值作为近似的残差，最后根据残差拟合一个回归树。</p>
+<h4 id="3-梯度提升（Gradient-Boosting）"><a href="#3-梯度提升（Gradient-Boosting）" class="headerlink" title="3. 梯度提升（Gradient Boosting）"></a>3. 梯度提升（Gradient Boosting）</h4><p>上面一节中，可以知道，平方损失函数的情形很简单，但是对于更一般的损失函数，优化就没有那么简单了，于是我们需要在提升树算法中引入梯度下降的优化算法，即所谓的GBDT。GBDT的损失函数，如果是对于分类算法，其损失函数有对数损失和指数损失，如果是回归算法，其损失函数一般有<strong>平方损失、绝对值损失、Huber损失函数</strong>（对异常值的鲁棒性比较强）等等。<strong>梯度下降优化算法的关键是计算其负梯度在当前模型的值</strong>，并将该值作为近似的残差，最后根据残差拟合一个回归树。</p>
 <script type="math/tex; mode=display">-\left[ \frac{\partial L(y^{(i)}, f(x^{(i)}))} {\partial f(x^{(i)})} \right]_{f(x) = f_{k-1}(x)} \approx r_{m,i}</script><p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1fktodr8p4nj20qs0ga0va.jpg" alt=""></p>
 <p><img src="https://raw.githubusercontent.com/swordspoet/i/img/20210323155700.png" alt=""></p>
-<p>第2（c）步的$c_{mj}$是各个叶子节点最佳负梯度的拟合值，第2（d）步将该拟合值更新到下一轮的学习器中。打个比方，假设一个人真实年龄是30岁，第一颗回归树预测的结果是27岁，残差是3，下一颗树的目标就是假定预测一个年龄等于3岁的人，如果第二棵树预测的结果是2岁，那么第一颗和第二棵树相加的结果29就是两棵树的预测结果。</p>
-<h1 id="3-sklearn-GBDT可调节的参数"><a href="#3-sklearn-GBDT可调节的参数" class="headerlink" title="3. sklearn GBDT可调节的参数"></a>3. sklearn GBDT可调节的参数</h1><p>按照分类和回归问题，sklearn有GradientBoostingClassifier为GBDT的<strong>分类</strong>类， 而GradientBoostingRegressor为GBDT的<strong>回归</strong>类，两者的参数类型差不多相同。</p>
+<p>第2（c）步的$c_{mj}$是各个叶子节点最佳负梯度的拟合值，第2（d）步将该拟合值更新到下一轮的学习器中。</p>
+<h4 id="3-sklearn-GBDT可调节的参数"><a href="#3-sklearn-GBDT可调节的参数" class="headerlink" title="3. sklearn GBDT可调节的参数"></a>3. sklearn GBDT可调节的参数</h4><p>按照分类和回归问题，sklearn有GradientBoostingClassifier为GBDT的<strong>分类</strong>类， 而GradientBoostingRegressor为GBDT的<strong>回归</strong>类，两者的参数类型差不多相同。</p>
 <ol>
 <li>loss：选择损失函数，分类问题的损失函数可以选择对数损失函数（deviance）和指数损失函数（exponential），回归问题的损失函数可以选择均方差损失函数（ls）、绝对损失函数（lad）、huber损失函数（huber）和分位数损失函数（quantile）</li>
 <li>learning_rate：学习率，默认0.1，取值范围(0,1]，文档提示这个参数经常需要跟n_estimators一块调节</li>
@@ -542,7 +544,17 @@
 <li>max_leaf_nodes：最大叶子节点数，默认为None，可以<strong>防止模型过拟合</strong></li>
 <li>min_impurity_split：节点划分的最小不纯度，如果节点的不纯度小于它，那么该节点不再生成子节点</li>
 </ol>
-<h1 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a>推荐阅读</h1><ol>
+<h4 id="GBDT的优点和局限性"><a href="#GBDT的优点和局限性" class="headerlink" title="GBDT的优点和局限性"></a>GBDT的优点和局限性</h4><p>优点：</p>
+<ol>
+<li>由于GBDT的弱学习器是决策树，这就决定了我们在应用模型的时候无需对数据进行归一化等预处理</li>
+<li>泛化能力强</li>
+</ol>
+<p>局限性：</p>
+<ol>
+<li>不适合处理文本分类的任务，在高维稀疏的数据集上表现也一般</li>
+<li>因为GBDT是加法模型，下一个模型是基于上一个模型的，所以它的训练过程是串行的</li>
+</ol>
+<h4 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a>推荐阅读</h4><ol>
 <li><a href="http://www.cnblogs.com/LeftNotEasy/archive/2011/03/07/random-forest-and-gbdt.html" target="_blank" rel="noopener">机器学习中的算法(1)-决策树模型组合之随机森林与GBDT</a></li>
 <li><a href="http://www.52cs.org/?p=429" target="_blank" rel="noopener">chentianqi: XGBoost 与 Boosted Tree</a></li>
 <li><a href="https://blog.csdn.net/qq_22238533/article/details/79192579" target="_blank" rel="noopener">GBDT原理与Sklearn源码分析-分类篇 - SCUT_Sam - CSDN博客</a></li>
@@ -800,7 +812,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">152</span>
+                    <span class="site-state-item-count">153</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -1478,7 +1490,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">308</span>
+                      
+                    
+                    <span class="site-state-item-count">309</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1560,7 +1574,7 @@
               </ul>
             </div>
 			<div class="theme-info">
-				<span class="post-count">全站共207.0k字</span>
+				<span class="post-count">全站共208.8k字</span>
 			</div>
 			
 			
@@ -1585,7 +1599,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-GBDT与AdaBoost的联系与区别"><span class="nav-text">1. GBDT与AdaBoost的联系与区别</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-回归问题的提升树算法"><span class="nav-text">2. 回归问题的提升树算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-梯度提升（Gradient-Boosting）"><span class="nav-text">3. 梯度提升（Gradient Boosting）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-sklearn-GBDT可调节的参数"><span class="nav-text">3. sklearn GBDT可调节的参数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#推荐阅读"><span class="nav-text">推荐阅读</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-GBDT与AdaBoost的联系与区别"><span class="nav-text">1. GBDT与AdaBoost的联系与区别</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-回归问题的提升树算法"><span class="nav-text">2. 回归问题的提升树算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-梯度提升（Gradient-Boosting）"><span class="nav-text">3. 梯度提升（Gradient Boosting）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-sklearn-GBDT可调节的参数"><span class="nav-text">3. sklearn GBDT可调节的参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GBDT的优点和局限性"><span class="nav-text">GBDT的优点和局限性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#推荐阅读"><span class="nav-text">推荐阅读</span></a></li></ol></div>
             
 
           </div>

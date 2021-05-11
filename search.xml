@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title><![CDATA[Spark读取ElasticSearch数据——聚合查询]]></title>
-    <url>%2F2020%2Fspark-elasticsearch-aggregation-query%2F</url>
-    <content type="text"><![CDATA[本文主要介绍如何通过Spark读取ES中的数据，并对ES进行聚合查询。 我使用到的Scala、Spark和es的版本信息： 12345678910111213141516171819202122&lt;properties&gt; &lt;scala.version&gt;2.11.12&lt;/scala.version&gt; &lt;spark.version&gt;2.4.0-cdh6.3.1&lt;/spark.version&gt;&lt;/properties&gt;&lt;dependencies&gt; &lt;dependency&gt; &lt;groupId&gt;org.scala-lang&lt;/groupId&gt; &lt;artifactId&gt;scala-library&lt;/artifactId&gt; &lt;version&gt;$&#123;scala.version&#125;&lt;/version&gt; &lt;/dependency&gt; &lt;dependency&gt; &lt;groupId&gt;org.scala-lang&lt;/groupId&gt; &lt;artifactId&gt;scala-actors&lt;/artifactId&gt; &lt;version&gt;$&#123;scala.version&#125;&lt;/version&gt; &lt;/dependency&gt; &lt;dependency&gt; &lt;groupId&gt;org.elasticsearch&lt;/groupId&gt; &lt;artifactId&gt;elasticsearch-spark-20_2.11&lt;/artifactId&gt; &lt;version&gt;6.5.4&lt;/version&gt; &lt;/dependency&gt;&lt;/dependencies&gt; 下面是Spark读取es数据的测试代码，大家可以参考一下，主要有三种方法，用到了es的高阶API（EsSparkSQL、EsSpark.esRDD）和低阶API，建议使用方法一和方法三，方法二在测试中发现es的query语句不生效，测试了很多遍也没有通过。 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101102103104105106107108109110111import java.net.InetAddressimport java.util.Propertiesimport org.apache.spark.sql.SparkSessionimport org.apache.spark.sql.functions.maximport org.elasticsearch.action.search.SearchTypeimport org.elasticsearch.common.settings.Settingsimport org.elasticsearch.common.transport.TransportAddressimport org.elasticsearch.search.aggregations.AggregationBuildersimport org.elasticsearch.search.aggregations.metrics.max.InternalMaximport org.elasticsearch.spark.rdd.EsSparkimport org.elasticsearch.spark.sql.EsSparkSQLimport org.elasticsearch.transport.client.PreBuiltTransportClientobject SparkEsDemo &#123; def main(args: Array[String]): Unit = &#123; run() &#125; def run(): Unit = &#123; val sparkSession = SparkSession .builder() .appName("SparkEsTestDemo") .config("es.nodes", "xxx.xxx.xxx.xxx") .config("es.port", 9200) //重试5次（默认3次） .config("es.batch.write.retry.count", "5") //等待60秒（默认10s） .config("es.batch.write.retry.wait", "60") //es连接超时时间100s（默认1m） .config("es.http.timeout", "200s") .getOrCreate() // 方法一：通过将es的数据读取为dataframe val esResource = "esIndex/esType" // 换成你自己的索引和索引类型 val esDf = EsSparkSQL .esDF(sparkSession,resource = esResource) // resource参数填写es的索引和索引类型 .agg(max("fieldName")) // 到了这里就相当于直接将es的数据转化为dataframe直接做计算了，很直观 .withColumnRenamed("max(fieldName)","maxFieldName") .na.fill(0) esDf.show(false) // 方法三：通过编写Query查询语句查询es数据，返回的是rdd数据 val query = s"""&#123; | "query": &#123; | "bool": &#123;&#125; | &#125;, | "size": 0, | "aggs": &#123; | "max_price": &#123; | "max": &#123; | "field": "price" | &#125; | &#125; | &#125; |&#125;""".stripMargin val esRdd = EsSpark .esRDD(sparkSession.sparkContext, esResource, query) // https://github.com/elastic/elasticsearch-hadoop/issues/276 esRdd.take(10).foreach(println) esRdd.take(10).foreach(f =&gt; &#123; val map:collection.Map[String,AnyRef] = f._2 for (s &lt;- map) &#123; println(s._1 + s._2) &#125; &#125;) // 方法三：通过es客户端的低阶API实现聚合查询 // https://www.cnblogs.com/benwu/articles/9230819.html val prop = new Properties() val esClient = initClient(prop) val searchResponse = esClient .prepareSearch("recommend_smartvideo_spider_acgn") .setTypes("smartvideo_type_user_irrelative") .setSearchType(SearchType.DFS_QUERY_THEN_FETCH) .setExplain(true) .setSize(0) .addAggregation(AggregationBuilders.max("max_cursor").field("inx_cursor")) .setFetchSource(false) .execute().actionGet() val maxValue:InternalMax = searchResponse.getAggregations.get("max_cursor") println(maxValue.value()) &#125; /** * 初始化es客户端 * @param prop es配置类 * @return */ def initClient(prop: Properties): PreBuiltTransportClient = &#123; val setting = Settings.builder() .put("cluster.name", prop.getProperty("es.cluster.name")) .put("client.transport.sniff", true) .build() val client = new PreBuiltTransportClient(setting) val hostAndPortArr = prop.getProperty("es.host&amp;port").split(",") for (hostPort &lt;- hostAndPortArr) &#123; val hp = hostPort.split(":") if (hp.length == 2) &#123; client.addTransportAddress( new TransportAddress(InetAddress.getByName(hp(0)), hp(1).toInt) ) &#125; else &#123; client.addTransportAddress( new TransportAddress(InetAddress.getByName(hp(0)), 9300) ) &#125; &#125; client &#125;&#125;]]></content>
+    <title><![CDATA[机器学习算法系列（19）XGBoost]]></title>
+    <url>%2F2021%2Fmachine-learning-algorithm-series-xgboost%2F</url>
+    <content type="text"><![CDATA[XGBoost是GBDT的一种高效的实现，它是由华盛顿大学的陈天奇开发的一个高度可扩展的、端到端的提升系统。XGBoost在各大算法竞赛中取得的成绩一时间可谓风头无两，它取得成功背后在于它在所有场景中的可扩展性。 处理稀疏数据 并行和分布式计算大大提高了学习的速度 回顾提升树（Boosting Tree）提升树（Boosting Tree）是集成学习的代表之一，在之前的文章中我们就提到过，集成学习的本质：单个单个的基学习器表达能力弱没有关系，只要把它们组合起来了就可以很强大了，可以概括为“三个臭皮匠顶个诸葛亮”。 提升树实际上是K个弱学习器的线性组合而得到的加法模型，所谓提升（Boosting）的本意是在上一个弱学习器的基础上更进一步缩小与目标值的距离，使用式子可以表示为（图片来自陈天奇的论文）： 简单解释一下，数据集中的每一条数据都会落入弱学习器叶子结点的某一个区域，即对应的预测值，然后最终的预测结果等于所有树的预测值之和。如下图，小男孩（代表数据集中的一条数据）最终的预测结果为tree1和tree2预测值之和： XGBoost损失函数的优化求解以上就是对提升树模型的简要回顾，下面正式进入XGBoost的部分，首先看XGBoost的损失函数： 回顾GBDT的损失函数： 可以看出，相比GBDT，XGBoost在其基础上添加了正则化项$\Omega(ht) = \gamma J + \frac{\lambda}{2}\sum\limits{j=1}^Jw{tj}^2$，正则化项中的$w{tj}$对应第t个弱学习器第j个叶子节点的最优值，与GBDT损失函数中的c是相同的意思（陈天奇的论文中是用$w$表示的，意思一样），在损失函数中添加正则化项的有助于降低模型的复杂性和防止模型出现过拟合的情况。 接下来问题来了，如何最小化XGBoost的损失函数呢？对于公式（2），如果节点的分裂使用的是均方误差那很好优化，而XGBoost损失函数中会包含一些函数无法用一般的优化方法如均方差，因此XGBoost使用的贪心法来获得优化解，每次节点的分裂都期望最小化损失函数的误差，所以XGBoost的损失函数中加入了当前的树$f_t$，损失函数变成： 然后对该损失函数做泰勒的二阶展开得： 其中$g_i$和$h_i$是第i个样本在第t个弱学习器对$\hat{y}^{(t-1)}$一阶偏导和二阶偏导，由于损失函数中的$l$是常数，在最小化中可以去掉，上面的式子可以进一步写成： 对于公式（4）的$w_j$的求解比较简单，损失函数对$w_j$求导并令其为0，可得最优解$w_j^{*}$： 然后将最优解代入公式（4），可得： 接着，每次在节点做左右子树分裂split的时候，我们要尽量减少损失函数的损失，也就是说，假设当前节点左右子树的一阶、二阶导数和为$G_L,H_L,G_R,H_L$，我们期望最大化下式（为什么是期望最大化下面会解释）： 整理，得： 这里有一个疑问，上面的这个式子是怎么从公式（6）计算得来的呢？自己想了很久没有想清楚，在B站上找到了一个up主把节点分裂的过程解释得非常到位！看下图，现在假设我们有从1到8的8个样本点。 第一次分裂，左子树两个样本点{7,8}，右子树有六个样本点{1,2,3,4,5,6}，此时的目标函数为： 接下来，我们选择某个特征对右子树做节点分裂，假设分裂的结果为左子树为{1,3,5}，右子树为{2,4,6}，此时的目标函数为： 在节点向下分裂的过程中，我们希望第二步目标函数变得越来越小，故实际上我们期望最大化的是第一步的目标函数减去第二步的目标函数：（这里请重点理解！）： GBDT和XGBoost的区别与联系： GBDT是集成学习算法，而XGBoost是GBDT的一种高效工程实现 对比GBDT的损失函数，XGBoost还加入了正则化部分，防止过拟合，泛化性能更优 XGBoost对损失函数对误差部分同时做了一阶和二阶的泰勒展开，相比GBDT更加准确 GBDT的弱学习器限定了CART，而XGBoost还有很多其他的弱学习器可以选择 GBDT在每一轮迭代的时候使用了全部的数据，而XGBoost采用了跟随机森林差不多的策略，支持对数据进行采样 GBDT没有设计对缺失值的处理，XGBoost能够自动学习出缺失值的处理策略 参考： XGBoost算法原理小结 - 刘建平Pinard - 博客园 XGBoost的技术剖析_哔哩哔哩 (゜-゜)つロ 干杯~-bilibili https://arxiv.org/pdf/1603.02754.pdf]]></content>
       <categories>
-        <category>Spark</category>
+        <category>Machine-Learning</category>
       </categories>
       <tags>
-        <tag>Spark</tag>
-        <tag>Scala</tag>
-        <tag>elasticsearch</tag>
+        <tag>机器学习算法系列,集成学习,XGBoost,bagging</tag>
       </tags>
   </entry>
   <entry>
@@ -23,6 +21,19 @@
       <tags>
         <tag>Spark</tag>
         <tag>Scala</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Spark读取ElasticSearch数据——聚合查询]]></title>
+    <url>%2F2020%2Fspark-elasticsearch-aggregation-query%2F</url>
+    <content type="text"><![CDATA[本文主要介绍如何通过Spark读取ES中的数据，并对ES进行聚合查询。 我使用到的Scala、Spark和es的版本信息： 12345678910111213141516171819202122&lt;properties&gt; &lt;scala.version&gt;2.11.12&lt;/scala.version&gt; &lt;spark.version&gt;2.4.0-cdh6.3.1&lt;/spark.version&gt;&lt;/properties&gt;&lt;dependencies&gt; &lt;dependency&gt; &lt;groupId&gt;org.scala-lang&lt;/groupId&gt; &lt;artifactId&gt;scala-library&lt;/artifactId&gt; &lt;version&gt;$&#123;scala.version&#125;&lt;/version&gt; &lt;/dependency&gt; &lt;dependency&gt; &lt;groupId&gt;org.scala-lang&lt;/groupId&gt; &lt;artifactId&gt;scala-actors&lt;/artifactId&gt; &lt;version&gt;$&#123;scala.version&#125;&lt;/version&gt; &lt;/dependency&gt; &lt;dependency&gt; &lt;groupId&gt;org.elasticsearch&lt;/groupId&gt; &lt;artifactId&gt;elasticsearch-spark-20_2.11&lt;/artifactId&gt; &lt;version&gt;6.5.4&lt;/version&gt; &lt;/dependency&gt;&lt;/dependencies&gt; 下面是Spark读取es数据的测试代码，大家可以参考一下，主要有三种方法，用到了es的高阶API（EsSparkSQL、EsSpark.esRDD）和低阶API，建议使用方法一和方法三，方法二在测试中发现es的query语句不生效，测试了很多遍也没有通过。 123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778798081828384858687888990919293949596979899100101102103104105106107108109110111import java.net.InetAddressimport java.util.Propertiesimport org.apache.spark.sql.SparkSessionimport org.apache.spark.sql.functions.maximport org.elasticsearch.action.search.SearchTypeimport org.elasticsearch.common.settings.Settingsimport org.elasticsearch.common.transport.TransportAddressimport org.elasticsearch.search.aggregations.AggregationBuildersimport org.elasticsearch.search.aggregations.metrics.max.InternalMaximport org.elasticsearch.spark.rdd.EsSparkimport org.elasticsearch.spark.sql.EsSparkSQLimport org.elasticsearch.transport.client.PreBuiltTransportClientobject SparkEsDemo &#123; def main(args: Array[String]): Unit = &#123; run() &#125; def run(): Unit = &#123; val sparkSession = SparkSession .builder() .appName("SparkEsTestDemo") .config("es.nodes", "xxx.xxx.xxx.xxx") .config("es.port", 9200) //重试5次（默认3次） .config("es.batch.write.retry.count", "5") //等待60秒（默认10s） .config("es.batch.write.retry.wait", "60") //es连接超时时间100s（默认1m） .config("es.http.timeout", "200s") .getOrCreate() // 方法一：通过将es的数据读取为dataframe val esResource = "esIndex/esType" // 换成你自己的索引和索引类型 val esDf = EsSparkSQL .esDF(sparkSession,resource = esResource) // resource参数填写es的索引和索引类型 .agg(max("fieldName")) // 到了这里就相当于直接将es的数据转化为dataframe直接做计算了，很直观 .withColumnRenamed("max(fieldName)","maxFieldName") .na.fill(0) esDf.show(false) // 方法三：通过编写Query查询语句查询es数据，返回的是rdd数据 val query = s"""&#123; | "query": &#123; | "bool": &#123;&#125; | &#125;, | "size": 0, | "aggs": &#123; | "max_price": &#123; | "max": &#123; | "field": "price" | &#125; | &#125; | &#125; |&#125;""".stripMargin val esRdd = EsSpark .esRDD(sparkSession.sparkContext, esResource, query) // https://github.com/elastic/elasticsearch-hadoop/issues/276 esRdd.take(10).foreach(println) esRdd.take(10).foreach(f =&gt; &#123; val map:collection.Map[String,AnyRef] = f._2 for (s &lt;- map) &#123; println(s._1 + s._2) &#125; &#125;) // 方法三：通过es客户端的低阶API实现聚合查询 // https://www.cnblogs.com/benwu/articles/9230819.html val prop = new Properties() val esClient = initClient(prop) val searchResponse = esClient .prepareSearch("recommend_smartvideo_spider_acgn") .setTypes("smartvideo_type_user_irrelative") .setSearchType(SearchType.DFS_QUERY_THEN_FETCH) .setExplain(true) .setSize(0) .addAggregation(AggregationBuilders.max("max_cursor").field("inx_cursor")) .setFetchSource(false) .execute().actionGet() val maxValue:InternalMax = searchResponse.getAggregations.get("max_cursor") println(maxValue.value()) &#125; /** * 初始化es客户端 * @param prop es配置类 * @return */ def initClient(prop: Properties): PreBuiltTransportClient = &#123; val setting = Settings.builder() .put("cluster.name", prop.getProperty("es.cluster.name")) .put("client.transport.sniff", true) .build() val client = new PreBuiltTransportClient(setting) val hostAndPortArr = prop.getProperty("es.host&amp;port").split(",") for (hostPort &lt;- hostAndPortArr) &#123; val hp = hostPort.split(":") if (hp.length == 2) &#123; client.addTransportAddress( new TransportAddress(InetAddress.getByName(hp(0)), hp(1).toInt) ) &#125; else &#123; client.addTransportAddress( new TransportAddress(InetAddress.getByName(hp(0)), 9300) ) &#125; &#125; client &#125;&#125;]]></content>
+      <categories>
+        <category>Spark</category>
+      </categories>
+      <tags>
+        <tag>Spark</tag>
+        <tag>Scala</tag>
+        <tag>elasticsearch</tag>
       </tags>
   </entry>
   <entry>
@@ -386,20 +397,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[详解RNN文本分类模型的架构]]></title>
-    <url>%2F2018%2FRNN-structure-in-text-classification%2F</url>
-    <content type="text"><![CDATA[典型RNN模型下图是典型的RNN模型，$X$是输入，对文本经过嵌入层嵌入处理，再进入RNN，RNN的后面是全连接层，输出各个类别的概率。 下面来描述一次数据从输入到输出的完整过程： 在自然语言处理中，不管是中文还是英文，首先第一步的任务是如何将文本数据数值化。对于中文，可以先建立词汇表，给词汇表中的没歌词建立唯一的id标识（数字），这样每段文本都可以用一串数字id来表示，然后就能进行词嵌入操作，英文的处理方法也类似。 对文本预处理时，由于每条文本的长度不一，需要给输入统一规定长度（seq_length），超过的截断，不足的填充。假设有$N​$段文本（text），统一长度后就变成了[N, 1, seq_length]​大小的矩阵，矩阵的每一行代表一段文本，大小为​[1, seq_length]​。 通常，传统的做法是将one-hot编码，但是劣势是矩阵会很稀疏，并且上下文之间的语义关系非常模糊，难以捕捉。现在一般的做法是将文本词向量化，将每个词（字）“嵌入”为大小为[1, embedding_size]大小的向量矩阵。到了这一步，输入基本就确定下来了，它是大小为[seq_length, embedding_size]大小的矩阵。 接下来是训练，训练中可以一条一条给RNN“喂”数据，当有一条数据进来，等待它的是seq_length个cell，LSTM的输出整个过程如下： 但是这样的训练太慢了，并且优化的参数也难以顾及到全局的信息，通常是批次训练，一次喂给模型batch_size条数据。 批次训练全过程详解 原帖地址：understanding-pytorch-batching-lstm/Understanding Pytorch Batching.ipynb at master · ngarneau/understanding-pytorch-batching-lstm 1. one-hot 编码 2. 零填充 3. 批量输入将每一个batch设置为4 4. 词嵌入（word embedding）矩阵中的每一行代表一个字母的向量 5. Packed Embeddings 注意，这里将词向量矩阵打包过了一次，因为我们并不需要零填充后的词向量。在这种情况下，batch_sizes为[4, 4, 4, 3, 2, 1]，即第一步到第三步每次会给LSTM喂4个字母，到第四步，San已经用光了，所以给LSTM的只有3个字母，以此类推，到最后只有1个字母v。 6. LSTM out数据进入RNN之后输出的结果 7. padded LSTM out填充LSTM的输出 8. reshape output 9. maxpooling最大池化 10. predict]]></content>
-      <categories>
-        <category>Machine-Learning</category>
-      </categories>
-      <tags>
-        <tag>架构</tag>
-        <tag>RNN</tag>
-        <tag>循环神经网络</tag>
-        <tag>分类模型</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[Python 工具箱系列 （6）：为jupyter notebook中添加虚拟环境]]></title>
     <url>%2F2018%2Fadd-virtualenv-in-jupyter-notebook%2F</url>
     <content type="text"><![CDATA[123456789# 建立虚拟环境scrapymkvirtualenv scrapy# 进入虚拟环境scrapyworkon scrapy# 安装jupyter，具体操作略过(scrapy) pip install jupyter# 安装ipykernel，添加kernel(scrapy) pip install ipykernel(scrapy) python -m ipykernel install --user --name scrapy --display-name "Python2(scrapy)"]]></content>
@@ -412,6 +409,20 @@
         <tag>jupyter notebook</tag>
         <tag>virtualenv</tag>
         <tag>python工具箱系列</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[详解RNN文本分类模型的架构]]></title>
+    <url>%2F2018%2FRNN-structure-in-text-classification%2F</url>
+    <content type="text"><![CDATA[典型RNN模型下图是典型的RNN模型，$X$是输入，对文本经过嵌入层嵌入处理，再进入RNN，RNN的后面是全连接层，输出各个类别的概率。 下面来描述一次数据从输入到输出的完整过程： 在自然语言处理中，不管是中文还是英文，首先第一步的任务是如何将文本数据数值化。对于中文，可以先建立词汇表，给词汇表中的没歌词建立唯一的id标识（数字），这样每段文本都可以用一串数字id来表示，然后就能进行词嵌入操作，英文的处理方法也类似。 对文本预处理时，由于每条文本的长度不一，需要给输入统一规定长度（seq_length），超过的截断，不足的填充。假设有$N​$段文本（text），统一长度后就变成了[N, 1, seq_length]​大小的矩阵，矩阵的每一行代表一段文本，大小为​[1, seq_length]​。 通常，传统的做法是将one-hot编码，但是劣势是矩阵会很稀疏，并且上下文之间的语义关系非常模糊，难以捕捉。现在一般的做法是将文本词向量化，将每个词（字）“嵌入”为大小为[1, embedding_size]大小的向量矩阵。到了这一步，输入基本就确定下来了，它是大小为[seq_length, embedding_size]大小的矩阵。 接下来是训练，训练中可以一条一条给RNN“喂”数据，当有一条数据进来，等待它的是seq_length个cell，LSTM的输出整个过程如下： 但是这样的训练太慢了，并且优化的参数也难以顾及到全局的信息，通常是批次训练，一次喂给模型batch_size条数据。 批次训练全过程详解 原帖地址：understanding-pytorch-batching-lstm/Understanding Pytorch Batching.ipynb at master · ngarneau/understanding-pytorch-batching-lstm 1. one-hot 编码 2. 零填充 3. 批量输入将每一个batch设置为4 4. 词嵌入（word embedding）矩阵中的每一行代表一个字母的向量 5. Packed Embeddings 注意，这里将词向量矩阵打包过了一次，因为我们并不需要零填充后的词向量。在这种情况下，batch_sizes为[4, 4, 4, 3, 2, 1]，即第一步到第三步每次会给LSTM喂4个字母，到第四步，San已经用光了，所以给LSTM的只有3个字母，以此类推，到最后只有1个字母v。 6. LSTM out数据进入RNN之后输出的结果 7. padded LSTM out填充LSTM的输出 8. reshape output 9. maxpooling最大池化 10. predict]]></content>
+      <categories>
+        <category>Machine-Learning</category>
+      </categories>
+      <tags>
+        <tag>架构</tag>
+        <tag>RNN</tag>
+        <tag>循环神经网络</tag>
+        <tag>分类模型</tag>
       </tags>
   </entry>
   <entry>
@@ -668,7 +679,7 @@
   <entry>
     <title><![CDATA[机器学习算法系列（16）随机森林]]></title>
     <url>%2F2018%2Fmachine-learning-algorithm-series-random-forests%2F</url>
-    <content type="text"><![CDATA[为了得到更强的泛化性能，在集成学习中我们期望个体学习器尽可能不相同，因为只有这样才能够全面地概括数据，所以有了 bagging 这个方法。 随机森林在 bagging 的基础上，再次对特征做了一次随机选择，比如对于自助采样后的每一个子数据集（总共 m 个子数据集），我们并不会像决策数那样用到所有的特征，随机森林会从所有的特征中随机选择一个包含 k（k&lt;n） 个特征的子集。当有一条新数据进来，在随机森林的 m 棵树会各自给出一个答案，如果是分类任务，我们就选择投票法，如果是回归任务则一般选择平均值作为输出。不像决策树，越靠近根节点的特征重要性越高，在随机森林中，在每个特征都是有可能成为“主角”的，也不容易出现过拟合的问题。 看了很多资料，似乎大家都把随机森林理解得有点复杂，推荐大家观看一个印度人的讲解视频：What is Random Forest Algorithm? A graphical tutorial on how Random Forest algorithm works? - YouTube，很清晰明了（需要翻墙）。]]></content>
+    <content type="text"><![CDATA[为了得到更强的泛化性能，在集成学习中我们期望个体学习器尽可能不相同，因为只有这样才能够全面地概括数据，所以有了 Bagging 这个方法。Bagging是并行式集成学习方法的代表，它基于自助采样法（Bootstrap sampling），给定m个样本的数据集，有放回地抽取一个数据作为数据集，重复m次随机采样得到m个样本的数据集。然后，我们可以将以上的步骤重复T次，得到T个大小为m的随机样本数据集，基于每个样本数据集训练学习器。最后，针对是分类或者回归任务使用投票或者平均来确定最终学习器学习的结果。 随机森林在 Bagging 的基础上做了改进，随机森林会再次对特征做了一次随机选择，比如对于自助采样后的每一个子数据集（总共 m 个子数据集），我们并不会像决策数那样用到所有的特征，随机森林会从所有的特征中随机选择一个包含 k（k&lt;n） 个特征的子集（通常k取log2(n)）。当有一条新数据进来，在随机森林的 m 棵树会各自给出一个答案，如果是分类任务，我们就选择投票法，如果是回归任务则一般选择平均值作为输出。不像决策树，越靠近根节点的特征重要性越高，在随机森林中，在每个特征都是有可能成为“主角”的，也不容易出现过拟合的问题，可以说泛化的优点很明显。 看了很多资料，似乎大家都把随机森林理解得有点复杂，推荐大家观看一个印度人的讲解视频：What is Random Forest Algorithm? A graphical tutorial on how Random Forest algorithm works? - YouTube，很清晰明了（需要翻墙）。]]></content>
       <categories>
         <category>Machine-Learning</category>
       </categories>
@@ -1172,7 +1183,7 @@
   <entry>
     <title><![CDATA[机器学习算法系列（14）梯度提升决策树]]></title>
     <url>%2F2017%2Fmachine-learning-algorithm-series-gbdt%2F</url>
-    <content type="text"><![CDATA[1. GBDT与AdaBoost的联系与区别在前面的文章中，我们了解到了一种提升方法 —— AdaBoost，它是一类能够从训练数据中学习一组弱分类器，并将弱分类器组合成强分类器的算法，通俗一点解释就是“三个臭皮匠顶个诸葛亮”。GBDT跟AdaBoost一样都属于集成学习中的提升方法（另一种是Bagging），特殊之处在于GBDT的基分类器限定为了决策树（分类树或回归树），提升树可以看做是多颗决策树的线性组合。 另外，它们两者在迭代上有所区别。AdaBoost利用的是上一轮学习器的误差率来更新数据的权重，在每一轮的迭代中误分类的数据和分类误差率小的模型会获得更高的权重，理论上AdaBoost的学习器可以选择任何分类模型，只是由于树形模型比较简单且容易产生随机性所以通常被用于基分类器。而GBDT的基学习分类器限定只能是CART回归树，顾名思义，它可以解决回归和分类问题，GBDT的迭代思路是使用前向分布算法，基本思想是根据上一轮学习器损失函数的负梯度来训练本轮的学习器，本轮学习器$f_{t}(x)$的优化的目标是将上一轮学习器的损失函数L优化得到一个最小值。而如何拟合GBDT的损失函数则是一个GBDT需要考虑的关键问题。 总结一下Adaboost 与 GBDT的区别： Adaboost 是基于样本权重更新，误分类的样本和误差率低的学习器可以获得更高的权重 Gradient Boost 是基于残差减小的梯度方向进行更新 理论上AdaBoost的分类器可以选择任何分类模型，GBDT的学习器则限定于分类回归树 可以这样说，如果限定提升树的基分类器为分类回归树（CART），那么此时的GBDT跟AdaBoost就没有差别了。 2. 回归问题的提升树算法下面讨论回归问题的提升树，其实相比分类问题，回归问题更好计算，没有 AdaBoost 那一套复杂的权重更新过程，每一次的迭代只需要拟合残差，每一棵新树的建立都是基于残差的负梯度方向。残差是什么？残差是实际值与预测值之差： r = y_i - f(x_i)回归问题的提升树有两个值得关注的点： 一、寻找使得残差最小的切分节点 二、平方损失误差 $L$ 达到要求后即可停止。 3. 梯度提升（Gradient Boosting）上面一节中，可以知道，平方损失函数的情形很简单，但是对于更一般的损失函数，优化就没有那么简单了，于是我们需要在提升树算法中引入梯度下降的优化算法，即所谓的GBDT。GBDT的损失函数，如果是对于分类算法，其损失函数有对数损失和指数损失，如果是回归算法，其损失函数一般有平方损失、绝对值损失、Huber损失函数（对异常值的鲁棒性比较强）等等。梯度下降优化算法的关键是计算其负梯度在当前模型的值，并将该值作为近似的残差，最后根据残差拟合一个回归树。 -\left[ \frac{\partial L(y^{(i)}, f(x^{(i)}))} {\partial f(x^{(i)})} \right]_{f(x) = f_{k-1}(x)} \approx r_{m,i} 第2（c）步的$c_{mj}$是各个叶子节点最佳负梯度的拟合值，第2（d）步将该拟合值更新到下一轮的学习器中。打个比方，假设一个人真实年龄是30岁，第一颗回归树预测的结果是27岁，残差是3，下一颗树的目标就是假定预测一个年龄等于3岁的人，如果第二棵树预测的结果是2岁，那么第一颗和第二棵树相加的结果29就是两棵树的预测结果。 3. sklearn GBDT可调节的参数按照分类和回归问题，sklearn有GradientBoostingClassifier为GBDT的分类类， 而GradientBoostingRegressor为GBDT的回归类，两者的参数类型差不多相同。 loss：选择损失函数，分类问题的损失函数可以选择对数损失函数（deviance）和指数损失函数（exponential），回归问题的损失函数可以选择均方差损失函数（ls）、绝对损失函数（lad）、huber损失函数（huber）和分位数损失函数（quantile） learning_rate：学习率，默认0.1，取值范围(0,1]，文档提示这个参数经常需要跟n_estimators一块调节 n_estimators：学习器的迭代次数，一般可以把这个参数设置得大一点以获得更好的效果，默认是100 subsample：采样率决定数据中不放回抽样一定比率的样本拟合基学习器，抽样能减小方差防止过拟合，但是同时也会增加偏差 max_depth：决策树的最大深度，默认为3，max_depth限制了数的节点个数，如果数据集的特征和数据量比较大可以把这个值调大一点 min_samples_split：内部节点再划分所需要的最小样本数，可以取int或者float，如果在划分的时候子树的节点数小于这个参数便不会继续划分 min_samples_leaf：叶子节点所需要的最少的样本数，默认等于1，可以取int或者float min_weight_fraction_leaf：叶子节点最小的样本权重和，如果样本中有比较多的缺失值可以引进这个参数 max_leaf_nodes：最大叶子节点数，默认为None，可以防止模型过拟合 min_impurity_split：节点划分的最小不纯度，如果节点的不纯度小于它，那么该节点不再生成子节点 推荐阅读 机器学习中的算法(1)-决策树模型组合之随机森林与GBDT chentianqi: XGBoost 与 Boosted Tree GBDT原理与Sklearn源码分析-分类篇 - SCUT_Sam - CSDN博客 GBDT原理与Sklearn源码分析-回归篇 - SCUT_Sam - CSDN博客]]></content>
+    <content type="text"><![CDATA[1. GBDT与AdaBoost的联系与区别在前面的文章中，我们了解到了一种提升方法 —— AdaBoost，它是一类能够从训练数据中学习一组弱分类器，并将弱分类器组合成强分类器的算法，通俗一点解释就是“三个臭皮匠顶个诸葛亮”。GBDT跟AdaBoost一样都属于集成学习中的提升方法（另一种是Bagging），特殊之处在于GBDT的弱学习器限定为了决策树（分类树或回归树），提升树可以看做是多颗决策树的线性组合。不过AdaBoost算是年代比较久远的集成学习算法，现在基本上很少用到了。 除了弱学习器的不同，另外，它们两者在迭代上有所区别。AdaBoost利用的是上一轮学习器的误差率来更新数据的权重，在每一轮的迭代中误分类的数据和分类误差率小的模型会获得更高的权重，理论上AdaBoost的学习器可以选择任何分类模型，只是由于树形模型比较简单且容易产生随机性所以通常被用于基分类器。而GBDT的基学习分类器限定只能是CART回归树，顾名思义，它可以解决回归和分类问题，GBDT的迭代思路是使用前向分布算法，基本思想是根据上一轮学习器损失函数的负梯度来训练本轮的学习器，本轮学习器$f_{t}(x)$的优化的目标是将上一轮学习器的损失函数L优化得到一个最小值。如果这样解释还不太清楚，那我举一个例子，比如现在给你k次机会猜测我的真实年龄，并且下一次猜测的数字需要跟上一次猜测的数字相加才能成为下一次猜测的最终结果，第一次你猜测20岁，我说小了，然后第二次你说加10岁，我说大了，然后第三次你说减5岁，我说小了…… 而如何拟合GBDT的损失函数则是一个GBDT需要考虑的关键问题。 总结一下Adaboost 与 GBDT的区别： Adaboost 是基于样本权重更新，误分类的样本和误差率低的学习器可以获得更高的权重 Gradient Boost 是基于残差减小的梯度方向进行更新 理论上AdaBoost的分类器可以选择任何分类模型，GBDT的学习器则限定于分类回归树 可以这样说，如果限定提升树的基分类器为分类回归树（CART），那么此时的GBDT跟AdaBoost就没有差别了。 2. 回归问题的提升树算法下面讨论回归问题的提升树，其实相比分类问题，回归问题更好计算，没有 AdaBoost 那一套复杂的权重更新过程，每一次的迭代只需要拟合残差，每一棵新树的建立都是基于残差的负梯度方向。残差是什么？残差是实际值与预测值之差： r = y_i - f(x_i)打个比方，假设一个人真实年龄是30岁，第一颗回归树预测的结果是27岁，残差是3，下一颗树的目标就是假定预测一个年龄等于3岁的人，如果第二棵树预测的结果是2岁，那么第一颗和第二棵树相加的结果29就是两棵树的预测结果。 回归问题的提升树有两个值得关注的点： 一、寻找使得残差最小的切分节点 二、平方损失误差 $L$ 达到要求后即可停止。 3. 梯度提升（Gradient Boosting）上面一节中，可以知道，平方损失函数的情形很简单，但是对于更一般的损失函数，优化就没有那么简单了，于是我们需要在提升树算法中引入梯度下降的优化算法，即所谓的GBDT。GBDT的损失函数，如果是对于分类算法，其损失函数有对数损失和指数损失，如果是回归算法，其损失函数一般有平方损失、绝对值损失、Huber损失函数（对异常值的鲁棒性比较强）等等。梯度下降优化算法的关键是计算其负梯度在当前模型的值，并将该值作为近似的残差，最后根据残差拟合一个回归树。 -\left[ \frac{\partial L(y^{(i)}, f(x^{(i)}))} {\partial f(x^{(i)})} \right]_{f(x) = f_{k-1}(x)} \approx r_{m,i} 第2（c）步的$c_{mj}$是各个叶子节点最佳负梯度的拟合值，第2（d）步将该拟合值更新到下一轮的学习器中。 3. sklearn GBDT可调节的参数按照分类和回归问题，sklearn有GradientBoostingClassifier为GBDT的分类类， 而GradientBoostingRegressor为GBDT的回归类，两者的参数类型差不多相同。 loss：选择损失函数，分类问题的损失函数可以选择对数损失函数（deviance）和指数损失函数（exponential），回归问题的损失函数可以选择均方差损失函数（ls）、绝对损失函数（lad）、huber损失函数（huber）和分位数损失函数（quantile） learning_rate：学习率，默认0.1，取值范围(0,1]，文档提示这个参数经常需要跟n_estimators一块调节 n_estimators：学习器的迭代次数，一般可以把这个参数设置得大一点以获得更好的效果，默认是100 subsample：采样率决定数据中不放回抽样一定比率的样本拟合基学习器，抽样能减小方差防止过拟合，但是同时也会增加偏差 max_depth：决策树的最大深度，默认为3，max_depth限制了数的节点个数，如果数据集的特征和数据量比较大可以把这个值调大一点 min_samples_split：内部节点再划分所需要的最小样本数，可以取int或者float，如果在划分的时候子树的节点数小于这个参数便不会继续划分 min_samples_leaf：叶子节点所需要的最少的样本数，默认等于1，可以取int或者float min_weight_fraction_leaf：叶子节点最小的样本权重和，如果样本中有比较多的缺失值可以引进这个参数 max_leaf_nodes：最大叶子节点数，默认为None，可以防止模型过拟合 min_impurity_split：节点划分的最小不纯度，如果节点的不纯度小于它，那么该节点不再生成子节点 GBDT的优点和局限性优点： 由于GBDT的弱学习器是决策树，这就决定了我们在应用模型的时候无需对数据进行归一化等预处理 泛化能力强 局限性： 不适合处理文本分类的任务，在高维稀疏的数据集上表现也一般 因为GBDT是加法模型，下一个模型是基于上一个模型的，所以它的训练过程是串行的 推荐阅读 机器学习中的算法(1)-决策树模型组合之随机森林与GBDT chentianqi: XGBoost 与 Boosted Tree GBDT原理与Sklearn源码分析-分类篇 - SCUT_Sam - CSDN博客 GBDT原理与Sklearn源码分析-回归篇 - SCUT_Sam - CSDN博客]]></content>
       <categories>
         <category>Machine-Learning</category>
       </categories>
@@ -1868,8 +1879,8 @@
       </categories>
       <tags>
         <tag>笔记</tag>
-        <tag>MOOC</tag>
         <tag>C++</tag>
+        <tag>MOOC</tag>
       </tags>
   </entry>
   <entry>
@@ -1894,8 +1905,8 @@
         <category>coding</category>
       </categories>
       <tags>
-        <tag>MOOC</tag>
         <tag>C++</tag>
+        <tag>MOOC</tag>
         <tag>编程</tag>
       </tags>
   </entry>
@@ -1920,8 +1931,8 @@
         <category>coding</category>
       </categories>
       <tags>
-        <tag>MOOC</tag>
         <tag>C++</tag>
+        <tag>MOOC</tag>
         <tag>编程</tag>
       </tags>
   </entry>
@@ -2032,9 +2043,9 @@
       <tags>
         <tag>数据分析</tag>
         <tag>R</tag>
-        <tag>data analysis</tag>
         <tag>数据结构</tag>
         <tag>data-structure</tag>
+        <tag>data analysis</tag>
       </tags>
   </entry>
   <entry>
