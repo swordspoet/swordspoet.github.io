@@ -175,7 +175,8 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/image-20210510210543835.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/image-20210510210629523.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/image-20210511224734116.png">
-<meta property="og:updated_time" content="2021-05-12T13:35:40.652Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/image-20210510202635578.png">
+<meta property="og:updated_time" content="2021-05-16T07:10:36.561Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习算法系列（19）XGBoost">
 <meta name="twitter:description" content="XGBoost是GBDT的一种高效的实现，它是由华盛顿大学的陈天奇开发的一个高度可扩展的、端到端的提升系统。近几年XGBoost在各大算法竞赛中取得的成绩一时间可谓风头无两，它取得成功背后在于它在所有场景中的可扩展性，它在处理稀疏数据上的标点也是非常强大的。 1. 回顾提升树（Boosting Tree）提升树（Boosting Tree）是集成学习的代表之一，在之前的文章中我们就提到过，集成学习">
@@ -302,7 +303,7 @@
           
           <li class="menu-item menu-item-tags">
     <a href="/tags/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">309</span></a>
+      <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签<span class="badge">311</span></a>
   </li>
         
         
@@ -310,7 +311,7 @@
           
           <li class="menu-item menu-item-categories">
     <a href="/categories/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">18</span></a>
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类<span class="badge">19</span></a>
   </li>
         
         
@@ -318,7 +319,7 @@
           
           <li class="menu-item menu-item-archives">
     <a href="/archives/" rel="section">
-      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">153</span></a>
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档<span class="badge">154</span></a>
   </li>
         
         
@@ -467,7 +468,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-05-12 21:35:40" itemprop="dateModified" datetime="2021-05-12T21:35:40+08:00">2021-05-12</time>
+                <time title="修改时间：2021-05-16 15:10:36" itemprop="dateModified" datetime="2021-05-16T15:10:36+08:00">2021-05-16</time>
               
             
           </span>
@@ -571,7 +572,27 @@
 </li>
 <li>基于score最大的特征分裂</li>
 </ol>
-<h4 id="4-XGBoost类库的参数"><a href="#4-XGBoost类库的参数" class="headerlink" title="4. XGBoost类库的参数"></a>4. XGBoost类库的参数</h4><p>在<a href="https://www.libinx.com/2017/machine-learning-algorithm-series-gbdt/">梯度提升决策树 </a>的文章的末尾提到了GBDT在sklearn中可以调节的参数，对于XGBoost我们还是以sklearn为例，其实XGBoost和GBDT可调节的参数都差不多，在下一篇文章中会单独拿出来介绍。</p>
+<h4 id="4-XGBoost类库的参数"><a href="#4-XGBoost类库的参数" class="headerlink" title="4. XGBoost类库的参数"></a>4. XGBoost类库的参数</h4><p>在<a href="https://www.libinx.com/2017/machine-learning-algorithm-series-gbdt/">梯度提升决策树 </a>的文章的末尾提到了GBDT在sklearn中可以调节的参数，其实XGBoost和GBDT可调节的参数都差不多。</p>
+<p>通用参数：</p>
+<ol>
+<li><code>booster</code> ：弱学习器种类，gbtree或者dart</li>
+<li><code>objective</code>：损失函数，如果是回归问题一般使用reg:squarederror，分类问题使用<code>binary:logistic</code>或者<code>multi:softmax</code>，另外还可以通过设置损失函数决定模型的输出是概率还是原始的预测值</li>
+<li><code>n_estimators</code>：弱学习器的个数，决定了模型的复杂程度，<strong>通常和学习率参数一块调参</strong></li>
+</ol>
+<p>弱学习器参数：</p>
+<ol>
+<li><code>eta [default=0.3, alias: learning_rate]</code>：学习率，默认等于0.3</li>
+<li><code>gamma [default=0, alias: min_split_loss]</code>：等于目标函数中正则化项的gamma，决策树分裂时最大化下式时必须大于gamma才能继续分裂<img src="https://raw.githubusercontent.com/swordspoet/i/img/image-20210510202635578.png" alt="image-20210510202635578" style="zoom:67%;"></li>
+<li><code>max_depth [default=6]</code>：定义树的最大深度，决定了模型的复杂程度，通常需要通过网格搜索决定最佳的树的深度</li>
+<li><code>min_child_weight [default=1]</code>：决策树中子节点最小的权重阈值，如果子节点的权重阈值小于min_child_weight则不再继续分裂</li>
+<li><code>subsample [default=1]</code>：训练集的采样率，介于0,1之间</li>
+<li><code>sampling_method [default= uniform]</code>：采样方法，有uniform和gradient_based</li>
+<li><code>colsample_bytree, colsample_bylevel, colsample_bynode [default=1]</code>：针对特征采样的手段，层级别、树级别和子节点级别，采样率介于0,1之间</li>
+<li><code>lambda [default=1, alias: reg_lambda]</code>：L2正则化系数，对应$\Omega(h<em>t) = \gamma J + \frac{\lambda}{2}\sum\limits</em>{j=1}^Jw_{tj}^2$里面的$\lambda$</li>
+<li><code>alpha [default=0, alias: reg_alpha]</code>：L1正则化系数，对应$\Omega(h<em>t) = \gamma J + \frac{\lambda}{2}\sum\limits</em>{j=1}^Jw_{tj}^2$里面的$\gamma$</li>
+<li><code>tree_method</code>：默认auto，自动选择最快的方法</li>
+</ol>
+<p>参考：<a href="https://xgboost.readthedocs.io/en/latest/python/python_api.html" target="_blank" rel="noopener">Python API Reference — xgboost 1.5.0-SNAPSHOT documentation</a></p>
 <h4 id="5-GBDT和XGBoost的区别与联系："><a href="#5-GBDT和XGBoost的区别与联系：" class="headerlink" title="5. GBDT和XGBoost的区别与联系："></a>5. GBDT和XGBoost的区别与联系：</h4><ol>
 <li>GBDT是集成学习算法，而XGBoost是GBDT的一种高效工程实现</li>
 <li>对比GBDT的损失函数，XGBoost还加入了正则化部分，防止过拟合，泛化性能更优</li>
@@ -700,6 +721,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2021/anti-cheating/" rel="prev" title="2021-05-16-谈谈反作弊风控的实践经验">
+                2021-05-16-谈谈反作弊风控的实践经验 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -780,7 +805,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">153</span>
+                    <span class="site-state-item-count">154</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -829,7 +854,9 @@
                     
                       
                     
-                    <span class="site-state-item-count">18</span>
+                      
+                    
+                    <span class="site-state-item-count">19</span>
                     <span class="site-state-item-name">分类</span>
                   </a>
                 </div>
@@ -1460,7 +1487,11 @@
                     
                       
                     
-                    <span class="site-state-item-count">309</span>
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">311</span>
                     <span class="site-state-item-name">标签</span>
                   </a>
                 </div>
@@ -1542,7 +1573,7 @@
               </ul>
             </div>
 			<div class="theme-info">
-				<span class="post-count">全站共209.1k字</span>
+				<span class="post-count">全站共211.2k字</span>
 			</div>
 			
 			
