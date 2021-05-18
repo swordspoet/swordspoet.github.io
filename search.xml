@@ -449,8 +449,8 @@
         <tag>支持向量机</tag>
         <tag>搜狗新闻数据</tag>
         <tag>文本分类</tag>
-        <tag>sklearn</tag>
         <tag>传统机器学习方法</tag>
+        <tag>sklearn</tag>
         <tag>logistic regression</tag>
         <tag>svm</tag>
         <tag>朴素贝叶斯</tag>
@@ -466,8 +466,8 @@
       </categories>
       <tags>
         <tag>python</tag>
-        <tag>classification_report</tag>
         <tag>sklearn</tag>
+        <tag>classification_report</tag>
         <tag>分类报告</tag>
       </tags>
   </entry>
@@ -636,6 +636,20 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[学习 Flask——尝试用用十步学习法]]></title>
+    <url>%2F2018%2Flearn-flask-by-10-steps%2F</url>
+    <content type="text"><![CDATA[尝试用十步学习法学习 Flask。 1. 了解全局 阅读背景知识：博客、视频、书籍（目录、大纲） 目的是了解自己对学习主题的了解程度 Flask 是 Python 下一个基于 Werkzeug（WSGI 套件，Web 服务器网关接口）、Jinja 2（模板引擎） 和良好扩展特性的微框架。为什么是“微”？我特地查了一些文档，“Flask 永远不会包含数据库，也不会有表单库或是这方面的其他东西”、“Flask 的理念是为所有应用建立良好的基础，其余的一切都取决于你自己或者扩展”，它很小，能快速应对上线需求，不需要复杂的数据库设计，也就是说 Flask 仅仅充当一个桥梁的架子，至于外观设计（模板）、桥梁流量控制（WSGI）则取决与桥梁设计师。 Flask 是 Python 下的，然后我之前有在老师的指导下用 Flask 写过两个简单的应用，时间久远，印象有点模糊，需查看笔记。另外，实践 Flask 还需要有一些 HTML 和 CSS 的知识，虽然没有系统学过，但问题应该不大，查找文档和在浏览器里打开 F12 调试即可，我在调试自己的博客过程中有一些调节样式的经验。 Flask 的教程有很多，国内国外的都有，国内的培训机构有的会把教学视频发布到腾讯视频，水平参差不齐，很多废话，观看时开两倍速快速过一遍，国外的质量相对较高，但是我还没有确定下看哪个TODO。 2. 确定范围（边界） 拆解：可控、聚焦 时间：在特定的时间能学会什么 在大约一周的时间内，学习 Flask 的基本概念：路由、部署、修改模板引擎、虚拟环境安装、常见问题调试技巧，掌握文档的快速上手部分，掌握如何开发一个简单的网站并上线（登录）。 3. 设定目标 清晰，拒绝含糊不清的描述 目标是具体的，可以实现的 按照教学视频复现一个可以登录注册的导航工具网站（奥森导航），该网站提供为程序员提高生产力的工具。 学完快速上手Quickstart — Flask 1.0.2 documentation 导航页面：把关于 | Thinking Realm里提到的几个链接作为导航，有多简单就多简单，能用就行 博客：能够实现登录注册，新建、修改删除文章功能 将以上的学习、开发过程整理为博客笔记 4. 寻找资源 书籍 博客、在线文档 教学视频 我收集到的资源： 下载电子书：Flask Web开发：基于Python的Web应用开发实战 安装了 pycharm 文档 Tutorial — Flask 1.0.2 documentation：如何用 Flask 搭建简单博客的技术文档；有个培训班老师制作了对应的教学视频，Mars 老师，共 17 讲 Quickstart — Flask 1.0.2 documentation：官方 Flask 快速入门文档，涉及到 Flask 中的一些常见概念，如路由、静态文件、模板等等。有两个中文翻译版本 欢迎来到 Flask 的世界 — Flask 1.0.2 documentation 快速入门 — Flask 0.10.1 文档 Deployment Options — Flask 1.0.2 documentation：如何部署 Flask？ 知乎问答：怎样才能彻底掌握Flask？怎样的学习顺序比较合理？ - 知乎 5. 创建学习计划通过阅读书籍和教学视频，观察别人的学习计划，定制自己的学习计划。 学完快速上手Quickstart — Flask 1.0.2 documentation：预计 1 hour，整理成学习笔记发布到博客 观看 Mars 老师的教学视频 6. 筛选资源由第 5 步的计划筛选第 4 步收集的资源 （未完待续……）]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>flask</tag>
+        <tag>软技能</tag>
+        <tag>程序员</tag>
+        <tag>网络框架</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[软技能——代码之外的生存指南]]></title>
     <url>%2F2018%2Fsoft-skills-the-software-developer-life-manual%2F</url>
     <content type="text"><![CDATA[这是一位在 33 岁实现财务自由的程序员的个人奋斗史，也是他对于生活和事业的全面总结以及留给后辈的指导。 转变心态转变心态，从签了“卖身契”的打工者变为把自己当做品牌经营的生意人。因此，你需要经常注意： 我能提供什么服务？ 如何提升服务的质量？ 绝大多数人的时间精力有限，专注与某一方面的服务 如何在团队中脱颖而出承担责任！承担责任！承担责任！ 直接：想方设法寻找别人没有注意到的、不愿涉及的领域，比如简化流程、维护文档 间接：帮助其他人解决问题，加速成长 让自己极度透明化，不要怕暴露自己的缺点（《原则》一书中也提到） 自学能力 像专业人士一样思考专业人士有自己的判断，从而他们有敢于说“不”的底气，不然很容易陷入无理要求的陷阱。书中列出了专业人士的几个特点，括号内为对应外行的特点： 遵守自己的原则（让干什么就干什么） 专注于正确完成工作（专注于完成工作） 不惧怕承认自己错了，不会文过饰非（不懂装懂）注：文过饰非，即用漂亮的文字掩盖自己的错误 持续稳定（无法预测，不可靠） 勇于承担责任（回避责任） 看完后我心里一惊，自己多少会有几个括号内的特点，无非就是不敢直面真正的问题。如何成为专业人士？ 良好的习惯 强大的时间管理能力，确定优先级 dare to say no （未完待续…）]]></content>
@@ -646,20 +660,6 @@
         <tag>读书笔记</tag>
         <tag>软技能</tag>
         <tag>程序员</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title><![CDATA[学习 Flask——尝试用用十步学习法]]></title>
-    <url>%2F2018%2Flearn-flask-by-10-steps%2F</url>
-    <content type="text"><![CDATA[尝试用十步学习法学习 Flask。 1. 了解全局 阅读背景知识：博客、视频、书籍（目录、大纲） 目的是了解自己对学习主题的了解程度 Flask 是 Python 下一个基于 Werkzeug（WSGI 套件，Web 服务器网关接口）、Jinja 2（模板引擎） 和良好扩展特性的微框架。为什么是“微”？我特地查了一些文档，“Flask 永远不会包含数据库，也不会有表单库或是这方面的其他东西”、“Flask 的理念是为所有应用建立良好的基础，其余的一切都取决于你自己或者扩展”，它很小，能快速应对上线需求，不需要复杂的数据库设计，也就是说 Flask 仅仅充当一个桥梁的架子，至于外观设计（模板）、桥梁流量控制（WSGI）则取决与桥梁设计师。 Flask 是 Python 下的，然后我之前有在老师的指导下用 Flask 写过两个简单的应用，时间久远，印象有点模糊，需查看笔记。另外，实践 Flask 还需要有一些 HTML 和 CSS 的知识，虽然没有系统学过，但问题应该不大，查找文档和在浏览器里打开 F12 调试即可，我在调试自己的博客过程中有一些调节样式的经验。 Flask 的教程有很多，国内国外的都有，国内的培训机构有的会把教学视频发布到腾讯视频，水平参差不齐，很多废话，观看时开两倍速快速过一遍，国外的质量相对较高，但是我还没有确定下看哪个TODO。 2. 确定范围（边界） 拆解：可控、聚焦 时间：在特定的时间能学会什么 在大约一周的时间内，学习 Flask 的基本概念：路由、部署、修改模板引擎、虚拟环境安装、常见问题调试技巧，掌握文档的快速上手部分，掌握如何开发一个简单的网站并上线（登录）。 3. 设定目标 清晰，拒绝含糊不清的描述 目标是具体的，可以实现的 按照教学视频复现一个可以登录注册的导航工具网站（奥森导航），该网站提供为程序员提高生产力的工具。 学完快速上手Quickstart — Flask 1.0.2 documentation 导航页面：把关于 | Thinking Realm里提到的几个链接作为导航，有多简单就多简单，能用就行 博客：能够实现登录注册，新建、修改删除文章功能 将以上的学习、开发过程整理为博客笔记 4. 寻找资源 书籍 博客、在线文档 教学视频 我收集到的资源： 下载电子书：Flask Web开发：基于Python的Web应用开发实战 安装了 pycharm 文档 Tutorial — Flask 1.0.2 documentation：如何用 Flask 搭建简单博客的技术文档；有个培训班老师制作了对应的教学视频，Mars 老师，共 17 讲 Quickstart — Flask 1.0.2 documentation：官方 Flask 快速入门文档，涉及到 Flask 中的一些常见概念，如路由、静态文件、模板等等。有两个中文翻译版本 欢迎来到 Flask 的世界 — Flask 1.0.2 documentation 快速入门 — Flask 0.10.1 文档 Deployment Options — Flask 1.0.2 documentation：如何部署 Flask？ 知乎问答：怎样才能彻底掌握Flask？怎样的学习顺序比较合理？ - 知乎 5. 创建学习计划通过阅读书籍和教学视频，观察别人的学习计划，定制自己的学习计划。 学完快速上手Quickstart — Flask 1.0.2 documentation：预计 1 hour，整理成学习笔记发布到博客 观看 Mars 老师的教学视频 6. 筛选资源由第 5 步的计划筛选第 4 步收集的资源 （未完待续……）]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>软技能</tag>
-        <tag>程序员</tag>
-        <tag>flask</tag>
-        <tag>网络框架</tag>
       </tags>
   </entry>
   <entry>
@@ -1200,8 +1200,8 @@
         <category>Machine-Learning</category>
       </categories>
       <tags>
-        <tag>机器学习算法系列</tag>
         <tag>决策树</tag>
+        <tag>机器学习算法系列</tag>
         <tag>Machine-Learning</tag>
         <tag>梯度提升</tag>
       </tags>
@@ -1648,9 +1648,9 @@
         <category>Machine-Learning</category>
       </categories>
       <tags>
+        <tag>机器学习</tag>
         <tag>数据分析</tag>
         <tag>R</tag>
-        <tag>机器学习</tag>
         <tag>Machine-Learning</tag>
         <tag>xgboost</tag>
         <tag>mlr</tag>
@@ -1720,9 +1720,9 @@
         <category>Machine-Learning</category>
       </categories>
       <tags>
+        <tag>机器学习</tag>
         <tag>数据分析</tag>
         <tag>R</tag>
-        <tag>机器学习</tag>
         <tag>Machine-Learning</tag>
       </tags>
   </entry>
@@ -1891,8 +1891,8 @@
       </categories>
       <tags>
         <tag>笔记</tag>
-        <tag>MOOC</tag>
         <tag>C++</tag>
+        <tag>MOOC</tag>
       </tags>
   </entry>
   <entry>
@@ -1917,8 +1917,8 @@
         <category>coding</category>
       </categories>
       <tags>
-        <tag>MOOC</tag>
         <tag>C++</tag>
+        <tag>MOOC</tag>
         <tag>编程</tag>
       </tags>
   </entry>
@@ -1943,8 +1943,8 @@
         <category>coding</category>
       </categories>
       <tags>
-        <tag>MOOC</tag>
         <tag>C++</tag>
+        <tag>MOOC</tag>
         <tag>编程</tag>
       </tags>
   </entry>
@@ -2084,8 +2084,8 @@
       <tags>
         <tag>机器学习</tag>
         <tag>算法</tag>
-        <tag>线性回归</tag>
         <tag>机器学习算法系列</tag>
+        <tag>线性回归</tag>
       </tags>
   </entry>
   <entry>
@@ -2098,8 +2098,8 @@
       <tags>
         <tag>机器学习</tag>
         <tag>算法</tag>
-        <tag>机器学习算法系列</tag>
         <tag>决策树</tag>
+        <tag>机器学习算法系列</tag>
       </tags>
   </entry>
 </search>
