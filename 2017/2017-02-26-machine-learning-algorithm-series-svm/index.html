@@ -150,21 +150,22 @@
 
 
 
-  <meta name="description" content="上个学期忙着写论文，博客因此而有一段时间没有打理。看看自己的博客，距离机器学习算法系列的上一篇文章已经两个多月过去了，说来实在惭愧。这篇文章主要讲支持向量机的公式推导，因为许多“面经”都有提到面试官会考应聘者的公式推导，SVM 的尤其频繁。其实推导的过程比较好理解，主要的方法是拉格朗日对偶问题的优化，难一点的地方在于对 KKT 条件、SMO 算法的理解。看李航老师的《统计学习方法》的时候，密密麻麻">
+  <meta name="description" content="在了解支持向量机（support vector machine，SVM）之前，你可能会对这个算法的名字感到很奇怪，“支持”？“machine”？这到底是啥？没错，你不是一个人，一开始的时候我也是相当纳闷。所以，在正式记录之前我想举一个简单的例子辅助理解。 比如说下图（原谅我自己懒得画图），你就先别管图中的英文注释，如果在一个平面上随机散落了若干方形和圆形的点，现在希望你在方形点和圆形点之间找出一条">
 <meta name="keywords" content="机器学习,算法,支持向量机">
 <meta property="og:type" content="article">
 <meta property="og:title" content="机器学习算法系列（4）支持向量机（一）">
 <meta property="og:url" content="https://www.libinx.com/2017/2017-02-26-machine-learning-algorithm-series-svm/index.html">
 <meta property="og:site_name" content="Thinking Realm">
-<meta property="og:description" content="上个学期忙着写论文，博客因此而有一段时间没有打理。看看自己的博客，距离机器学习算法系列的上一篇文章已经两个多月过去了，说来实在惭愧。这篇文章主要讲支持向量机的公式推导，因为许多“面经”都有提到面试官会考应聘者的公式推导，SVM 的尤其频繁。其实推导的过程比较好理解，主要的方法是拉格朗日对偶问题的优化，难一点的地方在于对 KKT 条件、SMO 算法的理解。看李航老师的《统计学习方法》的时候，密密麻麻">
+<meta property="og:description" content="在了解支持向量机（support vector machine，SVM）之前，你可能会对这个算法的名字感到很奇怪，“支持”？“machine”？这到底是啥？没错，你不是一个人，一开始的时候我也是相当纳闷。所以，在正式记录之前我想举一个简单的例子辅助理解。 比如说下图（原谅我自己懒得画图），你就先别管图中的英文注释，如果在一个平面上随机散落了若干方形和圆形的点，现在希望你在方形点和圆形点之间找出一条">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/20210525233311.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1fkwmvbjyh5j20u00op43f.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1fwb2n6329gj20u00u0dhs.jpg">
-<meta property="og:updated_time" content="2021-03-23T01:25:10.967Z">
+<meta property="og:updated_time" content="2021-05-26T16:33:41.892Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习算法系列（4）支持向量机（一）">
-<meta name="twitter:description" content="上个学期忙着写论文，博客因此而有一段时间没有打理。看看自己的博客，距离机器学习算法系列的上一篇文章已经两个多月过去了，说来实在惭愧。这篇文章主要讲支持向量机的公式推导，因为许多“面经”都有提到面试官会考应聘者的公式推导，SVM 的尤其频繁。其实推导的过程比较好理解，主要的方法是拉格朗日对偶问题的优化，难一点的地方在于对 KKT 条件、SMO 算法的理解。看李航老师的《统计学习方法》的时候，密密麻麻">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1fkwmvbjyh5j20u00op43f.jpg">
+<meta name="twitter:description" content="在了解支持向量机（support vector machine，SVM）之前，你可能会对这个算法的名字感到很奇怪，“支持”？“machine”？这到底是啥？没错，你不是一个人，一开始的时候我也是相当纳闷。所以，在正式记录之前我想举一个简单的例子辅助理解。 比如说下图（原谅我自己懒得画图），你就先别管图中的英文注释，如果在一个平面上随机散落了若干方形和圆形的点，现在希望你在方形点和圆形点之间找出一条">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/swordspoet/i/img/20210525233311.png">
 
 
 
@@ -452,7 +453,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-03-23 09:25:10" itemprop="dateModified" datetime="2021-03-23T09:25:10+08:00">2021-03-23</time>
+                <time title="修改时间：2021-05-27 00:33:41" itemprop="dateModified" datetime="2021-05-27T00:33:41+08:00">2021-05-27</time>
               
             
           </span>
@@ -510,43 +511,52 @@
       
 
       
-        <p>上个学期忙着写论文，博客因此而有一段时间没有打理。看看自己的博客，距离机器学习算法系列的上一篇文章已经两个多月过去了，说来实在惭愧。这篇文章主要讲支持向量机的公式推导，因为许多“面经”都有提到面试官会考应聘者的公式推导，SVM 的尤其频繁。其实推导的过程比较好理解，主要的方法是拉格朗日对偶问题的优化，难一点的地方在于对 KKT 条件、SMO 算法的理解。看李航老师的《统计学习方法》的时候，密密麻麻的字母下标还是伤了不少神，不过只要有耐心，理解了之后便有“柳暗花明”的感觉。废话少说，开始推导！</p>
-<a id="more"></a>
-<h1 id="1-线性可分支持向量机原始问题"><a href="#1-线性可分支持向量机原始问题" class="headerlink" title="1. 线性可分支持向量机原始问题"></a>1. 线性可分支持向量机原始问题</h1><p>支持向量机（Support vector machine， SVM）是一种分类模型，它的任务是在特征空间上找到正确划分数据集的间隔（gap），并且能使几何间隔最大的分离超平面，简而言之，就是要找到一个平面，能够将空间中的点隔开！如果我们定义超平面可以通过线性方程：$w^Tx+b=0$ 来表示，将其记为 $(w,b)$。那么空间中任意一点 $x$ 到该超平面 $(w,b)$ 的距离可以表示为</p>
-<p>\begin{equation}<br>r=\frac{|w^Tx+b|}{||w||}<br>\end{equation}</p>
-<p>那么如何找到使得间隔最大的分离超平面呢？我们先从最简单的情形开始分析，假设超平面可以将数据集 100% 正确分类，若 $w^Tx_i+b&gt;0$，有 $y_i=+1$，若 $w^Tx_i+b&lt;0$，有 $y_i=-1$，令</p>
-<p>\begin{equation}<br>\left{<br>\begin{array}{c}<br>w^Tx_i+b\ge+1, y_i=+1; \<br>w^Tx_i+b\le-1, y_i=-1.<br>\end{array}<br>\right.<br>\end{equation}</p>
-<p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1fkwmvbjyh5j20u00op43f.jpg" alt="支持向量与间隔"></p>
-<h1 id="2-原始问题转化为对偶问题"><a href="#2-原始问题转化为对偶问题" class="headerlink" title="2. 原始问题转化为对偶问题"></a>2. 原始问题转化为对偶问题</h1><p>如果我们将可以容忍的间隔设为1，也就是要求距离该平面 $(w,b)$ 正负距离为1的空间内没有一个异常点（outlier）存在，那么寻找最大分离的超平面就转化为如下的约束最优化问题：</p>
-<p>\begin{equation}<br>\underset{w,b}{max}\ \frac{2}{||w||} \<br>s.t.\ y_i(w^Tx_i+b)\ge1,\ i=1,2,…,m.<br>\end{equation}</p>
-<blockquote>
-<p>如何求解这个最优化问题呢？</p>
-</blockquote>
+        <p>在了解支持向量机（support vector machine，SVM）之前，你可能会对这个算法的名字感到很奇怪，“支持”？“machine”？这到底是啥？没错，你不是一个人，一开始的时候我也是相当纳闷。所以，在正式记录之前我想举一个简单的例子辅助理解。</p>
+<p>比如说下图（原谅我自己懒得画图），你就先别管图中的英文注释，如果在一个平面上随机散落了若干方形和圆形的点，现在希望你在方形点和圆形点之间找出一条<strong>最宽的间隔</strong>，你也可以把这条间隔想象成为一条宽宽的“河流”，然后这条宽宽的间隔又恰好能把河两岸的方形点和圆形点区分开来。</p>
+<p><img src="https://raw.githubusercontent.com/swordspoet/i/img/20210525233311.png" style="zoom:50%;"></p>
+<p>如果把以上的例子看作是分类问题，你会发现跟逻辑回归处理的分类问题思路有区别，逻辑回归会输出一个预测值，然后我们可以通过比较预测值和阈值来确定输出的种类，它属于线性分类器。而刚刚例子中用到的分类方法显然跟逻辑回归是有区别的，它属于<strong>非线性的分类器</strong>的方法，而这正是支持向量机思想的核心，就是找到一条能把不同点区分开来的宽宽的间隔。</p>
+<p>看得出来，上面例子中给的数据是线性可分的，我们可以学习一个线性的分类器，即<strong>线性可分支持向量机</strong>；当然，现实中的数据不会像例子中的那么完美，当数据是<strong>近似线性可分</strong>的时候，也可以学习一个线性的分类器，即<strong>线性支持向量机</strong>；当训练的数据不可分的时候则需要学习<strong>非线性支持向量机</strong>。伴随着数据越来越复杂，支持向量机的学习方法是从简单到复杂的过程，下面我们来讨论最简单的情形：线性可分支持向量机。</p>
+<h4 id="1-线性可分支持向量机原始问题"><a href="#1-线性可分支持向量机原始问题" class="headerlink" title="1. 线性可分支持向量机原始问题"></a>1. 线性可分支持向量机原始问题</h4><p>支持向量机（Support vector machine， SVM）是一种分类模型，它的任务是在特征空间上找到正确划分数据集的间隔，并且能使几何间隔最大的分离超平面，简而言之，就是要找到一个平面，能够将空间中的点隔开！</p>
+<p>首先，回顾中学时代几何中提到的点到直线的距离<a href="https://baike.baidu.com/item/%E7%82%B9%E5%88%B0%E7%9B%B4%E7%BA%BF%E8%B7%9D%E7%A6%BB/8673346" target="_blank" rel="noopener">计算方法</a>：如果我们通过线性方程$w^Tx+b=0$ 来表示空间中的一条直线，将其记为 $(w,b)$。那么空间中任意一点 $(x_i,y_i)$ 到该直线 $(w,b)$ 的<strong>几何距离</strong>可以表示为</p>
+<script type="math/tex; mode=display">
+d=\frac{|w^Tx_i+b|}{||w||}</script><p>前面我们提到过svm的核心思想是在空间中找到正确划分数据的间隔，并且这个间隔当然越宽越好。</p>
+<p>那么如何找到使得间隔最大的分离超平面呢？我们先从最简单的情形开始分析，假设超平面$w^Tx+b=0$可以将数据集 100% 正确分类，令</p>
+<script type="math/tex; mode=display">
+w^Tx_i+b\ge+1, 为正 \\ 
+w^Tx_i+b\le-1, 为负</script><p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1fkwmvbjyh5j20u00op43f.jpg" alt="支持向量与间隔" style="zoom: 33%;"></p>
+<p>如果我们将可以容忍的间隔设为1，也就是要求距离该平面 $(w,b)$ <strong>几何距离</strong>正负为1的空间内没有一个异常点存在，那么寻找最大分离的超平面就意味着上图中两根虚线上的数据点的<strong>几何距离</strong>$\frac{2}{||w||}$越大越好，转化为数学语言可以表示为如下<strong>约束</strong>最优化问题：</p>
+<script type="math/tex; mode=display">
+\underset{w,b}{max}\ \frac{2}{||w||} \\
+s.t.\ y_i(w^Tx_i+b)\ge1,\ i=1,2,...,m.</script><p>在线性可分的情况下，距离分离超平面最近的点称为支持向量，上图中落在虚线上的点就是支持向量，支持向量的决定了分离超平面，一般支持向量的个数不多，往往少数几个训练样本就确定了最终的分离超平面，所以有的时候增加训练样本可能并不会给支持向量机模型的效果带来多少改观。</p>
+<h4 id="2-原始问题转化为对偶问题"><a href="#2-原始问题转化为对偶问题" class="headerlink" title="2. 原始问题转化为对偶问题"></a>2. 原始问题转化为对偶问题</h4><p>我们将线性可分的支持向量机转化为数学语言之后，那么如何求解这个最优化问题呢？</p>
 <p>（1）构建拉格朗日函数</p>
-<p>该问题的拉格朗日函数可以等价写为（求$\frac{2}{||w||}$的最大值等价于求$\frac{1}{2}{||w||}^2$最小值）</p>
-<p>\begin{equation}<br>L(w,b,\alpha)=\frac{1}{2}{||w||}^2-\sum_{i=1}^m{\alpha_i(y_i(w^Tx_i+b-1))} \label{lagrangefunction}<br>\end{equation}</p>
-<p>这是一个凸二次规划问题，通过拉格朗日乘子法可得到其对偶问题。应用拉格朗日对偶性，原始问题$(w,b)$的对偶问题$(\alpha)$是极大极小问题：</p>
+<p>该问题的拉格朗日函数可以等价写为（求$\frac{2}{||w||}$的最大值等价于求$\frac{1}{2}{||w||}^2$最小值），$\alpha_i$为拉格朗日乘子</p>
+<script type="math/tex; mode=display">
+L(w,b,\alpha)=\frac{1}{2}{||w||}^2-\sum_{i=1}^m{\alpha_i(y_i(w^Tx_i+b-1))} \label{lagrangefunction}</script><p>这是一个凸二次规划问题，通过拉格朗日乘子法可得到其<strong>对偶问题</strong>。应用拉格朗日对偶性，原始问题$(w,b)$的对偶问题$(\alpha)$是极大极小问题：</p>
 <script type="math/tex; mode=display">
 max\ min\ L(w,b,\alpha)</script><p>分别令拉格朗日函数对$w$和$b$的偏导数为零可得</p>
-<p>\begin{equation}<br>w=\sum_{i=1}^m\alpha_iy_ix_i<br>\end{equation}</p>
-<p>\begin{equation}<br>0=\sum_{i=1}^m\alpha_iy_i<br>\end{equation}</p>
-<p>然后将上述两个式子带入<font color="blue">拉格朗日函数$\eqref{lagrangefunction}$</font>即可将消去$w$和$b$<br>\begin{equation}<br>\begin{aligned}<br>L(w,b,\alpha)&amp;=\frac{1}{2}\sum<em>{i=1}^{N}\sum</em>{j=1}^{N}\alpha<em>i\alpha_jy_iy_j(x_i·x_j)-\sum</em>{i=1}^{N}\alpha<em>iy_i((\sum</em>{j=1}^{N}\alpha<em>jy_jx_j)x_i+b)+\sum</em>{i=1}^{N}\alpha<em>i\<br>&amp;=\frac{1}{2}\sum</em>{i=1}^{N}\sum<em>{j=1}^{N}\alpha_i\alpha_jy_iy_j(x_i·x_j)+\sum</em>{i=1}^{N}\alpha_i<br>\end{aligned}<br>\end{equation}<br>然后就得到了原约束问题的<strong>对偶问题</strong>，即求拉格朗日函数$L(w,b,\alpha)$对$\alpha$的极大</p>
-<p>\begin{equation}<br>\underset{\alpha}{max}\ \sum<em>{i=1}^m\alpha_i-\frac{1}{2}\sum</em>{i=1}^m\sum<em>{j=1}^m\alpha_i\alpha_jy_iy_j(x_i·x_j)\<br>s.t.\ \sum</em>{i=1}^{N}\alpha_iy_i=0\<br>\alpha_i\ge0,\ i=1,2,…,N<br>\end{equation}</p>
-<p>故原始问题转化成为了求解对偶问题，为什么要这样做呢？这样做的优点是对偶问题需要求解的参数数量下降，原来需要考虑两个参数 $(w,b)$ ，现在只需要关注 $\alpha$ 便可以了，往往更容易求解。然后可以引入核函数，进而推广到非线性分类问题。设$\alpha^*$是对偶问题的最优化解，那么</p>
-<p>\begin{equation}<br>w^<em>=\sum_{i=1}^m{\alpha_i}^</em>y<em>ix_i\<br>b^*=y_j-\sum</em>{i=1}^{N}{\alpha_i}^*y_i(x_i·x_j)<br>\end{equation}</p>
-<p>求得了$w^<em>$，$b^</em>$，也就得到了我们需要的分离超平面。</p>
+<script type="math/tex; mode=display">
+w=\sum_{i=1}^m\alpha_iy_ix_i</script><script type="math/tex; mode=display">
+0=\sum_{i=1}^m\alpha_iy_i</script><p>然后将上述两个式子重新代入<font color="blue">拉格朗日函数</font>即可将消去$w$和$b$</p>
+<script type="math/tex; mode=display">
+L(w,b,\alpha)=\frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N}\alpha_i\alpha_jy_iy_j(x_i·x_j)-\sum_{i=1}^{N}\alpha_iy_i((\sum_{j=1}^{N}\alpha_jy_jx_j)x_i+b)+\sum_{i=1}^{N}\alpha_i\\
+=\frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N}\alpha_i\alpha_jy_iy_j(x_i·x_j)+\sum_{i=1}^{N}\alpha_i</script><p>然后就得到了原约束问题的<strong>对偶问题</strong>，即求拉格朗日函数$L(w,b,\alpha)$对$\alpha$的极大</p>
+<script type="math/tex; mode=display">
+\underset{\alpha}{max}\ \sum_{i=1}^m\alpha_i-\frac{1}{2}\sum_{i=1}^m\sum_{j=1}^m\alpha_i\alpha_jy_iy_j(x_i·x_j)\\
+s.t.\ \sum_{i=1}^{N}\alpha_iy_i=0\\
+\alpha_i\ge0,\ i=1,2,...,N</script><p>故原始问题转化成为了求解对偶问题，为什么要这样做呢？这样做的优点是对偶问题需要求解的参数数量下降，原来需要考虑两个参数 $(w,b)$ ，现在只需要关注 $\alpha$ 便可以了，往往更容易求解。然后可以引入核函数，进而推广到非线性分类问题。设$\alpha^*$是对偶问题的最优化解，那么</p>
+<script type="math/tex; mode=display">
+w^*=\sum_{i=1}^m{\alpha_i}^*y_ix_i\\
+b^*=y_j-\sum_{i=1}^{N}{\alpha_i}^*y_i(x_i·x_j)</script><p>求得了$w^<em>$，$b^</em>$，也就得到了我们需要的分离超平面。</p>
 <p>当然这篇文章主要针对的是线性可分问题，那么线性不可分问题以及对偶问题的求解又怎么解决呢？后面的文章将会继续解释。</p>
 <p>我把上述拉格朗日乘子法的求解过程用手写了一遍，辅助理解。</p>
 <p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1fwb2n6329gj20u00u0dhs.jpg" alt="拉格朗日乘子法求解"></p>
-<h1 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a>推荐阅读</h1><ul>
+<h4 id="推荐阅读（建议直接读教材）"><a href="#推荐阅读（建议直接读教材）" class="headerlink" title="推荐阅读（建议直接读教材）"></a>推荐阅读（建议直接读教材）</h4><ul>
 <li><p>周志华.机器学习[M].2016年1月第一版.清华大学出版社.2016</p>
 </li>
 <li><p>李航.统计学习方法[M].2012年3月第1版.清华大学出版社.2015</p>
 </li>
 </ul>
-<blockquote>
-<p>继续阅读<a href="http://www.libinx.com/categories/Machine-Learning/" target="_blank">机器学习算法系列笔记</a>！</p>
-</blockquote>
 
       
     </div>
@@ -578,14 +588,14 @@ max\ min\ L(w,b,\alpha)</script><p>分别令拉格朗日函数对$w$和$b$的偏
        <li class="popular-posts-item">
          
          
-         <div class="popular-posts-title"><a href="\2017\2017-02-26-machine-learning-algorithm-series-svm-2\" rel="bookmark">机器学习算法系列（5）支持向量机（二）</a></div>
+         <div class="popular-posts-title"><a href="\2017\2017-03-02-machine-learning-algorithm-series-svm-3\" rel="bookmark">机器学习算法系列（6）支持向量机（三）</a></div>
          
        </li>
      
        <li class="popular-posts-item">
          
          
-         <div class="popular-posts-title"><a href="\2017\2017-03-02-machine-learning-algorithm-series-svm-3\" rel="bookmark">机器学习算法系列（6）支持向量机（三）</a></div>
+         <div class="popular-posts-title"><a href="\2017\2017-02-26-machine-learning-algorithm-series-svm-2\" rel="bookmark">机器学习算法系列（5）支持向量机（二）</a></div>
          
        </li>
      
@@ -1565,7 +1575,7 @@ max\ min\ L(w,b,\alpha)</script><p>分别令拉格朗日函数对$w$和$b$的偏
               </ul>
             </div>
 			<div class="theme-info">
-				<span class="post-count">全站共211.2k字</span>
+				<span class="post-count">全站共211.5k字</span>
 			</div>
 			
 			
@@ -1590,7 +1600,7 @@ max\ min\ L(w,b,\alpha)</script><p>分别令拉格朗日函数对$w$和$b$的偏
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-线性可分支持向量机原始问题"><span class="nav-text">1. 线性可分支持向量机原始问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-原始问题转化为对偶问题"><span class="nav-text">2. 原始问题转化为对偶问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#推荐阅读"><span class="nav-text">推荐阅读</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-线性可分支持向量机原始问题"><span class="nav-text">1. 线性可分支持向量机原始问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-原始问题转化为对偶问题"><span class="nav-text">2. 原始问题转化为对偶问题</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#推荐阅读（建议直接读教材）"><span class="nav-text">推荐阅读（建议直接读教材）</span></a></li></ol></div>
             
 
           </div>
