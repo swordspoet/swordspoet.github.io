@@ -409,6 +409,20 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[详解RNN文本分类模型的架构]]></title>
+    <url>%2F2018%2FRNN-structure-in-text-classification%2F</url>
+    <content type="text"><![CDATA[典型RNN模型下图是典型的RNN模型，$X$是输入，对文本经过嵌入层嵌入处理，再进入RNN，RNN的后面是全连接层，输出各个类别的概率。 下面来描述一次数据从输入到输出的完整过程： 在自然语言处理中，不管是中文还是英文，首先第一步的任务是如何将文本数据数值化。对于中文，可以先建立词汇表，给词汇表中的没歌词建立唯一的id标识（数字），这样每段文本都可以用一串数字id来表示，然后就能进行词嵌入操作，英文的处理方法也类似。 对文本预处理时，由于每条文本的长度不一，需要给输入统一规定长度（seq_length），超过的截断，不足的填充。假设有$N​$段文本（text），统一长度后就变成了[N, 1, seq_length]​大小的矩阵，矩阵的每一行代表一段文本，大小为​[1, seq_length]​。 通常，传统的做法是将one-hot编码，但是劣势是矩阵会很稀疏，并且上下文之间的语义关系非常模糊，难以捕捉。现在一般的做法是将文本词向量化，将每个词（字）“嵌入”为大小为[1, embedding_size]大小的向量矩阵。到了这一步，输入基本就确定下来了，它是大小为[seq_length, embedding_size]大小的矩阵。 接下来是训练，训练中可以一条一条给RNN“喂”数据，当有一条数据进来，等待它的是seq_length个cell，LSTM的输出整个过程如下： 但是这样的训练太慢了，并且优化的参数也难以顾及到全局的信息，通常是批次训练，一次喂给模型batch_size条数据。 批次训练全过程详解 原帖地址：understanding-pytorch-batching-lstm/Understanding Pytorch Batching.ipynb at master · ngarneau/understanding-pytorch-batching-lstm 1. one-hot 编码 2. 零填充 3. 批量输入将每一个batch设置为4 4. 词嵌入（word embedding）矩阵中的每一行代表一个字母的向量 5. Packed Embeddings 注意，这里将词向量矩阵打包过了一次，因为我们并不需要零填充后的词向量。在这种情况下，batch_sizes为[4, 4, 4, 3, 2, 1]，即第一步到第三步每次会给LSTM喂4个字母，到第四步，San已经用光了，所以给LSTM的只有3个字母，以此类推，到最后只有1个字母v。 6. LSTM out数据进入RNN之后输出的结果 7. padded LSTM out填充LSTM的输出 8. reshape output 9. maxpooling最大池化 10. predict]]></content>
+      <categories>
+        <category>Machine-Learning</category>
+      </categories>
+      <tags>
+        <tag>架构</tag>
+        <tag>RNN</tag>
+        <tag>循环神经网络</tag>
+        <tag>分类模型</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Python 工具箱系列 （6）：为jupyter notebook中添加虚拟环境]]></title>
     <url>%2F2018%2Fadd-virtualenv-in-jupyter-notebook%2F</url>
     <content type="text"><![CDATA[123456789# 建立虚拟环境scrapymkvirtualenv scrapy# 进入虚拟环境scrapyworkon scrapy# 安装jupyter，具体操作略过(scrapy) pip install jupyter# 安装ipykernel，添加kernel(scrapy) pip install ipykernel(scrapy) python -m ipykernel install --user --name scrapy --display-name "Python2(scrapy)"]]></content>
@@ -424,20 +438,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[详解RNN文本分类模型的架构]]></title>
-    <url>%2F2018%2FRNN-structure-in-text-classification%2F</url>
-    <content type="text"><![CDATA[典型RNN模型下图是典型的RNN模型，$X$是输入，对文本经过嵌入层嵌入处理，再进入RNN，RNN的后面是全连接层，输出各个类别的概率。 下面来描述一次数据从输入到输出的完整过程： 在自然语言处理中，不管是中文还是英文，首先第一步的任务是如何将文本数据数值化。对于中文，可以先建立词汇表，给词汇表中的没歌词建立唯一的id标识（数字），这样每段文本都可以用一串数字id来表示，然后就能进行词嵌入操作，英文的处理方法也类似。 对文本预处理时，由于每条文本的长度不一，需要给输入统一规定长度（seq_length），超过的截断，不足的填充。假设有$N​$段文本（text），统一长度后就变成了[N, 1, seq_length]​大小的矩阵，矩阵的每一行代表一段文本，大小为​[1, seq_length]​。 通常，传统的做法是将one-hot编码，但是劣势是矩阵会很稀疏，并且上下文之间的语义关系非常模糊，难以捕捉。现在一般的做法是将文本词向量化，将每个词（字）“嵌入”为大小为[1, embedding_size]大小的向量矩阵。到了这一步，输入基本就确定下来了，它是大小为[seq_length, embedding_size]大小的矩阵。 接下来是训练，训练中可以一条一条给RNN“喂”数据，当有一条数据进来，等待它的是seq_length个cell，LSTM的输出整个过程如下： 但是这样的训练太慢了，并且优化的参数也难以顾及到全局的信息，通常是批次训练，一次喂给模型batch_size条数据。 批次训练全过程详解 原帖地址：understanding-pytorch-batching-lstm/Understanding Pytorch Batching.ipynb at master · ngarneau/understanding-pytorch-batching-lstm 1. one-hot 编码 2. 零填充 3. 批量输入将每一个batch设置为4 4. 词嵌入（word embedding）矩阵中的每一行代表一个字母的向量 5. Packed Embeddings 注意，这里将词向量矩阵打包过了一次，因为我们并不需要零填充后的词向量。在这种情况下，batch_sizes为[4, 4, 4, 3, 2, 1]，即第一步到第三步每次会给LSTM喂4个字母，到第四步，San已经用光了，所以给LSTM的只有3个字母，以此类推，到最后只有1个字母v。 6. LSTM out数据进入RNN之后输出的结果 7. padded LSTM out填充LSTM的输出 8. reshape output 9. maxpooling最大池化 10. predict]]></content>
-      <categories>
-        <category>Machine-Learning</category>
-      </categories>
-      <tags>
-        <tag>架构</tag>
-        <tag>RNN</tag>
-        <tag>循环神经网络</tag>
-        <tag>分类模型</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[基于 sklearn 的传统机器学习在搜狗新闻数据的文本分类实践]]></title>
     <url>%2F2018%2Ftext-classification-classic-ml-by-sklearn%2F</url>
     <content type="text"><![CDATA[sklearn is good tool. 1. 背景在sklearn下比较各个传统机器学习模型在文本分类任务上的表现。 2. 数据准备数据源依旧来自搜狗的新闻数据，由于机器的性能，本文只用到了一个星期的数据。 数据清洗从搜狗下载的新闻数据格式为xml，从HTML标签中提取标签和正文的工作在基于 Tensorflow 的 TextCNN 在搜狗新闻数据的文本分类实践一文中已经完成，不再赘述。因为在本次实验中不再使用基于字符级的思想，而是基于词，所以还要对数据做分词、去噪清洗操作。 分词：使用jieba分词工具，因为在分词时数据是单条单条处理的，所以速度会比较慢，对原始数据采用多进程分词，能节省不少的时间。你可以把多进程理解为把任务列表扔给进程池，“这是交给你的任务，你们赶紧给我办好！”，然后进程池的工人们就迅速过来认领任务，并同时开始工作。 12345678910111213141516171819202122232425262728293031# coding: utf-8import jiebastopwords_path = 'stopwords.txt'class CutWord(object): def __init__(self, stopwords_path=stopwords_path): self.stopwords_path = stopwords_path def add_dictionary(self, dict_list): map(lambda x: jieba.load_userdict(x), dict_list) def seg_sentence(self, sentence, stopwords_path=None): if not stopwords_path: stopwords_path = self.stopwords_path def stopwords_list(file_path): stopwords = [line.strip() for line in open(file_path, 'r').readlines()] return stopwords segmented_sentence = jieba.cut(sentence.strip()) stopwords_list = stopwords_list(stopwords_path) out_str = '' for word in segmented_sentence: if word not in stopwords_list: out_str += word out_str += ' ' return out_str 多进程分词： 123456789from multiprocessing import Poolpool = Pool(processes=6)for file_path, write_path in zip(file_list, write_list): paths = [file_path, write_path] pool.apply_async(seg_file, (paths,))pool.close()pool.join()print('Word segment finished...') 去噪：原始数据中有标点符号、停用词等噪声，通过加载外部停用词文件过滤掉这一部分的噪声。为了方便，把这两个功能整合成为一个工具类CutWord，在其他程序中直接调用使用即可。 分词、去噪清洗工作完毕，看看各个类别下的数据分布，占比最多的前四个是体育、新闻、商业和娱乐，其余8个类别的新闻占比均不足5%，数据量比较小。因为在这之前我用该数据做了二分类的任务，发现分类效果实在太好了，1万多的测试数据只有十几个分错了，好得有点不真实，所以，我决定拿占比排名前4类的数据来做实验。 数据切分每个类别新闻按照5000条训练集、500条验证集、1000条测试集提取，所以总共有训练集：验证集：测试集为20000：2000：4000。 特征提取sklearn中常用的文本特征提取方法有tfidf，将文本转换为文档-词项矩阵，矩阵中的元素，可以使用词频也可以使用tfidf值。为了获得更好的效果，本次试验的文本特征提取用到了全量的数据。 123456def tf_idf(contents): """提取文本特征tf-idf""" vectorizer = CountVectorizer(min_df=1e-5) transformer = TfidfTransformer() tfidf = transformer.fit_transform(vectorizer.fit_transform(contents)) return tfidf 3. 模型训练3.1 logistic regression logitstic regression的背景知识参考我的笔记：机器学习算法系列（3）Logistic Regression | Thinking Realm 为了有更好地优化参数，选用了更有效的交叉验证的LogisticRegressionCV模型，cv设置为10，训练的时间略长；n_jobs设置为-1，利用起所有的CPU核心。 123456lr_model = LogisticRegressionCV(solver='newton-cg', multi_class='multinomial', cv=10, n_jobs=-1)lr_model.fit(x_train[:20000], y_train[:20000])y_pred = lr_model.predict(x_train[20000:24000])print(metrics.confusion_matrix(y_train[20000:24000], y_pred))print(classification_report(y_train[20000:24000], y_pred, target_names=['business', 'sports', 'news', 'yule'])) 训练结果如下，模型在测试集上的表现还不错，除了体育的准确率为89%，其余的类别的指标都在90%以上。读不懂报告，参考：读懂sklearn的classification_report 1234567891011121314[[924 84 0 0] [ 51 941 16 16] [ 1 14 963 5] [ 3 16 5 961]] precision recall f1-score support business 0.94 0.92 0.93 1008 sports 0.89 0.92 0.91 1024 news 0.98 0.98 0.98 983 yule 0.98 0.98 0.98 985 micro avg 0.95 0.95 0.95 4000 macro avg 0.95 0.95 0.95 4000weighted avg 0.95 0.95 0.95 4000 3.2 线性支持向量机 支持向量机的背景知识参考我的系列笔记： 机器学习算法系列（4）支持向量机（一） | Thinking Realm 机器学习算法系列（5）支持向量机（二） | Thinking Realm 机器学习算法系列（6）支持向量机（三） | Thinking Realm 123456svm_model = SGDClassifier(n_jobs=-1)svm_model.fit(x_train[:20000], y_train[:20000])y_pred = svm_model.predict(x_train[20000:24000])print(metrics.confusion_matrix(y_train[20000:24000], y_pred))print(classification_report(y_train[20000:24000], y_pred, target_names=['business', 'sports', 'news', 'yule'])) 强大如支持向量机，30秒不到就完成了训练，按照性价比，完全可以把LogisticRegressionCV摁在地上摩擦。 1234567891011121314[[889 118 0 1] [ 67 922 17 18] [ 2 12 962 7] [ 1 14 4 966]] precision recall f1-score support business 0.93 0.88 0.90 1008 sports 0.86 0.90 0.88 1024 news 0.98 0.98 0.98 983 yule 0.97 0.98 0.98 985 micro avg 0.93 0.93 0.93 4000 macro avg 0.94 0.94 0.94 4000weighted avg 0.94 0.93 0.93 4000 3.3 朴素贝叶斯 朴素贝叶斯的背景知识参考我的系列笔记：机器学习算法系列（7）朴素贝叶斯法 | Thinking Realm 速度飞快，效果还行。 1234567891011121314[[908 99 0 1] [129 842 15 38] [ 2 14 948 19] [ 6 17 4 958]] precision recall f1-score support business 0.87 0.90 0.88 1008 sports 0.87 0.82 0.84 1024 news 0.98 0.96 0.97 983 yule 0.94 0.97 0.96 985 micro avg 0.91 0.91 0.91 4000 macro avg 0.91 0.92 0.91 4000weighted avg 0.91 0.91 0.91 4000 4. 模型对比 文本分类任务，支持向量机的表现可以吊打其他模型 一般的数据集的分类任务，各个模型的表现差距不是特别明显，用法大同小异 在结巴分词下逐条分词速度很慢，考虑多进程来解决 该实验用到的数据量不大，当数据量上升，场景复杂化，参数优化必不可少]]></content>
@@ -447,9 +447,9 @@
       <tags>
         <tag>机器学习</tag>
         <tag>支持向量机</tag>
-        <tag>sklearn</tag>
         <tag>搜狗新闻数据</tag>
         <tag>文本分类</tag>
+        <tag>sklearn</tag>
         <tag>传统机器学习方法</tag>
         <tag>logistic regression</tag>
         <tag>svm</tag>
@@ -479,11 +479,11 @@
         <category>Machine-Learning</category>
       </categories>
       <tags>
-        <tag>循环神经网络</tag>
         <tag>TensorFlow</tag>
-        <tag>textrnn</tag>
         <tag>搜狗新闻数据</tag>
         <tag>文本分类</tag>
+        <tag>循环神经网络</tag>
+        <tag>textrnn</tag>
         <tag>lstm</tag>
         <tag>gru</tag>
       </tags>
@@ -526,9 +526,9 @@
       <tags>
         <tag>卷积神经网络</tag>
         <tag>TensorFlow</tag>
+        <tag>textcnn</tag>
         <tag>搜狗新闻数据</tag>
         <tag>文本分类</tag>
-        <tag>textcnn</tag>
       </tags>
   </entry>
   <entry>
@@ -830,19 +830,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[Python | 对比两段计数器后想到的]]></title>
-    <url>%2F2018%2Fcomparison-between-two-counters%2F</url>
-    <content type="text"><![CDATA[任务背景：有 n 个 txt 文件，每个文件都有 i 行，每行的内容就是对应的行号 j。现在需要按照一定的间隔（slice_size），连续切分这 n 个文件，并返回切分点对应位置的总数、切分点在文件中对应行号、从该切分点开始能读取多少数据。 三个示例文件如下，三个文件的长度分别为 12，4 和 5，总共 21 行数据。 返回：[(1, 1, 5), (6, 6, 5), (11, 11, 2), (13, 1, 4), (17, 1, 5)] 文件一： 123456789101112 1 1 2 2 3 3 4 4 5 5 6 6 7 7 8 8 9 910 1011 1112 12 文件二： 12341 12 23 34 4 文件三： 123451 12 23 34 45 5 我认为，问题处理的难点在于最后一个返回值，我们需要在遍历完文件之后才能知道切分点后又多少数据。比如第一个文件，按照每 5 行切分一次，最后一次切分点在第 11 行，而此时，指针到文件末尾时我才知道从 11 这个切分点开始只剩下了两个数据，我无法提前知道剩下多少个数据。在这个地方我纠结了很久，到底怎样才能保存好这个值呢？我能确定的是，只有当指针到达文件末尾时，最后一次切分才会结束，才会知道在该次切分中剩余多少数据，所以，在 counter_01 中，我加入了一个 if not line_pos: 的判断条件。 接下来就是计算剩下多少数据的问题了，我通过 res = idx % slice_size 得到剩余的数据，比如总数 12 的文件，以 5 来切分，12 % 5 = 2，这样就得到了最后一次需要读取的数据。但是，这种做法存在一个很严重的问题：每次切分时我都是默认切分点后面会有 slice_size 个数据，所以当指针到达 11 行时，我就提前假设后面有了 5 条数据，然而事实上并没有，需要当指针到达最后一行时来修正。为了掩饰那个错误，我用了比较暴力的办法：直接干掉列表的倒数第二个自以为正确的数据。 对于第一个返回值，切分点在三个文件累计位置，只需要在文件遍历的最外层设置 total 计数变量即可，每读完一行数据再加一。这里也有一个需要处理的坑，比如在 if not line_pos: 的判断中，切分点累计位置如果还等于 total，那最后一个切分点的位置永远会在文件的最后一行，所以需要在 if idx % slice_size == 0: 中先把 total 赋值给 start_num 存下来给接下来的判断用。第二个返回值处理的逻辑也类似，把 line_pos 赋值给 tmp_line_pos，留给接下来的判断语句中使用。 1234567891011121314151617181920212223242526272829303132333435363738#!/usr/bin/python# -*- coding=utf8 -*-"""# @Author : Li Bin# @Created Time : 2018-08-15 23:32:55# @Description : 返回切分列表"""slice_size = 5file_paths = ['/home/libin/cook_book/dataset/test_01.txt', '/home/libin/cook_book/dataset/test_02.txt', '/home/libin/cook_book/dataset/test_03.txt']def counter_01(): total = 0 slice_list = [] for file_path in file_paths: with open(file_path) as fp: line_pos = fp.readline() idx = 0 while line_pos: total += 1 if idx % slice_size == 0: start_num = total slice_list.append((start_num, int(line_pos.strip()), slice_size)) tmp_line_pos = line_pos line_pos = fp.readline() if not line_pos: last_idx = (idx / slice_size) * slice_size res = idx % slice_size slice_list.append((start_num, int(tmp_line_pos.strip()), res+1)) del slice_list[-2] idx += 1 print slice_list 第一个计数器勉强实现了计数的功能，但是不够漂亮，特别是处理剩余数据的逻辑上有说不出的混乱和复杂，很蹩脚。来看第二个计数器，初始参数有 total 和 slice_counter 两个，对比计数器一，计数器二的思路为每次只切一份小片数据，slice_counter 等于 1，记下 slice_start_pos、slice_start_num，当 slice_counter 等于 5，将上一个 slice_start_pos、slice_start_num 取出来，此时该小片有 5 个数据。 那么问题来了，要是最后一个分片没有 5 行数据咋办？这里的处理逻辑很漂亮，当切完一个片，slice_counter 归零，当指针到达了最后一行，如果最后一个分片不足 5，那么 slice_counter 是不会归零的！while 判断跳出来后，后面加个 if slice_counter &gt; 0: 把剩余的 slice_start_pos、slice_start_num、slice_counter 取出来，任务完成。 123456789101112131415161718192021222324def counter_02(): total = 0 slice_list = [] for file_path in file_paths: with open(file_path) as fp: line_pos = fp.readline() slice_counter = 0 while line_pos: total += 1 slice_counter += 1 if slice_counter == 1: slice_start_pos = int(line_pos.strip()) slice_start_num = total if slice_counter == slice_size: slice_list.append((slice_start_num , slice_start_pos, slice_counter)) slice_counter = 0 line_pos = fp.readline() if slice_counter &gt; 0: slice_list.append((slice_start_num, slice_start_pos, slice_counter)) print slice_list 对比以上两个计数器，显然第二个更优，处理的逻辑干净、思路清晰，每个变量负责的任务很明确，特别是最后的 if slice_counter &gt; 0: 很漂亮。第一个计数器在一开始想干的事情太多了，一开始就想着假设后面有 5 条数据，然后靠后面的暴力删除来掩饰这个错误。对比完这两个计数器，我觉得，在处理的问题的时候，拆解问题的能力很重要，一个逻辑处理一个小问题，别想着存在一个万能逻辑解决多个问题，这是我以上想到的。 继续加强代码能力。。。]]></content>
-      <categories>
-        <category>Python</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>计数器</tag>
-        <tag>复盘</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[Python 工具箱系列（1）：常用文件操作]]></title>
     <url>%2F2018%2Fpython-file-operations-in-common-use%2F</url>
     <content type="text"><![CDATA[1. 新建文件夹12if not os.path.isdir(path_out): os.makedirs(path_out) 2. 遍历所有文件和子文件夹12for a, b, filenames in os.walk(path_data): for filename in filenames: 3. 只遍历当前文件，不包含子文件夹123for a, b, filenames in os.walk(path_data): for filename in filenames: if a == path_data: 4. 读取文件的前几行或中间某些行得到一个由迭代器生成的切片对象，标准切片不能做到。 12345import itertoolswith open(&apos;/file/path&apos;) as f: for line in itertools.islice(f, 2, None): # 遍历文件从第二行到最后一行 print line 5. 跳过拥有某些元素的行在逐行读取文件时，我们可能要忽略掉拥有某些元素的行，通常一般的写法是： 1234with open(&apos;file/path&apos;) as f: for line in f: if line.startswith(&apos;#&apos;): print line 6. 判断是文件还是目录判断路径是文件还是目录，不依赖于所处环境 1234567891011121314&gt;&gt;&gt; os.path.exists(&quot;te&quot;)True&gt;&gt;&gt; os.path.exists(&quot;nothing&quot;)False&gt;&gt;&gt; os.path.isfile(&quot;nothing&quot;)False&gt;&gt;&gt; os.path.isdir(&quot;nothing&quot;)False&gt;&gt;&gt;&gt;&gt;&gt; os.path.isdir(&quot;te&quot;)False&gt;&gt;&gt; os.path.isfile(&quot;te&quot;)True&gt;&gt;&gt; 7. 遍历文件中的所有行1234567with open(&apos;foo.txt&apos;) as fp: line = fp.readline() n = 0 while line: n += 1 print line print n]]></content>
@@ -854,6 +841,19 @@
         <tag>IO</tag>
         <tag>Python工具箱系列</tag>
         <tag>PythonToolkitSeries</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Python | 对比两段计数器后想到的]]></title>
+    <url>%2F2018%2Fcomparison-between-two-counters%2F</url>
+    <content type="text"><![CDATA[任务背景：有 n 个 txt 文件，每个文件都有 i 行，每行的内容就是对应的行号 j。现在需要按照一定的间隔（slice_size），连续切分这 n 个文件，并返回切分点对应位置的总数、切分点在文件中对应行号、从该切分点开始能读取多少数据。 三个示例文件如下，三个文件的长度分别为 12，4 和 5，总共 21 行数据。 返回：[(1, 1, 5), (6, 6, 5), (11, 11, 2), (13, 1, 4), (17, 1, 5)] 文件一： 123456789101112 1 1 2 2 3 3 4 4 5 5 6 6 7 7 8 8 9 910 1011 1112 12 文件二： 12341 12 23 34 4 文件三： 123451 12 23 34 45 5 我认为，问题处理的难点在于最后一个返回值，我们需要在遍历完文件之后才能知道切分点后又多少数据。比如第一个文件，按照每 5 行切分一次，最后一次切分点在第 11 行，而此时，指针到文件末尾时我才知道从 11 这个切分点开始只剩下了两个数据，我无法提前知道剩下多少个数据。在这个地方我纠结了很久，到底怎样才能保存好这个值呢？我能确定的是，只有当指针到达文件末尾时，最后一次切分才会结束，才会知道在该次切分中剩余多少数据，所以，在 counter_01 中，我加入了一个 if not line_pos: 的判断条件。 接下来就是计算剩下多少数据的问题了，我通过 res = idx % slice_size 得到剩余的数据，比如总数 12 的文件，以 5 来切分，12 % 5 = 2，这样就得到了最后一次需要读取的数据。但是，这种做法存在一个很严重的问题：每次切分时我都是默认切分点后面会有 slice_size 个数据，所以当指针到达 11 行时，我就提前假设后面有了 5 条数据，然而事实上并没有，需要当指针到达最后一行时来修正。为了掩饰那个错误，我用了比较暴力的办法：直接干掉列表的倒数第二个自以为正确的数据。 对于第一个返回值，切分点在三个文件累计位置，只需要在文件遍历的最外层设置 total 计数变量即可，每读完一行数据再加一。这里也有一个需要处理的坑，比如在 if not line_pos: 的判断中，切分点累计位置如果还等于 total，那最后一个切分点的位置永远会在文件的最后一行，所以需要在 if idx % slice_size == 0: 中先把 total 赋值给 start_num 存下来给接下来的判断用。第二个返回值处理的逻辑也类似，把 line_pos 赋值给 tmp_line_pos，留给接下来的判断语句中使用。 1234567891011121314151617181920212223242526272829303132333435363738#!/usr/bin/python# -*- coding=utf8 -*-"""# @Author : Li Bin# @Created Time : 2018-08-15 23:32:55# @Description : 返回切分列表"""slice_size = 5file_paths = ['/home/libin/cook_book/dataset/test_01.txt', '/home/libin/cook_book/dataset/test_02.txt', '/home/libin/cook_book/dataset/test_03.txt']def counter_01(): total = 0 slice_list = [] for file_path in file_paths: with open(file_path) as fp: line_pos = fp.readline() idx = 0 while line_pos: total += 1 if idx % slice_size == 0: start_num = total slice_list.append((start_num, int(line_pos.strip()), slice_size)) tmp_line_pos = line_pos line_pos = fp.readline() if not line_pos: last_idx = (idx / slice_size) * slice_size res = idx % slice_size slice_list.append((start_num, int(tmp_line_pos.strip()), res+1)) del slice_list[-2] idx += 1 print slice_list 第一个计数器勉强实现了计数的功能，但是不够漂亮，特别是处理剩余数据的逻辑上有说不出的混乱和复杂，很蹩脚。来看第二个计数器，初始参数有 total 和 slice_counter 两个，对比计数器一，计数器二的思路为每次只切一份小片数据，slice_counter 等于 1，记下 slice_start_pos、slice_start_num，当 slice_counter 等于 5，将上一个 slice_start_pos、slice_start_num 取出来，此时该小片有 5 个数据。 那么问题来了，要是最后一个分片没有 5 行数据咋办？这里的处理逻辑很漂亮，当切完一个片，slice_counter 归零，当指针到达了最后一行，如果最后一个分片不足 5，那么 slice_counter 是不会归零的！while 判断跳出来后，后面加个 if slice_counter &gt; 0: 把剩余的 slice_start_pos、slice_start_num、slice_counter 取出来，任务完成。 123456789101112131415161718192021222324def counter_02(): total = 0 slice_list = [] for file_path in file_paths: with open(file_path) as fp: line_pos = fp.readline() slice_counter = 0 while line_pos: total += 1 slice_counter += 1 if slice_counter == 1: slice_start_pos = int(line_pos.strip()) slice_start_num = total if slice_counter == slice_size: slice_list.append((slice_start_num , slice_start_pos, slice_counter)) slice_counter = 0 line_pos = fp.readline() if slice_counter &gt; 0: slice_list.append((slice_start_num, slice_start_pos, slice_counter)) print slice_list 对比以上两个计数器，显然第二个更优，处理的逻辑干净、思路清晰，每个变量负责的任务很明确，特别是最后的 if slice_counter &gt; 0: 很漂亮。第一个计数器在一开始想干的事情太多了，一开始就想着假设后面有 5 条数据，然后靠后面的暴力删除来掩饰这个错误。对比完这两个计数器，我觉得，在处理的问题的时候，拆解问题的能力很重要，一个逻辑处理一个小问题，别想着存在一个万能逻辑解决多个问题，这是我以上想到的。 继续加强代码能力。。。]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>计数器</tag>
+        <tag>复盘</tag>
       </tags>
   </entry>
   <entry>
@@ -1648,9 +1648,9 @@
         <category>Machine-Learning</category>
       </categories>
       <tags>
-        <tag>机器学习</tag>
         <tag>数据分析</tag>
         <tag>R</tag>
+        <tag>机器学习</tag>
         <tag>Machine-Learning</tag>
         <tag>xgboost</tag>
         <tag>mlr</tag>
@@ -1720,9 +1720,9 @@
         <category>Machine-Learning</category>
       </categories>
       <tags>
-        <tag>机器学习</tag>
         <tag>数据分析</tag>
         <tag>R</tag>
+        <tag>机器学习</tag>
         <tag>Machine-Learning</tag>
       </tags>
   </entry>
@@ -1891,8 +1891,8 @@
       </categories>
       <tags>
         <tag>笔记</tag>
-        <tag>C++</tag>
         <tag>MOOC</tag>
+        <tag>C++</tag>
       </tags>
   </entry>
   <entry>
@@ -1917,8 +1917,8 @@
         <category>coding</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>MOOC</tag>
+        <tag>C++</tag>
         <tag>编程</tag>
       </tags>
   </entry>
@@ -1943,8 +1943,8 @@
         <category>coding</category>
       </categories>
       <tags>
-        <tag>C++</tag>
         <tag>MOOC</tag>
+        <tag>C++</tag>
         <tag>编程</tag>
       </tags>
   </entry>
@@ -1980,7 +1980,7 @@
   <entry>
     <title><![CDATA[机器学习算法系列（5）支持向量机（二）]]></title>
     <url>%2F2017%2F2017-02-26-machine-learning-algorithm-series-svm-2%2F</url>
-    <content type="text"><![CDATA[在先前的一篇文章我们介绍了线性可分问题的支持向量机方法，不过它的前提条件比较严苛，现实工程环境中一般不会有那么完美的数据集。但我们要求方法更具有适用性，如果碰到线性不可分问题，那就要寻求别的解决办法了。 1. 软间隔最大化针对近似线性可分的问题，硬间隔最大化的方法就不适用了，因为一旦间隔区域有异常点，软间隔的不等式约束不一定都成立。对于不能满足函数间隔条件的数据集，下面就来讲解一种软间隔最大化的方法。 所谓“软”，也就是将约束条件放松一点点，有些数据破坏了间隔条件是被容许的（不知道这也是不是一种防止过拟合的手段？），但是也不能太多。我们给约束条件加上一个松弛变量$\xi_i$，放宽约束条件，这样硬间隔最大化里面要求的间隔强制为 1 的约束条件就变为： y_i(wx_i+b)\ge1-\xi_i同时，对松弛变量加上惩罚参数 $C\gt0$，目标函数就变为 \frac{1}{2}{||w||}^2+C\sum_{i=1}^{N}\xi_i所以线性不可分的支持向量机问题变为凸二次规划问题，我们暂且称为原始问题 \begin{equation}\begin{split}\underset{w,b,\xi}{min}\quad&amp;\frac{1}{2}{||w||}^2+C\sum_{i=1}^{N}\xi_i \\s.t.\quad&amp;y_i(wx_i+b)\ge1-\xi_i, \quad\text{$i=1,2,…,N$}\\&amp;\xi_i\ge0,\quad\text{$i=1,2,…,N$}\label{origin}\end{split}\end{equation} 2. 转化为对偶问题对凸二次规划问题，我们依然选择拉格朗日乘子法求解 （1）首先对原始问题构建拉格朗日函数，$\alpha$ 和 $\mu$ 为拉格朗日乘数 \begin{equation}L(w,b,\xi,\alpha,\mu)=\frac{1}{2}{||w||}^2+C\sum{i=1}^{N}\xi_i-\sum{i=1}^{N}\alphaiy_i(wx_i+b)-\sum{i=1}^{N}\alphai\xi_i+\sum{i=1}^{N}\alphai-\sum{i=1}^{N}\mu_i{\xi}_i \label{lagrangefunction}\end{equation} （2）极小化$L(w,b,\alpha)$，分别对$w,b,\xi$求偏导并令其等于零 \begin{equation}\begin{split}&amp;\frac{\partial L}{\partial w}=w-\sum{i=1}^{N}\alpha_iy_ix_i=0 \\&amp;\frac{\partial L}{\partial b}=\sum{i=1}^{N}\alpha_iy_i=0 \\&amp;\frac{\partial L}{\partial \xi}=C-\alpha_i-\mu_i=0\end{split} \end{equation} 得 \begin{equation}\begin{split}&amp;w=\sum{i=1}^{N}\alpha_iy_ix_i\\&amp;\sum{i=1}^{N}\alpha_iy_i=0\\&amp;C-\alpha_i-\mu_i=0\end{split}\end{equation} 然后将上述三个式子带入拉格朗日函数$\eqref{lagrangefunction}$即可将消去$w$和$b$，即 L(w,b,\xi,\alpha,\mu)=-\frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N}\alpha_i\alpha_jy_iy_jx_ix_j+\sum_{i=1}^{N}\alpha_i对偶问题是拉格朗日函数极大极小问题，求上式对$\alpha$的极大，即得对偶问题 \begin{equation}\begin{split}max\quad&amp;-\frac{1}{2}\sum{i=1}^{N}\sum{j=1}^{N}\alphai\alpha_jy_iy_jx_ix_j+\sum{i=1}^{N}\alphai\s.t.\quad&amp;\sum{i=1}^{N}\alpha_iy_i=0\&amp;C-\alpha_i-\mu_i=0\&amp;\alpha_i\ge0,\mu_i\ge0,i=1,2,…,N\end{split}\end{equation} 看出来没有？当拉格朗日函数转化为其对偶问题的形式，令人激动的是优化问题神奇般地只剩下一个参数了！如果我们设${\alpha_i}^*$是对偶问题的一个解，那么原始问题$w^*,b^*$的解可由下式求得，接下来的任务只需要求解$\alpha$了，如下 \begin{equation}w^*=\sum{i=1}^{N}{\alpha_i}^*y_ix_i\b^*=y_j-\sum{i=1}^{N}y_i{\alpha_i}^*(x_i·x_j)\end{equation} 3. 非线性支持向量机与核函数针对非线性分类问题，我们一般使用非线性支持向量机的方法，其主要特点是核技巧（kernel trick）。核技巧的基本想法是通过非线性变换将输入空间（一般是欧式空间或离散集合）映射到另一个特征空间，简单一点理解就是函数变换。 \phi(x):x\to\mathcal{H}K(x,z)=\phi(x)\cdot\phi(z)其中$K(x,z)$为核函数，$\phi(x)$为映射函数 因此，当核技巧应用于支持向量机中，对偶问题的目标函数中的内积$(x_i,x_j)$便可以用核函数$K(x,z)=\phi(x)\cdot\phi(z)$来代替，故对偶问题的目标函数变为只有$\alpha$一个参数了： w(\alpha)=-\frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N}\alpha_i\alpha_jy_iy_jK(x_i,x_j)+\sum_{i=1}^{N}\alpha_i3.1 几种常见的核函数 线性核 多项式核 高斯核（也称RBF核） 拉普拉斯核 sigmoid核 在实际中，我们经常会碰到非线性的分类问题，为了避免复杂的线性变换，这时需要应用核技巧来将数据从低维空间映射到高维空间，然后再采用线性分类器的学习方法训练模型，关于核函数的解释，知乎上的一个回答非常形象机器学习有很多关于核函数的说法，核函数的定义和作用是什么？ - 知乎，这篇文章也值得研究支持向量机: Kernel « Free Mind。 小结这篇文章介绍了软间隔方法和核函数，以及如何将原始问题转化为只有一个参数的对偶问题，至于如何求解 ${\alpha_i}$，在接下来的文章中，我们会学习一种专门对付求解${\alpha_i}$的SMO算法。 推荐阅读 《机器学习 Machine Learning》 周志华 《统计学习方法》李航 第七章]]></content>
+    <content type="text"><![CDATA[在机器学习算法系列（4）支持向量机（一）我们介绍了线性可分问题的支持向量机方法，不过实际的业务场景中一般不会有那么干净的数据集，有的情况下数据集中的样本是不可分的。但我们要求方法更具有适用性，如果碰到线性不可分问题，我们要适当允许支持向量机容忍一些错误，也就是那条宽宽的“间隔”中允许存在无法归类的数据。 1. 硬还是软？针对近似线性可分的问题，我们要求所谓的间隔中不能有无法归类的数据，这条间隔比较严格，称之为硬间隔。而对于线性不可分的情形，硬间隔最大化的方法就不适用了，因为一旦间隔区域有异常点，硬间隔的不等式约束不一定都成立。对于不能满足函数硬间隔条件的数据集，需要对硬间隔最大化做一些调整，容许有些许的异常点存在，这样的方法叫做软间隔最大化。 回顾硬间隔最大化的约束最优化问题： \underset{w,b}{max}\ \frac{2}{||w||} \\ s.t.\ y_i(w^Tx_i+b)\ge1,\ i=1,2,...,m.硬间隔最大化的优化问题的约束条件很严格，也就是所有的样本点必须被划分正确。 何谓“软”？也就是将约束条件放松一点点，有些数据破坏了间隔条件是被容许的，但是也不能太多。我们给约束条件加上一个松弛变量$\xi_i$，放宽约束条件，这样硬间隔最大化里面要求的间隔强制为 1 的约束条件就变为： y_i(wx_i+b)\ge1-\xi_i同时，对松弛变量加上惩罚参数 $C\gt0$，惩罚参数的大小控制误分类的容忍程度，目标函数就变为 \frac{1}{2}{||w||}^2+C\sum_{i=1}^{N}\xi_i所以线性不可分的支持向量机问题变为凸二次规划问题，我们暂且称为原始问题 \underset{w,b,\xi}{min}\quad\frac{1}{2}{||w||}^2+C\sum_{i=1}^{N}\xi_i \\\\ s.t.\quad y_i(wx_i+b)\ge1-\xi_i, \quad\text{$i=1,2,...,N$}\\\\ \xi_i\ge0,\quad\text{$i=1,2,...,N$}\label{origin}2. 转化为对偶问题同线性可分的问题求解的分析过程一样，对线性不可分的支持向量机凸二次规划问题，依然选择拉格朗日乘子法求解，然后转化为求解对偶问题 （1）首先对原始问题构建拉格朗日函数，$\alpha$ 和 $\mu$ 为拉格朗日乘子 L(w,b,\xi,\alpha,\mu)=\frac{1}{2}{||w||}^2+C\sum_{i=1}^{N}\xi_i-\sum_{i=1}^{N}\alpha_i(y_i(wx_i+b)-1+\xi_i)-\sum_{i=1}^{N}\mu_i{\xi}_i \label{lagrangefunction}（2）对偶问题是拉格朗日函数的极大极小问题，先对极小化$L(w,b,\alpha)$，分别对$w,b,\xi$求偏导并令其等于零 \frac{\partial L}{\partial w}=w-\sum_{i=1}^{N}\alpha_iy_ix_i=0 \\\\ \frac{\partial L}{\partial b}=\sum_{i=1}^{N}\alpha_iy_i=0 \\\\ \frac{\partial L}{\partial \xi}=C-\alpha_i-\mu_i=0得 w=\sum_{i=1}^{N}\alpha_iy_ix_i\\\\ \sum_{i=1}^{N}\alpha_iy_i=0\\\\ C-\alpha_i-\mu_i=0然后将上述三个式子带入拉格朗日函数即可将消去$w$和$b$，即 L(w,b,\xi,\alpha,\mu)=-\frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N}\alpha_i\alpha_jy_iy_jx_ix_j+\sum_{i=1}^{N}\alpha_i对偶问题是拉格朗日函数极大极小问题，求上式对$\alpha$的极大化，即得对偶问题 max\quad-\frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N}\alpha_i\alpha_jy_iy_jx_ix_j+\sum_{i=1}^{N}\alpha_i\\ s.t.\quad\sum_{i=1}^{N}\alpha_iy_i=0\\ C-\alpha_i-\mu_i=0\\ \alpha_i\ge0,\mu_i\ge0,i=1,2,...,N当拉格朗日函数转化为其对偶问题的形式之后，需要求解的参数数量下降了，只需要完成对$\alpha$极大化的求解，原始问题$w^{},b^{}$的解可由下式求得，接下来的任务只需要求解$\alpha$了，如下 w^{*}=\sum_{i=1}^{N}{\alpha_i}^{*}y_ix_i\\ b^{*}=y_j-\sum_{i=1}^{N}y_i{\alpha_i}^{*}(x_i·x_j)3. 非线性支持向量机与核函数无论是上一篇讨论线性可分和这篇笔记以上讨论线性不可分问题都属于线性分类问题的范畴，有线性分类势必就有非线性分类，比如如下的动图，在做变化之前的确有一个超平面能把红色和蓝色数据分割开，但是这样的求解往往太麻烦了，如果转换一个角度，对数据做一次转换，原有的非线性问题就变成了线性问题了，求解的难度下降了很多。 针对非线性分类问题，我们一般使用非线性支持向量机的方法，其主要特点是核技巧（kernel trick）。核技巧的基本想法是通过非线性变换将输入空间（一般是欧式空间或离散集合）映射到另一个特征空间，简单一点理解就是函数变换。 \phi(x):x\to\mathcal{H} K(x,z)=\phi(x)\cdot\phi(z)其中$K(x,z)$为核函数，$\phi(x)$为映射函数。 因此，当核技巧应用于支持向量机中，对偶问题的目标函数中的内积$(x_i,x_j)$便可以用核函数$K(x,z)=\phi(x)\cdot\phi(z)$来代替，故对偶问题的目标函数变为只有$\alpha$一个参数了： w(\alpha)=-\frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N}\alpha_i\alpha_jy_iy_jK(x_i,x_j)+\sum_{i=1}^{N}\alpha_i对以上问题的求解过程这里就不具体讨论了。 3.1 几种常见的核函数 线性核 多项式核 高斯核（也称RBF核） 拉普拉斯核 sigmoid核 在实际中，我们经常会碰到非线性的分类问题，为了避免复杂的线性变换，这时需要应用核技巧来将数据从低维空间映射到高维空间，然后再采用线性分类器的学习方法训练模型，关于核函数的解释，知乎上的一个回答非常形象机器学习有很多关于核函数的说法，核函数的定义和作用是什么？ - 知乎，这篇文章也值得阅读支持向量机: Kernel « Free Mind。 小结这篇笔记介绍了软间隔方法和核函数，以及如何将原始问题转化为只有一个参数的对偶问题，这两篇笔记都只提到了如何转换为对偶问题，至于如何求解 ${\alpha_i}$还没有做分析，在接下来的笔记中，我们会学习一种专门对付求解${\alpha_i}$的SMO算法。 推荐阅读 《机器学习 Machine Learning》 周志华 《统计学习方法》李航 第七章]]></content>
       <categories>
         <category>Machine-Learning</category>
       </categories>
@@ -1994,7 +1994,7 @@
   <entry>
     <title><![CDATA[机器学习算法系列（4）支持向量机（一）]]></title>
     <url>%2F2017%2F2017-02-26-machine-learning-algorithm-series-svm%2F</url>
-    <content type="text"><![CDATA[在了解支持向量机（support vector machine，SVM）之前，你可能会对这个算法的名字感到很奇怪，“支持”？“machine”？这到底是啥？没错，你不是一个人，一开始的时候我也是相当纳闷。所以，在正式记录之前我想举一个简单的例子辅助理解。 比如说下图（原谅我自己懒得画图），你就先别管图中的英文注释，如果在一个平面上随机散落了若干方形和圆形的点，现在希望你在方形点和圆形点之间找出一条最宽的间隔，你也可以把这条间隔想象成为一条宽宽的“河流”，然后这条宽宽的间隔又恰好能把河两岸的方形点和圆形点区分开来。 如果把以上的例子看作是分类问题，你会发现跟逻辑回归处理的分类问题思路有区别，逻辑回归会输出一个预测值，然后我们可以通过比较预测值和阈值来确定输出的种类，它属于线性分类器。而刚刚例子中用到的分类方法显然跟逻辑回归是有区别的，它属于非线性的分类器的方法，而这正是支持向量机思想的核心，就是找到一条能把不同点区分开来的宽宽的间隔。 看得出来，上面例子中给的数据是线性可分的，我们可以学习一个线性的分类器，即线性可分支持向量机；当然，现实中的数据不会像例子中的那么完美，当数据是近似线性可分的时候，也可以学习一个线性的分类器，即线性支持向量机；当训练的数据不可分的时候则需要学习非线性支持向量机。伴随着数据越来越复杂，支持向量机的学习方法是从简单到复杂的过程，下面我们来讨论最简单的情形：线性可分支持向量机。 1. 线性可分支持向量机原始问题支持向量机（Support vector machine， SVM）是一种分类模型，它的任务是在特征空间上找到正确划分数据集的间隔，并且能使几何间隔最大的分离超平面，简而言之，就是要找到一个平面，能够将空间中的点隔开！ 首先，回顾中学时代几何中提到的点到直线的距离计算方法：如果我们通过线性方程$w^Tx+b=0$ 来表示空间中的一条直线，将其记为 $(w,b)$。那么空间中任意一点 $(x_i,y_i)$ 到该直线 $(w,b)$ 的几何距离可以表示为 d=\frac{|w^Tx_i+b|}{||w||}前面我们提到过svm的核心思想是在空间中找到正确划分数据的间隔，并且这个间隔当然越宽越好。 那么如何找到使得间隔最大的分离超平面呢？我们先从最简单的情形开始分析，假设超平面$w^Tx+b=0$可以将数据集 100% 正确分类，令 w^Tx_i+b\ge+1, 为正 \\ w^Tx_i+b\le-1, 为负 如果我们将可以容忍的间隔设为1，也就是要求距离该平面 $(w,b)$ 几何距离正负为1的空间内没有一个异常点存在，那么寻找最大分离的超平面就意味着上图中两根虚线上的数据点的几何距离$\frac{2}{||w||}$越大越好，转化为数学语言可以表示为如下约束最优化问题： \underset{w,b}{max}\ \frac{2}{||w||} \\ s.t.\ y_i(w^Tx_i+b)\ge1,\ i=1,2,...,m.在线性可分的情况下，距离分离超平面最近的点称为支持向量，上图中落在虚线上的点就是支持向量，支持向量的决定了分离超平面，一般支持向量的个数不多，往往少数几个训练样本就确定了最终的分离超平面，所以有的时候增加训练样本可能并不会给支持向量机模型的效果带来多少改观。 2. 原始问题转化为对偶问题我们将线性可分的支持向量机转化为数学语言之后，那么如何求解这个最优化问题呢？ （1）构建拉格朗日函数 该问题的拉格朗日函数可以等价写为（求$\frac{2}{||w||}$的最大值等价于求$\frac{1}{2}{||w||}^2$最小值），$\alpha_i$为拉格朗日乘子 L(w,b,\alpha)=\frac{1}{2}{||w||}^2-\sum_{i=1}^m{\alpha_i(y_i(w^Tx_i+b-1))} \label{lagrangefunction}这是一个凸二次规划问题，通过拉格朗日乘子法可得到其对偶问题。应用拉格朗日对偶性，原始问题$(w,b)$的对偶问题$(\alpha)$是极大极小问题： max\ min\ L(w,b,\alpha)分别令拉格朗日函数对$w$和$b$的偏导数为零可得 w=\sum_{i=1}^m\alpha_iy_ix_i 0=\sum_{i=1}^m\alpha_iy_i然后将上述两个式子重新代入拉格朗日函数即可将消去$w$和$b$ L(w,b,\alpha)=\frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N}\alpha_i\alpha_jy_iy_j(x_i·x_j)-\sum_{i=1}^{N}\alpha_iy_i((\sum_{j=1}^{N}\alpha_jy_jx_j)x_i+b)+\sum_{i=1}^{N}\alpha_i\\ =\frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N}\alpha_i\alpha_jy_iy_j(x_i·x_j)+\sum_{i=1}^{N}\alpha_i然后就得到了原约束问题的对偶问题，即求拉格朗日函数$L(w,b,\alpha)$对$\alpha$的极大 \underset{\alpha}{max}\ \sum_{i=1}^m\alpha_i-\frac{1}{2}\sum_{i=1}^m\sum_{j=1}^m\alpha_i\alpha_jy_iy_j(x_i·x_j)\\ s.t.\ \sum_{i=1}^{N}\alpha_iy_i=0\\ \alpha_i\ge0,\ i=1,2,...,N故原始问题转化成为了求解对偶问题，为什么要这样做呢？这样做的优点是对偶问题需要求解的参数数量下降，原来需要考虑两个参数 $(w,b)$ ，现在只需要关注 $\alpha$ 便可以了，往往更容易求解。然后可以引入核函数，进而推广到非线性分类问题。设$\alpha^*$是对偶问题的最优化解，那么 w^*=\sum_{i=1}^m{\alpha_i}^*y_ix_i\\ b^*=y_j-\sum_{i=1}^{N}{\alpha_i}^*y_i(x_i·x_j)求得了$w^$，$b^$，也就得到了我们需要的分离超平面。 当然这篇文章主要针对的是线性可分问题，那么线性不可分问题以及对偶问题的求解又怎么解决呢？后面的文章将会继续解释。 我把上述拉格朗日乘子法的求解过程用手写了一遍，辅助理解。 推荐阅读（建议直接读教材） 周志华.机器学习[M].2016年1月第一版.清华大学出版社.2016 李航.统计学习方法[M].2012年3月第1版.清华大学出版社.2015]]></content>
+    <content type="text"><![CDATA[在了解支持向量机（support vector machine，SVM）之前，你可能会对这个算法的名字感到很奇怪，“支持”？“machine”？这到底是啥？没错，你不是一个人，一开始的时候我也是相当纳闷。所以，在正式记录之前我想举一个简单的例子辅助理解。 比如说下图（原谅我自己懒得画图），你就先别管图中的英文注释，如果在一个平面上随机散落了若干方形和圆形的点，现在希望你在方形点和圆形点之间找出一条最宽的间隔，你也可以把这条间隔想象成为一条宽宽的“河流”，然后这条宽宽的间隔又恰好能把河两岸的方形点和圆形点区分开来。 如果把以上的例子看作是分类问题，你会发现跟逻辑回归处理的分类问题思路有区别，逻辑回归会输出一个预测值，然后我们可以通过比较预测值和阈值来确定输出的种类，它属于线性分类器。而刚刚例子中用到的分类方法显然跟逻辑回归是有区别的，它属于非线性的分类器的方法，而这正是支持向量机思想的核心，就是找到一条能把不同点区分开来的宽宽的间隔。 看得出来，上面例子中给的数据是线性可分的，我们可以学习一个线性的分类器，即线性可分支持向量机；当然，现实中的数据不会像例子中的那么完美，当数据是近似线性可分的时候，也可以学习一个线性的分类器，即线性支持向量机；当训练的数据不可分的时候则需要学习非线性支持向量机。伴随着数据越来越复杂，支持向量机的学习方法是从简单到复杂的过程，下面我们来讨论最简单的情形：线性可分支持向量机。 1. 线性可分支持向量机原始问题支持向量机（Support vector machine， SVM）是一种分类模型，它的任务是在特征空间上找到正确划分数据集的间隔，并且能使几何间隔最大的分离超平面，简而言之，就是要找到一个平面，能够将空间中的点隔开！ 首先，回顾中学时代几何中提到的点到直线的距离计算方法：如果我们通过线性方程$w^Tx+b=0$ 来表示空间中的一条直线，将其记为 $(w,b)$。那么空间中任意一点 $(x_i,y_i)$ 到该直线 $(w,b)$ 的几何距离可以表示为 d=\frac{|w^Tx_i+b|}{||w||}前面我们提到过svm的核心思想是在空间中找到正确划分数据的间隔，并且这个间隔当然越宽越好。 那么如何找到使得间隔最大的分离超平面呢？我们先从最简单的情形开始分析，假设超平面$w^Tx+b=0$可以将数据集 100% 正确分类，令 w^Tx_i+b\ge+1, 为正 \\ w^Tx_i+b\le-1, 为负 如果我们将可以容忍的间隔设为1，也就是要求距离该平面 $(w,b)$ 几何距离正负为1的空间内没有一个异常点存在，那么寻找最大分离的超平面就意味着上图中两根虚线上的数据点的几何距离$\frac{2}{||w||}$越大越好，转化为数学语言可以表示为如下约束最优化问题： \underset{w,b}{max}\ \frac{2}{||w||} \\ s.t.\ y_i(w^Tx_i+b)\ge1,\ i=1,2,...,m.在线性可分的情况下，距离分离超平面最近的点称为支持向量，上图中落在虚线上的点就是支持向量，支持向量的决定了分离超平面，一般支持向量的个数不多，往往少数几个训练样本就确定了最终的分离超平面，所以有的时候增加训练样本可能并不会给支持向量机模型的效果带来多少改观。 2. 原始问题转化为对偶问题我们将线性可分的支持向量机转化为数学语言之后，那么如何求解这个最优化问题呢？ （1）构建拉格朗日函数 该问题的拉格朗日函数可以等价写为（求$\frac{2}{||w||}$的最大值等价于求$\frac{1}{2}{||w||}^2$最小值），$\alpha_i$为拉格朗日乘子 L(w,b,\alpha)=\frac{1}{2}{||w||}^2-\sum_{i=1}^m{\alpha_i(y_i(w^Tx_i+b)-1)} \label{lagrangefunction}这是一个凸二次规划问题，通过拉格朗日乘子法可得到其对偶问题。应用拉格朗日对偶性，原始问题$(w,b)$的对偶问题$(\alpha)$是极大极小问题： max\ min\ L(w,b,\alpha)分别令拉格朗日函数对$w$和$b$的偏导数为零可得 w=\sum_{i=1}^m\alpha_iy_ix_i 0=\sum_{i=1}^m\alpha_iy_i然后将上述两个式子重新代入拉格朗日函数即可将消去$w$和$b$ L(w,b,\alpha)=\frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N}\alpha_i\alpha_jy_iy_j(x_i·x_j)-\sum_{i=1}^{N}\alpha_iy_i((\sum_{j=1}^{N}\alpha_jy_jx_j)x_i+b)+\sum_{i=1}^{N}\alpha_i\\ =\frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N}\alpha_i\alpha_jy_iy_j(x_i·x_j)+\sum_{i=1}^{N}\alpha_i然后就得到了原约束问题的对偶问题，即求拉格朗日函数$L(w,b,\alpha)$对$\alpha$的极大 \underset{\alpha}{max}\ \sum_{i=1}^m\alpha_i-\frac{1}{2}\sum_{i=1}^m\sum_{j=1}^m\alpha_i\alpha_jy_iy_j(x_i·x_j)\\ s.t.\ \sum_{i=1}^{N}\alpha_iy_i=0\\ \alpha_i\ge0,\ i=1,2,...,N故原始问题转化成为了求解对偶问题，为什么要这样做呢？这样做的优点是对偶问题需要求解的参数数量下降，原来需要考虑两个参数 $(w,b)$ ，现在只需要关注 $\alpha$ 便可以了，往往更容易求解。然后可以引入核函数，进而推广到非线性分类问题。设$\alpha^*$是对偶问题的最优化解，那么 w^*=\sum_{i=1}^m{\alpha_i}^*y_ix_i\\ b^*=y_j-\sum_{i=1}^{N}{\alpha_i}^*y_i(x_i·x_j)求得了$w^$，$b^$，也就得到了我们需要的分离超平面。 当然这篇文章主要针对的是线性可分问题，那么线性不可分问题以及对偶问题的求解又怎么解决呢？后面的文章将会继续解释。 我把上述拉格朗日乘子法的求解过程用手写了一遍，辅助理解。 推荐阅读（建议直接读教材） 周志华.机器学习[M].2016年1月第一版.清华大学出版社.2016 李航.统计学习方法[M].2012年3月第1版.清华大学出版社.2015]]></content>
       <categories>
         <category>Machine-Learning</category>
       </categories>
