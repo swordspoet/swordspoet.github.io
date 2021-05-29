@@ -409,20 +409,6 @@
       </tags>
   </entry>
   <entry>
-    <title><![CDATA[详解RNN文本分类模型的架构]]></title>
-    <url>%2F2018%2FRNN-structure-in-text-classification%2F</url>
-    <content type="text"><![CDATA[典型RNN模型下图是典型的RNN模型，$X$是输入，对文本经过嵌入层嵌入处理，再进入RNN，RNN的后面是全连接层，输出各个类别的概率。 下面来描述一次数据从输入到输出的完整过程： 在自然语言处理中，不管是中文还是英文，首先第一步的任务是如何将文本数据数值化。对于中文，可以先建立词汇表，给词汇表中的没歌词建立唯一的id标识（数字），这样每段文本都可以用一串数字id来表示，然后就能进行词嵌入操作，英文的处理方法也类似。 对文本预处理时，由于每条文本的长度不一，需要给输入统一规定长度（seq_length），超过的截断，不足的填充。假设有$N​$段文本（text），统一长度后就变成了[N, 1, seq_length]​大小的矩阵，矩阵的每一行代表一段文本，大小为​[1, seq_length]​。 通常，传统的做法是将one-hot编码，但是劣势是矩阵会很稀疏，并且上下文之间的语义关系非常模糊，难以捕捉。现在一般的做法是将文本词向量化，将每个词（字）“嵌入”为大小为[1, embedding_size]大小的向量矩阵。到了这一步，输入基本就确定下来了，它是大小为[seq_length, embedding_size]大小的矩阵。 接下来是训练，训练中可以一条一条给RNN“喂”数据，当有一条数据进来，等待它的是seq_length个cell，LSTM的输出整个过程如下： 但是这样的训练太慢了，并且优化的参数也难以顾及到全局的信息，通常是批次训练，一次喂给模型batch_size条数据。 批次训练全过程详解 原帖地址：understanding-pytorch-batching-lstm/Understanding Pytorch Batching.ipynb at master · ngarneau/understanding-pytorch-batching-lstm 1. one-hot 编码 2. 零填充 3. 批量输入将每一个batch设置为4 4. 词嵌入（word embedding）矩阵中的每一行代表一个字母的向量 5. Packed Embeddings 注意，这里将词向量矩阵打包过了一次，因为我们并不需要零填充后的词向量。在这种情况下，batch_sizes为[4, 4, 4, 3, 2, 1]，即第一步到第三步每次会给LSTM喂4个字母，到第四步，San已经用光了，所以给LSTM的只有3个字母，以此类推，到最后只有1个字母v。 6. LSTM out数据进入RNN之后输出的结果 7. padded LSTM out填充LSTM的输出 8. reshape output 9. maxpooling最大池化 10. predict]]></content>
-      <categories>
-        <category>Machine-Learning</category>
-      </categories>
-      <tags>
-        <tag>架构</tag>
-        <tag>RNN</tag>
-        <tag>循环神经网络</tag>
-        <tag>分类模型</tag>
-      </tags>
-  </entry>
-  <entry>
     <title><![CDATA[Python 工具箱系列 （6）：为jupyter notebook中添加虚拟环境]]></title>
     <url>%2F2018%2Fadd-virtualenv-in-jupyter-notebook%2F</url>
     <content type="text"><![CDATA[123456789# 建立虚拟环境scrapymkvirtualenv scrapy# 进入虚拟环境scrapyworkon scrapy# 安装jupyter，具体操作略过(scrapy) pip install jupyter# 安装ipykernel，添加kernel(scrapy) pip install ipykernel(scrapy) python -m ipykernel install --user --name scrapy --display-name "Python2(scrapy)"]]></content>
@@ -438,6 +424,20 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[详解RNN文本分类模型的架构]]></title>
+    <url>%2F2018%2FRNN-structure-in-text-classification%2F</url>
+    <content type="text"><![CDATA[典型RNN模型下图是典型的RNN模型，$X$是输入，对文本经过嵌入层嵌入处理，再进入RNN，RNN的后面是全连接层，输出各个类别的概率。 下面来描述一次数据从输入到输出的完整过程： 在自然语言处理中，不管是中文还是英文，首先第一步的任务是如何将文本数据数值化。对于中文，可以先建立词汇表，给词汇表中的没歌词建立唯一的id标识（数字），这样每段文本都可以用一串数字id来表示，然后就能进行词嵌入操作，英文的处理方法也类似。 对文本预处理时，由于每条文本的长度不一，需要给输入统一规定长度（seq_length），超过的截断，不足的填充。假设有$N​$段文本（text），统一长度后就变成了[N, 1, seq_length]​大小的矩阵，矩阵的每一行代表一段文本，大小为​[1, seq_length]​。 通常，传统的做法是将one-hot编码，但是劣势是矩阵会很稀疏，并且上下文之间的语义关系非常模糊，难以捕捉。现在一般的做法是将文本词向量化，将每个词（字）“嵌入”为大小为[1, embedding_size]大小的向量矩阵。到了这一步，输入基本就确定下来了，它是大小为[seq_length, embedding_size]大小的矩阵。 接下来是训练，训练中可以一条一条给RNN“喂”数据，当有一条数据进来，等待它的是seq_length个cell，LSTM的输出整个过程如下： 但是这样的训练太慢了，并且优化的参数也难以顾及到全局的信息，通常是批次训练，一次喂给模型batch_size条数据。 批次训练全过程详解 原帖地址：understanding-pytorch-batching-lstm/Understanding Pytorch Batching.ipynb at master · ngarneau/understanding-pytorch-batching-lstm 1. one-hot 编码 2. 零填充 3. 批量输入将每一个batch设置为4 4. 词嵌入（word embedding）矩阵中的每一行代表一个字母的向量 5. Packed Embeddings 注意，这里将词向量矩阵打包过了一次，因为我们并不需要零填充后的词向量。在这种情况下，batch_sizes为[4, 4, 4, 3, 2, 1]，即第一步到第三步每次会给LSTM喂4个字母，到第四步，San已经用光了，所以给LSTM的只有3个字母，以此类推，到最后只有1个字母v。 6. LSTM out数据进入RNN之后输出的结果 7. padded LSTM out填充LSTM的输出 8. reshape output 9. maxpooling最大池化 10. predict]]></content>
+      <categories>
+        <category>Machine-Learning</category>
+      </categories>
+      <tags>
+        <tag>架构</tag>
+        <tag>循环神经网络</tag>
+        <tag>RNN</tag>
+        <tag>分类模型</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[基于 sklearn 的传统机器学习在搜狗新闻数据的文本分类实践]]></title>
     <url>%2F2018%2Ftext-classification-classic-ml-by-sklearn%2F</url>
     <content type="text"><![CDATA[sklearn is good tool. 1. 背景在sklearn下比较各个传统机器学习模型在文本分类任务上的表现。 2. 数据准备数据源依旧来自搜狗的新闻数据，由于机器的性能，本文只用到了一个星期的数据。 数据清洗从搜狗下载的新闻数据格式为xml，从HTML标签中提取标签和正文的工作在基于 Tensorflow 的 TextCNN 在搜狗新闻数据的文本分类实践一文中已经完成，不再赘述。因为在本次实验中不再使用基于字符级的思想，而是基于词，所以还要对数据做分词、去噪清洗操作。 分词：使用jieba分词工具，因为在分词时数据是单条单条处理的，所以速度会比较慢，对原始数据采用多进程分词，能节省不少的时间。你可以把多进程理解为把任务列表扔给进程池，“这是交给你的任务，你们赶紧给我办好！”，然后进程池的工人们就迅速过来认领任务，并同时开始工作。 12345678910111213141516171819202122232425262728293031# coding: utf-8import jiebastopwords_path = 'stopwords.txt'class CutWord(object): def __init__(self, stopwords_path=stopwords_path): self.stopwords_path = stopwords_path def add_dictionary(self, dict_list): map(lambda x: jieba.load_userdict(x), dict_list) def seg_sentence(self, sentence, stopwords_path=None): if not stopwords_path: stopwords_path = self.stopwords_path def stopwords_list(file_path): stopwords = [line.strip() for line in open(file_path, 'r').readlines()] return stopwords segmented_sentence = jieba.cut(sentence.strip()) stopwords_list = stopwords_list(stopwords_path) out_str = '' for word in segmented_sentence: if word not in stopwords_list: out_str += word out_str += ' ' return out_str 多进程分词： 123456789from multiprocessing import Poolpool = Pool(processes=6)for file_path, write_path in zip(file_list, write_list): paths = [file_path, write_path] pool.apply_async(seg_file, (paths,))pool.close()pool.join()print('Word segment finished...') 去噪：原始数据中有标点符号、停用词等噪声，通过加载外部停用词文件过滤掉这一部分的噪声。为了方便，把这两个功能整合成为一个工具类CutWord，在其他程序中直接调用使用即可。 分词、去噪清洗工作完毕，看看各个类别下的数据分布，占比最多的前四个是体育、新闻、商业和娱乐，其余8个类别的新闻占比均不足5%，数据量比较小。因为在这之前我用该数据做了二分类的任务，发现分类效果实在太好了，1万多的测试数据只有十几个分错了，好得有点不真实，所以，我决定拿占比排名前4类的数据来做实验。 数据切分每个类别新闻按照5000条训练集、500条验证集、1000条测试集提取，所以总共有训练集：验证集：测试集为20000：2000：4000。 特征提取sklearn中常用的文本特征提取方法有tfidf，将文本转换为文档-词项矩阵，矩阵中的元素，可以使用词频也可以使用tfidf值。为了获得更好的效果，本次试验的文本特征提取用到了全量的数据。 123456def tf_idf(contents): """提取文本特征tf-idf""" vectorizer = CountVectorizer(min_df=1e-5) transformer = TfidfTransformer() tfidf = transformer.fit_transform(vectorizer.fit_transform(contents)) return tfidf 3. 模型训练3.1 logistic regression logitstic regression的背景知识参考我的笔记：机器学习算法系列（3）Logistic Regression | Thinking Realm 为了有更好地优化参数，选用了更有效的交叉验证的LogisticRegressionCV模型，cv设置为10，训练的时间略长；n_jobs设置为-1，利用起所有的CPU核心。 123456lr_model = LogisticRegressionCV(solver='newton-cg', multi_class='multinomial', cv=10, n_jobs=-1)lr_model.fit(x_train[:20000], y_train[:20000])y_pred = lr_model.predict(x_train[20000:24000])print(metrics.confusion_matrix(y_train[20000:24000], y_pred))print(classification_report(y_train[20000:24000], y_pred, target_names=['business', 'sports', 'news', 'yule'])) 训练结果如下，模型在测试集上的表现还不错，除了体育的准确率为89%，其余的类别的指标都在90%以上。读不懂报告，参考：读懂sklearn的classification_report 1234567891011121314[[924 84 0 0] [ 51 941 16 16] [ 1 14 963 5] [ 3 16 5 961]] precision recall f1-score support business 0.94 0.92 0.93 1008 sports 0.89 0.92 0.91 1024 news 0.98 0.98 0.98 983 yule 0.98 0.98 0.98 985 micro avg 0.95 0.95 0.95 4000 macro avg 0.95 0.95 0.95 4000weighted avg 0.95 0.95 0.95 4000 3.2 线性支持向量机 支持向量机的背景知识参考我的系列笔记： 机器学习算法系列（4）支持向量机（一） | Thinking Realm 机器学习算法系列（5）支持向量机（二） | Thinking Realm 机器学习算法系列（6）支持向量机（三） | Thinking Realm 123456svm_model = SGDClassifier(n_jobs=-1)svm_model.fit(x_train[:20000], y_train[:20000])y_pred = svm_model.predict(x_train[20000:24000])print(metrics.confusion_matrix(y_train[20000:24000], y_pred))print(classification_report(y_train[20000:24000], y_pred, target_names=['business', 'sports', 'news', 'yule'])) 强大如支持向量机，30秒不到就完成了训练，按照性价比，完全可以把LogisticRegressionCV摁在地上摩擦。 1234567891011121314[[889 118 0 1] [ 67 922 17 18] [ 2 12 962 7] [ 1 14 4 966]] precision recall f1-score support business 0.93 0.88 0.90 1008 sports 0.86 0.90 0.88 1024 news 0.98 0.98 0.98 983 yule 0.97 0.98 0.98 985 micro avg 0.93 0.93 0.93 4000 macro avg 0.94 0.94 0.94 4000weighted avg 0.94 0.93 0.93 4000 3.3 朴素贝叶斯 朴素贝叶斯的背景知识参考我的系列笔记：机器学习算法系列（7）朴素贝叶斯法 | Thinking Realm 速度飞快，效果还行。 1234567891011121314[[908 99 0 1] [129 842 15 38] [ 2 14 948 19] [ 6 17 4 958]] precision recall f1-score support business 0.87 0.90 0.88 1008 sports 0.87 0.82 0.84 1024 news 0.98 0.96 0.97 983 yule 0.94 0.97 0.96 985 micro avg 0.91 0.91 0.91 4000 macro avg 0.91 0.92 0.91 4000weighted avg 0.91 0.91 0.91 4000 4. 模型对比 文本分类任务，支持向量机的表现可以吊打其他模型 一般的数据集的分类任务，各个模型的表现差距不是特别明显，用法大同小异 在结巴分词下逐条分词速度很慢，考虑多进程来解决 该实验用到的数据量不大，当数据量上升，场景复杂化，参数优化必不可少]]></content>
@@ -449,8 +449,8 @@
         <tag>支持向量机</tag>
         <tag>搜狗新闻数据</tag>
         <tag>文本分类</tag>
-        <tag>sklearn</tag>
         <tag>传统机器学习方法</tag>
+        <tag>sklearn</tag>
         <tag>logistic regression</tag>
         <tag>svm</tag>
         <tag>朴素贝叶斯</tag>
@@ -466,8 +466,8 @@
       </categories>
       <tags>
         <tag>python</tag>
-        <tag>classification_report</tag>
         <tag>sklearn</tag>
+        <tag>classification_report</tag>
         <tag>分类报告</tag>
       </tags>
   </entry>
@@ -497,8 +497,8 @@
       </categories>
       <tags>
         <tag>机器学习算法系列</tag>
-        <tag>RNN</tag>
         <tag>循环神经网络</tag>
+        <tag>RNN</tag>
         <tag>长短时记忆网络</tag>
         <tag>LSTM</tag>
       </tags>
@@ -656,10 +656,10 @@
         <category>Python</category>
       </categories>
       <tags>
-        <tag>软技能</tag>
-        <tag>程序员</tag>
         <tag>flask</tag>
         <tag>网络框架</tag>
+        <tag>软技能</tag>
+        <tag>程序员</tag>
       </tags>
   </entry>
   <entry>
@@ -1200,8 +1200,8 @@
         <category>Machine-Learning</category>
       </categories>
       <tags>
-        <tag>决策树</tag>
         <tag>机器学习算法系列</tag>
+        <tag>决策树</tag>
         <tag>Machine-Learning</tag>
         <tag>梯度提升</tag>
       </tags>
@@ -1692,8 +1692,8 @@
         <category>Machine-Learning</category>
       </categories>
       <tags>
-        <tag>Python</tag>
         <tag>Machine-Learning</tag>
+        <tag>Python</tag>
         <tag>深度学习</tag>
         <tag>图像处理</tag>
         <tag>卷积神经网络</tag>
@@ -1734,8 +1734,8 @@
         <category>Machine-Learning</category>
       </categories>
       <tags>
-        <tag>Python</tag>
         <tag>Machine-Learning</tag>
+        <tag>Python</tag>
         <tag>深度学习</tag>
         <tag>图像处理</tag>
         <tag>正则化</tag>
@@ -1761,8 +1761,8 @@
         <category>Machine-Learning</category>
       </categories>
       <tags>
-        <tag>Python</tag>
         <tag>Machine-Learning</tag>
+        <tag>Python</tag>
         <tag>深度学习</tag>
         <tag>图像处理</tag>
       </tags>
@@ -1775,8 +1775,8 @@
         <category>Machine-Learning</category>
       </categories>
       <tags>
-        <tag>Python</tag>
         <tag>Machine-Learning</tag>
+        <tag>Python</tag>
         <tag>深度学习</tag>
         <tag>图像处理</tag>
       </tags>
@@ -1891,8 +1891,8 @@
       </categories>
       <tags>
         <tag>笔记</tag>
-        <tag>MOOC</tag>
         <tag>C++</tag>
+        <tag>MOOC</tag>
       </tags>
   </entry>
   <entry>
@@ -1917,8 +1917,8 @@
         <category>coding</category>
       </categories>
       <tags>
-        <tag>MOOC</tag>
         <tag>C++</tag>
+        <tag>MOOC</tag>
         <tag>编程</tag>
       </tags>
   </entry>
@@ -1943,8 +1943,8 @@
         <category>coding</category>
       </categories>
       <tags>
-        <tag>MOOC</tag>
         <tag>C++</tag>
+        <tag>MOOC</tag>
         <tag>编程</tag>
       </tags>
   </entry>
@@ -1965,7 +1965,7 @@
   <entry>
     <title><![CDATA[机器学习算法系列（6）支持向量机（三）]]></title>
     <url>%2F2017%2F2017-03-02-machine-learning-algorithm-series-svm-3%2F</url>
-    <content type="text"><![CDATA[上一篇文章我们介绍了如何将支持向量机的原始优化问题转化为只有一个参数的对偶问题，但是还遗留了参数的求解没有解决，这篇文章讲到的序列最小最优算法（SMO）就是一种高效实现支持向量机学习的算法。 由上一篇文章，凸二次规划的对偶问题 \begin{equation}\begin{split}min\quad&amp;\frac{1}{2}\sum{i=1}^{N}\sum{j=1}^{N}\alphai\alpha_jy_iy_jK(x_i{\cdot}x_j)-\sum{i=1}^{N}\alphai\s.t.\quad&amp;\sum{i=1}^{N}\alpha_iy_i=0\&amp;0\le\alpha_i\le{C},i=1,2,…,N\\label{dualproblem}\end{split}\end{equation} 1. SMO 算法基本思路不同于之前解决二次规划问题所采取的手段，SMO 选择在每一步解决一个最小可能的优化问题，通过求解子问题来逼近原始问题，这可以大大提高整个算法的计算速度，是一种启发式的方法。笔者感觉 SMO 与提升树中的前向分步算法有异曲同工之妙，两者都是通过“由小到大”，先做错了不要紧，慢慢来，然后逐步接近最优解的过程。 SMO 的优势： can be done analytically 不需要额外的矩阵存储空间 SMO = analytic method + heuristic（启发式） 由上述对偶问题，假设先固定除$\alpha_1,\alpha_2$之外的所有其他变量，于是对偶问题$\eqref{dualproblem}$的子问题可以等价写为 \begin{equation}\begin{split}\underset{\alpha1,\alpha_2}{min}\quad&amp;\frac{1}{2}K{11}{\alpha1}^2+\frac{1}{2}K{22}{\alpha2}^2+y_1y_2K{12}\alpha1\alpha_2\&amp;-(\alpha_1+\alpha_2)+y_1\alpha_1\sum{i=3}^{N}yi\alpha_iK{i1}+y2\alpha_2\sum{i=3}^{N}yi\alpha_iK{i2}\s.t.\quad&amp;\alpha1y_1+\alpha_2y_2=-\sum{i=3}^{N}y_i\alpha_i=k\&amp;0\le\alpha_i\le{C},i=1,2,…,N\\label{subproblem}\end{split}\end{equation} 由对偶问题$\eqref{dualproblem}$的约束条件$\sum_{i=1}^{N}\alpha_iy_i=0$，得 \alpha_1y_1+\sum_{i=2}^{N}\alpha_iy_i=0左右两边同乘一个$y_1$，得 \alpha_1{y_1}^2+y_1\sum_{i=2}^{N}\alpha_iy_i=0因为${y_1}^2$恒为1，得 \alpha_1=-y_1\sum_{i=2}^{N}\alpha_iy_i我们将$\alpha_1$代入子问题$\eqref{subproblem}$，从而消去$\alpha_1$。也就是说，对偶问题$\eqref{dualproblem}$两个变量中只有一个是自由变量，实际上是单变量的优化问题，这样问题就更加简化了！ 2. 两个变量的凸二次规划问题求解通过变换，我们将子问题变成了只有$\alpha_2$的单变量优化问题。如何求解$\alpha_2$？考虑两种情形 （1）考虑$y_1*y_2$的两种不同情形\begin{equation}\begin{split}y_1=y_2\Rightarrow\alpha_1+\alpha_2=k\\label{t1}\end{split}\end{equation}\begin{equation}\begin{split}y_1{\neq}y_2\Rightarrow\alpha_1-\alpha_2=k\\label{t2}\end{split}\end{equation}设$L$与$H$是在对角线段端点的上界和下界，由上图所示，要得到$\alpha_2$的准确取值范围，上界我们取两个最大值的最小值，下界取两个最小值的最大值即可。由$\eqref{t1}$ \begin{equation}\begin{split}L=max(0,\alpha_1+\alpha_2-C),H=min(C,\alpha_1+\alpha_2)\\label{st1}\end{split}\end{equation} 由$\eqref{t2}$ \begin{equation}\begin{split}L=max(0,\alpha_2-\alpha_1),H=min(C,C+\alpha_2-\alpha_1)\\label{st2}\end{split}\end{equation} （2）不考虑约束条件求$\alpha_{2}^{new,unc}$首先，$\alpha2$的约束条件很多，为了避免求解太繁，我们先不考虑上面两个条件的约束得到$\alpha{2}^{new,unc}$（unc，即uncertain，不确定）的最优解，然后再求约束条件下的最优解$\alpha_{2}^{new}$。 解： **设** g(x)=\sum_{i=1}^{N}\alpha_iy_iK(x_i,x)+b**令误差** E_i=g(x_i)-y_i=(\sum_{i=1}^{N}\alpha_jy_jK(x_i{\cdot}x_j)+b)-y_i,i=1,2**记** $$v_i=\sum_{j=3}^{N}\alpha_jy_jK(x_i{\cdot}x_j)=g(x_i)-\sum_{j=1}^{N}\alpha_jy_jK(x_i{\cdot}x_j),i=1,2$$ **故****子问题**$\eqref{subproblem}$**的目标函数可以写为** \begin{equation}\begin{split} w(\alpha_1,\alpha_2)&=\frac{1}{2}K_{11}{\alpha_1}^2+\frac{1}{2}K_{22}{\alpha_2}^2+y_1y_2K_{12}\alpha_1\alpha_2\\ &-(\alpha_1+\alpha_2)+y_1\alpha_1v_1+y_2\alpha_2v_2\\ \label{objectfunction} \end{split}\end{equation} **因为** \alpha_1y_1+\alpha_2y_2=k,y_1^{2}=1**所以** \alpha_1=(k-\alpha_2y_2)y_1代入目标函数$\eqref{objectfunction}$，得 \begin{equation}\begin{split}w(\alpha2)&amp;=\frac{1}{2}K{11}{(k-\alpha2y_2)}^2+\frac{1}{2}K{22}{\alpha2}^2+y_2K{12}(k-\alpha_2y_2)\alpha_2\&amp;-(k-\alpha_2y_2)y_1-\alpha_2+v_1(k-\alpha_2y_2)+y_2\alpha_2v_2\\label{alpha_2}\end{split}\end{equation} 这样目标函数只有一个未知参数了！针对单变量的凸二次规划问题，这太简单了。 （3）单变量的凸二次规划问题对$\alpha_2$求导并令其为零 \frac{\partial w}{\partial \alpha_2}=-K_{11}ky_2+K_{11}\alpha_2+K_{22}\alpha_2+y_2K_{12}k-2y_2K_{12}y_2\alpha_2+y_1y_2-1-v_1y_2+y_2v_2\\ =K_{11}\alpha_2+K_{22}\alpha_2+y_2K_{12}k-2y_2K_{12}\alpha_2k-K_{11}ky_2+y_1y_2-1-v_1y_2+y_2v_2=0得 \begin{equation}\begin{split}(K{11}+K{22}-2K{12})\alpha_2&amp;=y_2(y_2-y_1+kK{11}-kK{12}+v_1-v_2)\&amp;=y_2(y_2-y_1+kK{11}-kK{12}\&amp;+(g(x_1)-\sum{j=1}^{2}\alphajy_jK(x_1{\cdot}x_j)-b)-(g(x_2)-\sum{j=1}^{2}\alpha_jy_jK(x_2{\cdot}x_j)-b))\\label{alpha2new}\end{split}\end{equation} 将$\alpha_1y_1+\alpha_2y_2=k$代入$\eqref{alpha2new}$，得 \begin{equation}\begin{split}(K{11}+K{22}-2K{12})\alpha{2}^{new,unc}&amp;=y2((y_2-y_1+g(x_1)-g(x_2)+(K{11}+K{22}-2K{12})\alpha{2}^{old}y_2))\&amp;=(K{11}+K{22}-2K{12})\alpha_2^{old}+y_2(E_1-E_2)\end{split}\end{equation} 是不是有点头晕了？我也是，为了帮助读者快速理解，下图给出了详细的化简步骤，相信应该有帮助吧！ 我们令$\eta=K{11}+K{22}-2K_{12}$，得 \alpha_{2}^{new,unc}=\alpha_2^{old}+\frac{y_2(E_1-E_2)}{\eta}再考虑求解约束条件$\eqref{st1}$$\eqref{st2}$后的$\alpha_{2}^{new}$ （4）考虑求解约束条件$\alpha_{2}^{new}$\alpha_{2}^{new}= \begin{cases} H, & \alpha_{2}^{new,unc}\gt{H}\\ \alpha_{2}^{new,unc}, & L\le\alpha_{2}^{new,unc}\le{H}\\ L, &\alpha_{2}^{new,unc}\lt{L} \end{cases}**因为** \alpha_{1}^{new}y_1+\alpha_{2}^{new}y_2=\alpha_{1}^{old}y_1+\alpha_{2}^{old}y_2**所以** \alpha_{1}^{new}=\alpha_{1}^{old}+y_1y_2(\alpha_{2}^{old}-\alpha_{2}^{new})于是，我们经过上述的推导，终于就得到了对偶问题子问题$\eqref{subproblem}$的解$(\alpha{1}^{new},\alpha{2}^{new})$。 （5）重新计算$b$和差值$E_i$在每次完成两个变量的优化后，我们还需要将$\alpha_2^{new}$与$\alpha_2^{old}$比较，如果变化的程度不大，则要重新计算阈值$b$和差值$E_i$ 3. 基于 Python 实现 SMO 的代码分析这是基于 Python 实现 SVM 中的 SOM 算法，来自于《机器学习实战》，代码很容易读，基本可以与上文的公式推导完全对应，所以不太理解的地方，还是把 SOM 推导过程的来龙去脉先捋一捋吧！ 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273from numpy import *from time import sleep#==============================================================================# 打开文件、两个辅助函数#==============================================================================# 打开文件逐行读取数据，得到每行的类标签‘labelMat’和数据矩阵‘dataMat’def loadDataSet(fileName): dataMat = []; labelMat = [] fr = open(fileName) for line in fr.readlines(): # ‘fr.readlines()’逐行读取数据 lineArr = line.strip().split('\t') dataMat.append([float(lineArr[0]), float(lineArr[1])]) # 将每行数据的第一个和第二个位置储存到‘dataMat’矩阵 labelMat.append(float(lineArr[2])) # 每行的第三个是数据标签，存储到‘labelMat’矩阵 return dataMat,labelMat# 辅助函数1：取两个不同下标的alphadef selectJrand(i,m): j=i #we want to select any J not equal to i while (j==i): j = int(random.uniform(0,m)) return j# 辅助函数2：用于调整大于H小于L的alpha值，对应alpha2_new的更新法则，alpha2_new只能在[L,H]的区间范围之内 def clipAlpha(aj,H,L): if aj &gt; H: aj = H if L &gt; aj: aj = L return aj#==============================================================================# 简化版本SMO算法#==============================================================================def smoSimple(dataMatIn, classLabels, C, toler, maxIter): # 5个参数：数据集、类别标签、常数c、容错率、退出前的最大循环次数 dataMatrix = mat(dataMatIn); labelMat = mat(classLabels).transpose() # 类别标签‘classLabels’转置为列向量 b = 0; m,n = shape(dataMatrix) # ‘shape’得到矩阵的行数m和列数n alphas = mat(zeros((m,1))) # 初始化alpha为元素全部为零的(m*1)列矩阵 iter = 0 while (iter &lt; maxIter): alphaPairsChanged = 0 # 用于记录alpha是否已经进行优化 for i in range(m): # 外层循环 fXi = float(multiply(alphas,labelMat).T*(dataMatrix*dataMatrix[i,:].T)) + b Ei = fXi - float(labelMat[i]) # 计算误差 if ((labelMat[i]*Ei &lt; -toler) and (alphas[i] &lt; C)) or ((labelMat[i]*Ei &gt; toler) and (alphas[i] &gt; 0)): # 检查变量是否满足KKT条件，如果不满足，那么继续迭代， # 如果满足，那么最优化问题的解就得到了 j = selectJrand(i,m) # 内层循环 fXj = float(multiply(alphas,labelMat).T*(dataMatrix*dataMatrix[j,:].T)) + b # fXj为输入xj的预测值，对应本文公式(7) Ej = fXj - float(labelMat[j]) # 预测值与真实值之间的误差 alphaIold = alphas[i].copy(); alphaJold = alphas[j].copy(); if (labelMat[i] != labelMat[j]): L = max(0, alphas[j] - alphas[i]) H = min(C, C + alphas[j] - alphas[i]) else: L = max(0, alphas[j] + alphas[i] - C) H = min(C, alphas[j] + alphas[i]) if L==H: print "L==H"; continue # 计算eta eta = 2.0 * dataMatrix[i,:]*dataMatrix[j,:].T - dataMatrix[i,:]*dataMatrix[i,:].T - dataMatrix[j,:]*dataMatrix[j,:].T if eta &gt;= 0: print "eta&gt;=0"; continue # 求alpha2_new，对应alpha2_new的更新公式，注意eta与文中的符号刚好相反，所以这里是'-=' alphas[j] -= labelMat[j]*(Ei - Ej)/eta alphas[j] = clipAlpha(alphas[j],H,L)# alpha2_new与alpha2_old比较，如果变化的程度不大，则要更新阈值b和误差值E if (abs(alphas[j] - alphaJold) &lt; 0.00001): print "j not moving enough"; continue alphas[i] += labelMat[j]*labelMat[i]*(alphaJold - alphas[j]) b1 = b - Ei- labelMat[i]*(alphas[i]-alphaIold)*dataMatrix[i,:]*dataMatrix[i,:].T - labelMat[j]*(alphas[j]-alphaJold)*dataMatrix[i,:]*dataMatrix[j,:].T b2 = b - Ej- labelMat[i]*(alphas[i]-alphaIold)*dataMatrix[i,:]*dataMatrix[j,:].T - labelMat[j]*(alphas[j]-alphaJold)*dataMatrix[j,:]*dataMatrix[j,:].T if (0 &lt; alphas[i]) and (C &gt; alphas[i]): b = b1 elif (0 &lt; alphas[j]) and (C &gt; alphas[j]): b = b2 else: b = (b1 + b2)/2.0 alphaPairsChanged += 1 print "iter: %d i:%d, pairs changed %d" % (iter,i,alphaPairsChanged) # 打印迭代次数、alpha优化的个数 if (alphaPairsChanged == 0): iter += 1 else: iter = 0 print "iteration number: %d" % iter return b,alphas 小结至此，机器学习算法系列之支持向量机三部曲暂时就告一段落了！ 在这个系列文章中，我们涉及了线性可分、线性不可分、硬间隔、软间隔、序列最小优化方法等许多概念，用到了拉格朗日乘子法、线性模型等求解办法，故数学公式的推导很繁，不过“只要功夫深，铁杵磨成针”，耐心一点，再耐心一点，便会柳暗花明。如果看了笔记还是有不明白的地方，建议看看原书，跟着李航老师的思路一步一步来。 推荐阅读 《机器学习》.周志华 《统计学习方法》.李航 《机器学习实战》.Peter Harrington https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr-98-14.pdf]]></content>
+    <content type="text"><![CDATA[前两篇笔记主要记录了在线性可分、线性不可分和非线性可分三种情形下，如何将支持向量机的原始优化问题转化为只有一个参数的对偶问题，对偶问题的求解实现没有记录，这篇笔记讲到的序列最小最优算法（SMO）就是一种高效实现支持向量机学习的算法。 由上一篇笔记，凸二次规划的对偶问题 min\quad\frac{1}{2}\sum_{i=1}^{N}\sum_{j=1}^{N}\alpha_i\alpha_jy_iy_jK(x_i{\cdot}x_j)-\sum_{i=1}^{N}\alpha_i\\ s.t.\quad\sum_{i=1}^{N}\alpha_iy_i=0\\ 0\le\alpha_i\le{C},i=1,2,...,N\\1. SMO 算法基本思路不同于之前解决二次规划问题所采取的手段，SMO 选择在每一步解决一个最小可能的优化问题，通过求解子问题来逼近原始问题，这可以大大提高整个算法的计算速度，是一种启发式的方法。SMO 与提升树中的前向分步算法或者ALS（交替最小二乘法）的思路殊途同归，它们都是通过不断解决小问题来逼近最优解。 SMO 的优势： can be done analytically 不需要额外的矩阵存储空间 SMO = analytic method + heuristic（启发式） 由上述对偶问题，假设先固定除$\alpha_1,\alpha_2$之外的所有其他变量，于是对偶问题的子问题可以等价写为 \underset{\alpha_1,\alpha_2}{min}\quad\frac{1}{2}K_{11}{\alpha_1}^2+\frac{1}{2}K_{22}{\alpha_2}^2+y_1y_2K_{12}\alpha_1\alpha_2\\ -(\alpha_1+\alpha_2)+y_1\alpha_1\sum_{i=3}^{N}y_i\alpha_iK_{i1}+y_2\alpha_2\sum_{i=3}^{N}y_i\alpha_iK_{i2}\\ s.t.\quad\alpha_1y_1+\alpha_2y_2=-\sum_{i=3}^{N}y_i\alpha_i=k\\ 0\le\alpha_i\le{C},i=1,2,...,N\\由对偶问题的约束条件$\sum_{i=1}^{N}\alpha_iy_i=0$，得： \alpha_1y_1+\sum_{i=2}^{N}\alpha_iy_i=0左右两边同乘一个$y_1$，得： \alpha_1{y_1}^2+y_1\sum_{i=2}^{N}\alpha_iy_i=0因为${y_1}^2$恒为1，显然： \alpha_1=-y_1\sum_{i=2}^{N}\alpha_iy_i我们将$\alpha_1$代入子问题，从而消去$\alpha_1$。也就是说，对偶问题两个变量中只有一个是自由变量，实际上是单变量的优化问题，这样问题就更加简化了！ 2. 两个变量的凸二次规划问题求解通过变换，我们将子问题变成了只有$\alpha_2$的单变量优化问题。如何求解$\alpha_2$？考虑两种情形 （1）考虑$y_1*y_2$的两种不同情形 y_1=y_2\Rightarrow\alpha_1+\alpha_2=k y_1{\neq}y_2\Rightarrow\alpha_1-\alpha_2=k 设$L$与$H$是在对角线段端点的上界和下界，由上图所示，要得到$\alpha_2$的准确取值范围，上界我们取两个最大值的最小值，下界取两个最小值的最大值即可。由 L=max(0,\alpha_1+\alpha_2-C),H=min(C,\alpha_1+\alpha_2)\\由 L=max(0,\alpha_2-\alpha_1),H=min(C,C+\alpha_2-\alpha_1)\\（2）不考虑约束条件求$\alpha_{2}^{new,unc}$首先，$\alpha2$的约束条件很多，为了避免求解太繁，我们先不考虑上面两个条件的约束得到$\alpha{2}^{new,unc}$（unc，即uncertain，不确定）的最优解，然后再求约束条件下的最优解$\alpha_{2}^{new}$。 解： 设 g(x)=\sum_{i=1}^{N}\alpha_iy_iK(x_i,x)+b令误差 E_i=g(x_i)-y_i=(\sum_{i=1}^{N}\alpha_jy_jK(x_i{\cdot}x_j)+b)-y_i,i=1,2记 v_i=\sum_{j=3}^{N}\alpha_jy_jK(x_i{\cdot}x_j)=g(x_i)-\sum_{j=1}^{N}\alpha_jy_jK(x_i{\cdot}x_j),i=1,2故子问题的目标函数可以写为 w(\alpha_1,\alpha_2)=\frac{1}{2}K_{11}{\alpha_1}^2+\frac{1}{2}K_{22}{\alpha_2}^2+y_1y_2K_{12}\alpha_1\alpha_2\\ -(\alpha_1+\alpha_2)+y_1\alpha_1v_1+y_2\alpha_2v_2\\因为 \alpha_1y_1+\alpha_2y_2=k,y_1^{2}=1所以 \alpha_1=(k-\alpha_2y_2)y_1代入目标函数，得 w(\alpha_2)=\frac{1}{2}K_{11}{(k-\alpha_2y_2)}^2+\frac{1}{2}K_{22}{\alpha_2}^2+y_2K_{12}(k-\alpha_2y_2)\alpha_2\\ -(k-\alpha_2y_2)y_1-\alpha_2+v_1(k-\alpha_2y_2)+y_2\alpha_2v_2\\这样目标函数只有一个未知参数了！针对单变量的凸二次规划问题，这太简单了。 （3）单变量的凸二次规划问题对$\alpha_2$求导并令其为零 \frac{\partial w}{\partial \alpha_2}=-K_{11}ky_2+K_{11}\alpha_2+K_{22}\alpha_2+y_2K_{12}k-2y_2K_{12}y_2\alpha_2+y_1y_2-1-v_1y_2+y_2v_2\\ =K_{11}\alpha_2+K_{22}\alpha_2+y_2K_{12}k-2y_2K_{12}\alpha_2k-K_{11}ky_2+y_1y_2-1-v_1y_2+y_2v_2=0得 (K_{11}+K_{22}-2K_{12})\alpha_2=y_2(y_2-y_1+kK_{11}-kK_{12}+v_1-v_2)\\ =y_2(y_2-y_1+kK_{11}-kK_{12}\\ +(g(x_1)-\sum_{j=1}^{2}\alpha_jy_jK(x_1{\cdot}x_j)-b)-(g(x_2)-\sum_{j=1}^{2}\alpha_jy_jK(x_2{\cdot}x_j)-b))\\将$\alpha_1y_1+\alpha_2y_2=k$代入，得 (K_{11}+K_{22}-2K_{12})\alpha_{2}^{new,unc}=y_2((y_2-y_1+g(x_1)-g(x_2)+(K_{11}+K_{22}-2K_{12})\alpha_{2}^{old}y_2))\\ =(K_{11}+K_{22}-2K_{12})\alpha_2^{old}+y_2(E_1-E_2)以下是详细的求解过程： 我们令$\eta=K{11}+K{22}-2K_{12}$，得 \alpha_{2}^{new,unc}=\alpha_2^{old}+\frac{y_2(E_1-E_2)}{\eta}再考虑求解约束条件后的$\alpha_{2}^{new}$ （4）考虑求解约束条件$\alpha_{2}^{new}$ \alpha_{2}^{new}= \begin{cases} H, & \alpha_{2}^{new,unc}\gt{H}\\ \alpha_{2}^{new,unc}, & L\le\alpha_{2}^{new,unc}\le{H}\\ L, &\alpha_{2}^{new,unc}\lt{L} \end{cases}因为 \alpha_{1}^{new}y_1+\alpha_{2}^{new}y_2=\alpha_{1}^{old}y_1+\alpha_{2}^{old}y_2所以 \alpha_{1}^{new}=\alpha_{1}^{old}+y_1y_2(\alpha_{2}^{old}-\alpha_{2}^{new})于是，我们经过上述的推导，终于就得到了对偶问题子问题的解$(\alpha{1}^{new},\alpha{2}^{new})$。 （5）重新计算$b$和差值$E_i$在每次完成两个变量的优化后，我们还需要将$\alpha_2^{new}$与$\alpha_2^{old}$比较，如果变化的程度不大，则要重新计算阈值$b$和差值$E_i$ 3. 基于 Python 实现 SMO 的代码分析这是基于 Python 实现 SVM 中的 SMO 算法，来自于《机器学习实战》，代码很容易读，基本可以与上文的公式推导完全对应，所以不太理解的地方，还是把 SMO 推导过程的来龙去脉先捋一捋吧！ 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273from numpy import *from time import sleep#==============================================================================# 打开文件、两个辅助函数#==============================================================================# 打开文件逐行读取数据，得到每行的类标签‘labelMat’和数据矩阵‘dataMat’def loadDataSet(fileName): dataMat = []; labelMat = [] fr = open(fileName) for line in fr.readlines(): # ‘fr.readlines()’逐行读取数据 lineArr = line.strip().split('\t') dataMat.append([float(lineArr[0]), float(lineArr[1])]) # 将每行数据的第一个和第二个位置储存到‘dataMat’矩阵 labelMat.append(float(lineArr[2])) # 每行的第三个是数据标签，存储到‘labelMat’矩阵 return dataMat,labelMat# 辅助函数1：取两个不同下标的alphadef selectJrand(i,m): j=i #we want to select any J not equal to i while (j==i): j = int(random.uniform(0,m)) return j# 辅助函数2：用于调整大于H小于L的alpha值，对应alpha2_new的更新法则，alpha2_new只能在[L,H]的区间范围之内 def clipAlpha(aj,H,L): if aj &gt; H: aj = H if L &gt; aj: aj = L return aj#==============================================================================# 简化版本SMO算法#==============================================================================def smoSimple(dataMatIn, classLabels, C, toler, maxIter): # 5个参数：数据集、类别标签、常数c、容错率、退出前的最大循环次数 dataMatrix = mat(dataMatIn); labelMat = mat(classLabels).transpose() # 类别标签‘classLabels’转置为列向量 b = 0; m,n = shape(dataMatrix) # ‘shape’得到矩阵的行数m和列数n alphas = mat(zeros((m,1))) # 初始化alpha为元素全部为零的(m*1)列矩阵 iter = 0 while (iter &lt; maxIter): alphaPairsChanged = 0 # 用于记录alpha是否已经进行优化 for i in range(m): # 外层循环 fXi = float(multiply(alphas,labelMat).T*(dataMatrix*dataMatrix[i,:].T)) + b Ei = fXi - float(labelMat[i]) # 计算误差 if ((labelMat[i]*Ei &lt; -toler) and (alphas[i] &lt; C)) or ((labelMat[i]*Ei &gt; toler) and (alphas[i] &gt; 0)): # 检查变量是否满足KKT条件，如果不满足，那么继续迭代， # 如果满足，那么最优化问题的解就得到了 j = selectJrand(i,m) # 内层循环 fXj = float(multiply(alphas,labelMat).T*(dataMatrix*dataMatrix[j,:].T)) + b # fXj为输入xj的预测值，对应本文公式(7) Ej = fXj - float(labelMat[j]) # 预测值与真实值之间的误差 alphaIold = alphas[i].copy(); alphaJold = alphas[j].copy(); if (labelMat[i] != labelMat[j]): L = max(0, alphas[j] - alphas[i]) H = min(C, C + alphas[j] - alphas[i]) else: L = max(0, alphas[j] + alphas[i] - C) H = min(C, alphas[j] + alphas[i]) if L==H: print "L==H"; continue # 计算eta eta = 2.0 * dataMatrix[i,:]*dataMatrix[j,:].T - dataMatrix[i,:]*dataMatrix[i,:].T - dataMatrix[j,:]*dataMatrix[j,:].T if eta &gt;= 0: print "eta&gt;=0"; continue # 求alpha2_new，对应alpha2_new的更新公式，注意eta与文中的符号刚好相反，所以这里是'-=' alphas[j] -= labelMat[j]*(Ei - Ej)/eta alphas[j] = clipAlpha(alphas[j],H,L)# alpha2_new与alpha2_old比较，如果变化的程度不大，则要更新阈值b和误差值E if (abs(alphas[j] - alphaJold) &lt; 0.00001): print "j not moving enough"; continue alphas[i] += labelMat[j]*labelMat[i]*(alphaJold - alphas[j]) b1 = b - Ei- labelMat[i]*(alphas[i]-alphaIold)*dataMatrix[i,:]*dataMatrix[i,:].T - labelMat[j]*(alphas[j]-alphaJold)*dataMatrix[i,:]*dataMatrix[j,:].T b2 = b - Ej- labelMat[i]*(alphas[i]-alphaIold)*dataMatrix[i,:]*dataMatrix[j,:].T - labelMat[j]*(alphas[j]-alphaJold)*dataMatrix[j,:]*dataMatrix[j,:].T if (0 &lt; alphas[i]) and (C &gt; alphas[i]): b = b1 elif (0 &lt; alphas[j]) and (C &gt; alphas[j]): b = b2 else: b = (b1 + b2)/2.0 alphaPairsChanged += 1 print "iter: %d i:%d, pairs changed %d" % (iter,i,alphaPairsChanged) # 打印迭代次数、alpha优化的个数 if (alphaPairsChanged == 0): iter += 1 else: iter = 0 print "iteration number: %d" % iter return b,alphas 推荐阅读 《机器学习》.周志华 《统计学习方法》.李航 《机器学习实战》.Peter Harrington https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr-98-14.pdf]]></content>
       <categories>
         <category>Machine-Learning</category>
       </categories>
@@ -2084,8 +2084,8 @@
       <tags>
         <tag>机器学习</tag>
         <tag>算法</tag>
-        <tag>机器学习算法系列</tag>
         <tag>线性回归</tag>
+        <tag>机器学习算法系列</tag>
       </tags>
   </entry>
   <entry>
@@ -2098,8 +2098,8 @@
       <tags>
         <tag>机器学习</tag>
         <tag>算法</tag>
-        <tag>决策树</tag>
         <tag>机器学习算法系列</tag>
+        <tag>决策树</tag>
       </tags>
   </entry>
 </search>
