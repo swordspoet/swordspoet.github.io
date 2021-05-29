@@ -160,7 +160,7 @@
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gw1faa6luky3rj20ru0kw3zj.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gw1faa3knocquj20jq0dbdg6.jpg">
-<meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gw1faa58agw31j20s10hnjrw.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/image-20210529133330134.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gw1faaas4iaxij20ew0ahmy4.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffkx1382lhj20m80gkglz.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffkx12m0t0j20m80gkdg4.jpg">
@@ -168,7 +168,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fw4hik16a1j20cd04igls.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fw4hj5wpu3j20kl030dfw.jpg">
 <meta property="og:image" content="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fw4hjple6ij20ci07xjrp.jpg">
-<meta property="og:updated_time" content="2021-03-23T01:25:10.967Z">
+<meta property="og:updated_time" content="2021-05-29T09:40:16.731Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="机器学习算法系列（3）Logistic Regression">
 <meta name="twitter:description" content="上一篇文章讲到了线性模型，线性模型形式十分简单，却有丰富的变化。一般线性模型有一定的缺陷，那就是$y=w^Tx+b$的预测值是为数值型的，当面对要求预测值为离散型就有些力不从心了，它会很容易受到异常值的影响，从而导致误差。那么，可不可以令预测值$y$变成另外一种形式呢？比如，在分类任务里，我们要求预测值为离散型的，得到一个是或否的答案，不再是原来的连续性预测值。这里就要用到机器学习中的一个重要的模">
@@ -460,7 +460,7 @@
                 
                   <span class="post-meta-item-text">更新于</span>
                 
-                <time title="修改时间：2021-03-23 09:25:10" itemprop="dateModified" datetime="2021-03-23T09:25:10+08:00">2021-03-23</time>
+                <time title="修改时间：2021-05-29 17:40:16" itemprop="dateModified" datetime="2021-05-29T17:40:16+08:00">2021-05-29</time>
               
             
           </span>
@@ -518,65 +518,75 @@
       
 
       
-        <p>上一篇文章讲到了线性模型，线性模型形式十分简单，却有丰富的变化。一般线性模型有一定的缺陷，那就是$y=w^Tx+b$的预测值是为数值型的，当面对要求预测值为离散型就有些力不从心了，它会很容易受到异常值的影响，从而导致误差。那么，可不可以令预测值$y$变成另外一种形式呢？比如，在分类任务里，我们要求预测值为离散型的，得到一个是或否的答案，不再是原来的连续性预测值。这里就要用到机器学习中的一个重要的模型——Logistic Regression，即逻辑斯蒂回归或对数线性回归(log-linear regression)</p>
+        <p>上一篇文章讲到了线性模型，线性模型形式十分简单，却有丰富的变化。一般线性模型有一定的缺陷，那就是$y=w^Tx+b$的预测值是为数值型的，当面对要求预测值为离散型就有些力不从心了，它会很容易受到异常值的影响，从而导致误差。那么，可不可以令预测值$y$变成另外一种形式呢？比如，在分类任务里，我们要求预测值为离散型的，得到一个是或否的答案，不再是原来的连续性预测值。这里就要用到机器学习中的一个重要的模型——Logistic Regression，即逻辑斯蒂回归或对数线性回归(log-linear regression)。</p>
 <a id="more"></a>
-<p>\begin{equation}<br>\mathrm{ln}y=w^Tx+b<br>\end{equation}</p>
-<p>实际上是在试图让$e^{w^T+b}$逼近$y$，形式上仍然是线性回归，但实质上是在求线性空间到非线性空间的映射。</p>
-<h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><ul>
+<script type="math/tex; mode=display">
+\mathrm{ln}y=w^Tx+b</script><p>实际上是在试图让$e^{w^T+b}$逼近$y$，形式上仍然是线性回归，但实质上是在求线性空间到非线性空间的映射。</p>
+<h4 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h4><ul>
 <li>Logistic 分布</li>
 <li>Logistic 函数</li>
 <li>极大似然估计(MLE)</li>
 <li>梯度下降算法(Gradient Descent)</li>
 <li>Python代码实现及分析</li>
+<li>关于 Logistic Regression 的讨论</li>
 </ul>
-<h1 id="1-Logistic-分布"><a href="#1-Logistic-分布" class="headerlink" title="1. Logistic 分布"></a>1. Logistic 分布</h1><p>在学习 Logistic regression 之前，我们有必要了解一下 logistic 分布函数和密度函数</p>
-<p>\begin{equation}<br>F(x)=P(X\le{x})=\frac{1}{1+e^{-(x-\mu)/\gamma}}<br>\end{equation}</p>
-<p>\begin{equation}<br>f(x)=F’(x)=\frac{e^{-(x-\mu)/\gamma}}{\gamma{(1+e^{-(x-\mu)/\gamma})}^2}<br>\end{equation}</p>
-<p>式中，$\mu$为位置参数，$\gamma\gt0$是形状参数</p>
-<p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gw1faa6luky3rj20ru0kw3zj.jpg" alt="Logistic分布函数和密度函数"></p>
-<p>逻辑斯蒂函数实际上是线性回归模型的预测结果取逼近真实标记的对数几率，其对应的模型是对数几率回归</p>
-<h1 id="2-Logistic-函数"><a href="#2-Logistic-函数" class="headerlink" title="2. Logistic 函数"></a>2. Logistic 函数</h1><p>考虑一个二分类任务，其输出标记为$y∈{0,1}$，而线性回归模型产生的预测值z是实数值，于是我们需要将z转换为0/1值，理想的方法是logistic函数</p>
-<p>\begin{equation}<br>y=\frac{1}{1+e^{-z}}<br>\end{equation}</p>
-<p>logistic 函数是一种“Sigmoid函数”，它将$z$值转化为一个接近 0 或 1 的$y$值，并且输出值在$z=0$附近的变化很陡峭，若预测值大于零就判为正例，小于零就判为反例，预测值为临界值零则可任意判别</p>
-<p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gw1faa3knocquj20jq0dbdg6.jpg" alt="Sigmoid函数"></p>
+<h4 id="1-Logistic-分布"><a href="#1-Logistic-分布" class="headerlink" title="1. Logistic 分布"></a>1. Logistic 分布</h4><p>在学习 Logistic regression 之前，我们有必要了解一下 logistic 分布函数和密度函数</p>
+<script type="math/tex; mode=display">
+F(x)=P(X\le{x})=\frac{1}{1+e^{-(x-\mu)/\gamma}}</script><script type="math/tex; mode=display">
+f(x)=F'(x)=\frac{e^{-(x-\mu)/\gamma}}{\gamma{(1+e^{-(x-\mu)/\gamma})}^2}</script><p>式中，$\mu$为位置参数，$\gamma\gt0$是形状参数</p>
+<p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gw1faa6luky3rj20ru0kw3zj.jpg" alt="Logistic分布函数和密度函数" style="zoom:50%;"></p>
+<p>逻辑斯蒂函数实际上是线性回归模型的预测结果取逼近真实标记的对数几率，其对应的模型是对数几率回归。</p>
+<h4 id="2-Logistic-函数"><a href="#2-Logistic-函数" class="headerlink" title="2. Logistic 函数"></a>2. Logistic 函数</h4><p>考虑一个二分类任务，其输出标记为$y∈{0,1}$，而线性回归模型产生的预测值z是实数值，于是我们需要将z转换为0/1值，理想的方法是对数几率函数</p>
+<script type="math/tex; mode=display">
+y=\frac{1}{1+e^{-z}}</script><p>对数几率函数是一种“Sigmoid函数”，它将$z$值转化为一个接近 0 或 1 的$y$值，并且输出值在$z=0$附近的变化很陡峭，若预测值大于零就判为正例，小于零就判为反例，预测值为临界值零则可任意判别</p>
+<p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gw1faa3knocquj20jq0dbdg6.jpg" alt="Sigmoid函数" style="zoom:50%;"></p>
 <p>如果我们将线性模型$z=w^Tx+b$代入上式，得</p>
-<p>\begin{equation}<br>y=\frac{1}{1+e^{-(w^Tx+b)}}<br>\end{equation}</p>
-<p>变形</p>
-<p>\begin{equation}<br>\mathrm{ln}\frac{y}{1-y}=w^Tx+b<br>\label{zheng}<br>\end{equation}</p>
-<p>若将$y$视为$x$作为正例的可能性，$1-y$视为反例的可能性，两者的比值称为“对数几率”(logit odds)，反映了$x$作为正例的可能性。</p>
-<p>由此可以看出，实际上是在用线性回归的模型的预测结果去逼近真实标记的对数几率，因此其对应的模型称为“对数几率回归”(logistic regression)。</p>
-<h1 id="3-极大似然估计-MLE"><a href="#3-极大似然估计-MLE" class="headerlink" title="3. 极大似然估计(MLE)"></a>3. 极大似然估计(MLE)</h1><p>类似线性回归，我们需要定义一个损失函数(loss function)，然后通过最小化损失函数来训练出一个分类器，对于logistic regression，哪种损失函数表现最好？假设选用0-1损失函数，考虑1000个样本，用训练得到的分类器分类，960个被分在了正确的一类，其余40个划分错误，那么这里损失函数的大小就是40。考虑调整$w$的大小，得到的损失函数值可能仍然是相同的，没有可以优化的空间。0-1损失函数看来是行不通，不妨看看log损失函数，为什么选择log损失函数，考虑-log(x)函数图像，这个函数图像在趋近于0的地方函数值趋于无穷大。相比0-1损失函数，它的惩罚性能实在太好，考虑公式（10），假设预测值$h_w(x^{(i)})$为1，而实际标签$y^{(i)}$为0，结果便是损失函数会变得很大。并且它的损失函数还是凸函数，存在可优化的空间。</p>
-<p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gw1faa58agw31j20s10hnjrw.jpg" alt="-log(x)损失函数"></p>
+<script type="math/tex; mode=display">
+y=\frac{1}{1+e^{-(w^Tx+b)}}</script><p>变形</p>
+<script type="math/tex; mode=display">
+\mathrm{ln}\frac{y}{1-y}=w^Tx+b</script><p>若将$y$视为$x$作为正例的可能性，$1-y$视为反例的可能性，两者的比值称为“对数几率”(logit odds)，反映了$x$作为正例的可能性。</p>
+<p>由此可以看出，实际上是在用线性回归的模型的预测结果去逼近真实标记的对数几率，因此其对应的模型也被称为“对数几率回归”(logistic regression)。</p>
+<h4 id="3-极大似然估计-MLE"><a href="#3-极大似然估计-MLE" class="headerlink" title="3. 极大似然估计(MLE)"></a>3. 极大似然估计(MLE)</h4><p>类似线性回归，我们需要定义一个损失函数(loss function)，然后通过最小化损失函数来训练出一个分类器，对于logistic regression，哪种损失函数表现最好？假设选用0-1损失函数，考虑1000个样本，用训练得到的分类器分类，960个被分在了正确的一类，其余40个划分错误，那么这里损失函数的大小就是40。考虑调整$w$的大小，得到的损失函数值可能仍然是相同的，没有可以优化的空间。</p>
+<p>0-1损失函数看来是行不通，不妨看看<strong>log损失函数</strong>，为什么选择log损失函数，考虑-log(x)函数图像，这个函数图像在趋近于0的地方函数值趋于无穷大。相比0-1损失函数，它的惩罚性能实在太好，考虑公式（10），假设预测值$h_w(x^{(i)})$为1，而实际标签$y^{(i)}$为0，结果便是损失函数会变得很大。并且它的损失函数还是凸函数，存在可优化的空间。</p>
+<p><img src="https://raw.githubusercontent.com/swordspoet/i/img/image-20210529133330134.png" alt="image-20210529133330134" style="zoom: 50%;"></p>
 <p>由 logistic 函数，建立如下表达式</p>
-<p>\begin{equation}<br>h_w(x)=g(w^Tx)=\frac{1}{1+e^{-w^Tx}}<br>\end{equation}</p>
-<p>根据$\eqref{zheng}$，$p(y=1|x)$为正例的概率 $y$，解之，显然有</p>
-<p>\begin{equation}<br>\begin{aligned}<br>p(y=1|x)&amp;=h_w(x)\<br>p(y=0|x)&amp;=1-h_w(x)\<br>p(y|x)&amp;={h_w(x)}^y{(1-h_w(x))}^{1-y}, y=0, 1<br>\end{aligned}<br>\end{equation}</p>
-<p>于是，我们可以通过极大似然估计法(maximum likelihood method)来估计$w$（为了计算的方便，将偏置项$b$的权重设为1，记为$w_0$）</p>
+<script type="math/tex; mode=display">
+h_w(x)=g(w^Tx)=\frac{1}{1+e^{-w^Tx}}</script><p>根据前文，$p(y=1|x)$为正例的概率 $y$，解之，显然有</p>
+<script type="math/tex; mode=display">
+p(y=1|x)=h_w(x)\\
+p(y=0|x)=1-h_w(x)\\
+p(y|x)={h_w(x)}^y{(1-h_w(x))}^{1-y}, y=0, 1</script><p>于是，我们可以通过极大似然估计法(maximum likelihood method)来估计$w$（为了计算的方便，将偏置项$b$的权重设为1，记为$w_0$）</p>
 <p>给定数据集${(x<em>i,y_i)}</em>{i=1}^m$，写出对应极大似然函数</p>
-<p>\begin{equation}<br>\begin{aligned}<br>L(w)&amp;=\prod<em>{i=1}^{m}p(y^{(i)}|x^{(i)};\theta) \<br>&amp;=\prod</em>{i=1}^{m}h_w{(x^{(i)})}^{y^{(i)}}{(1-h_w(x^{(i)}))}^{1-y^{(i)}}<br>\end{aligned}<br>\end{equation}</p>
-<p>再对两边取对数</p>
-<p>\begin{equation}<br>logL(w)=\sum_{i=1}^{m}[y^{(i)}logh_w(x^{(i)})+(1-y^{(i)})log(1-h_w(x^{(i)}))]<br>\end{equation}</p>
-<p>因此最优解可以通过最大化负的似然函数得到</p>
-<p>\begin{equation}<br>J(w)=-\frac{1}{m}\sum<em>{i=1}^{m}[y^{(i)}logh_w(x^{(i)})+(1-y^{(i)})log(1-h_w(x^{(i)}))]\<br>J(w)=-\frac{1}{m}\sum</em>{i=1}^{m}[y^{(i)}log\frac{h<em>w(x^{(i)})}{1-h_w(x^{(i)})}+log(1-h_w(x^{(i)}))]\<br>J(w)=-\frac{1}{m}\sum</em>{i=1}^{m}[y^{(i)}(w^Tx)-log(1+e^{w^Tx})]<br>\end{equation}</p>
-<h1 id="4-梯度下降算法-Gradient-Descent"><a href="#4-梯度下降算法-Gradient-Descent" class="headerlink" title="4. 梯度下降算法(Gradient Descent)"></a>4. 梯度下降算法(Gradient Descent)</h1><p>上式中$J(w)$是一个关于$\theta$的高阶可导连续凸函数，根据凸优化理论，采用梯度下降法求最优解，令$\theta=(w,b),minJ(\theta)$</p>
-<p>\begin{equation}<br>{\theta}_j:={\theta}_j-\alpha\frac{\partial}{\partial{\theta}_j}J(\theta)<br>\end{equation}</p>
-<p>其中，$\frac{\partial}{\partial{\theta}<em>j}J(\theta)=\frac{1}{m}\sum</em>{i=1}^{m}(h_{\theta}(x^{(i)})-y^{(i)})x_j^{(i)}$，$\alpha$是步长，当然经过化简之后，上式对$w$的求导是很方便的。</p>
+<script type="math/tex; mode=display">
+L(w)=\prod_{i=1}^{m}p(y^{(i)}|x^{(i)};\theta) \\
+=\prod_{i=1}^{m}h_w{(x^{(i)})}^{y^{(i)}}{(1-h_w(x^{(i)}))}^{1-y^{(i)}}</script><p>再对两边取对数</p>
+<script type="math/tex; mode=display">
+logL(w)=\sum_{i=1}^{m}[y^{(i)}logh_w(x^{(i)})+(1-y^{(i)})log(1-h_w(x^{(i)}))]</script><p>因此最优解可以通过最大化负的似然函数得到</p>
+<script type="math/tex; mode=display">
+J(w)=-\frac{1}{m}\sum_{i=1}^{m}[y^{(i)}logh_w(x^{(i)})+(1-y^{(i)})log(1-h_w(x^{(i)}))]\\
+J(w)=-\frac{1}{m}\sum_{i=1}^{m}[y^{(i)}log\frac{h_w(x^{(i)})}{1-h_w(x^{(i)})}+log(1-h_w(x^{(i)}))]\\
+J(w)=-\frac{1}{m}\sum_{i=1}^{m}[y^{(i)}(w^Tx)-log(1+e^{w^Tx})]</script><h4 id="4-梯度下降算法-Gradient-Descent"><a href="#4-梯度下降算法-Gradient-Descent" class="headerlink" title="4. 梯度下降算法(Gradient Descent)"></a>4. 梯度下降算法(Gradient Descent)</h4><p>上式中$J(w)$是一个关于$\theta$的高阶可导连续凸函数，根据凸优化理论，采用梯度下降法求最优解，令$\theta=(w,b),minJ(\theta)$</p>
+<script type="math/tex; mode=display">
+{\theta}_j:={\theta}_j-\alpha\frac{\partial}{\partial{\theta}_j}J(\theta)</script><p>其中，$\frac{\partial}{\partial{\theta}<em>j}J(\theta)=\frac{1}{m}\sum</em>{i=1}^{m}(h_{\theta}(x^{(i)})-y^{(i)})x_j^{(i)}$，$\alpha$是步长，当然经过化简之后，上式对$w$的求导是很方便的。</p>
 <blockquote>
 <p><del>推导过程如下，分部求导。$h(w)$ 对 $w$ 求导的结果是 $-h(w)(1-h(w))x$</del></p>
 </blockquote>
-<p>\begin{equation}\begin{split}<br>\frac{\partial}{\partial{w}<em>j}J(w) =&amp; \frac{\partial{J(w)}}{\partial{h_w(x)}} \cdot \frac{\partial{h_w(x)}}{\partial{w}_j} \<br>=&amp; [y^{(i)}+(y^{(i)}-1)/(1-h_w(x^{(i)})]\cdot [h_w(x^{(i)})(1-h_w(x^{(i)}))] x^{(i)}\<br>=&amp; [(y^{(i)}h_w(x^{(i)})(1-h_w(x^{(i)}))+h_w(x^{(i)}(1-y^{(i)}))]\cdot x^{(i)}\<br>=&amp; (h</em>{w}(x^{(i)})-y^{(i)})\cdot x_j^{(i)}<br>\end{split}\end{equation}</p>
-<p>总的来说，logistic regression 是一类比较简单的分类算法，可以把它看做是一类广义线性模型，即线性模型的延伸即可。logistic regression 能够很好地胜任二分类问题，logistic regression 中关键的问题在于参数优化，传统的0-1损失函数非凸，我们不能对其进行优化以得到一个较优参数，log 损失函数是一个不错的选择，它使得损失函数呈凸函数形状（本身并非平方损失函数），这就让梯度下降算法有了施展的空间。</p>
-<h1 id="5-Python-代码实现-LR-及分析"><a href="#5-Python-代码实现-LR-及分析" class="headerlink" title="5. Python 代码实现 LR 及分析"></a>5. Python 代码实现 LR 及分析</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载数据集，loadDataSet()函数的主要功能是打开文本文件，并逐行读取；</span></span><br><span class="line"><span class="comment"># 每行的前两列分别为X1,X2，除此以外，还为偏置项设置一列X0</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadDataSet</span><span class="params">()</span>:</span></span><br><span class="line">    data = []; label = []</span><br><span class="line">    fr = open(<span class="string">'E:/Python/data/testSet.txt'</span>)</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> fr.readlines():</span><br><span class="line">        lineArr = line.strip().split()</span><br><span class="line">        data.append([<span class="number">1.0</span>, float(lineArr[<span class="number">0</span>]), float(lineArr[<span class="number">1</span>])])</span><br><span class="line">        label.append(int(lineArr[<span class="number">2</span>]))</span><br><span class="line">    <span class="keyword">return</span> data, label</span><br><span class="line">data, label = loadDataSet()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义sigmoid函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span><span class="params">(z)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1.0</span> / (<span class="number">1</span> + exp(-z))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义梯度下降算法</span></span><br><span class="line"><span class="comment"># 设定步长alpha为0.001，迭代次数为500次，初始权重theta为长度为n个值全为1的向量</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradDscent</span><span class="params">(data, label)</span>:</span></span><br><span class="line">    dataMatrix = np.matrix(data); labelMatrix = np.matrix(label).T</span><br><span class="line">    m, n = shape(dataMatrix)</span><br><span class="line">    alpha = <span class="number">0.001</span></span><br><span class="line">    iters = <span class="number">500</span></span><br><span class="line">    theta = ones((n, <span class="number">1</span>))</span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> range(iters):</span><br><span class="line">		<span class="comment"># 梯度下降算法，因为要求损失函数的最小值</span></span><br><span class="line">		<span class="comment"># 对应公式（12）</span></span><br><span class="line">        h = sigmoid(dataMatrix * theta)</span><br><span class="line">        error = (h - labelMatrix)</span><br><span class="line">        theta = theta - alpha * dataMatrix.T * error</span><br><span class="line">    <span class="keyword">return</span> theta</span><br><span class="line"></span><br><span class="line">theta = gradDscent(data, label)</span><br><span class="line">theta = array(theta)</span><br><span class="line">dataArr = array(data)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 画出决策边界</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plotfit</span><span class="params">(theta)</span>:</span></span><br><span class="line">    n = dataArr.shape[<span class="number">0</span>]</span><br><span class="line">    x1 = []; y1 = []</span><br><span class="line">    x2 = []; y2 = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">        <span class="keyword">if</span> int(label[i]) == <span class="number">1</span>:</span><br><span class="line">            x1.append(dataArr[i,<span class="number">1</span>]); y1.append(dataArr[i,<span class="number">2</span>])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            x2.append(dataArr[i,<span class="number">1</span>]); y2.append(dataArr[i,<span class="number">2</span>])</span><br><span class="line">    fig = plt.figure()</span><br><span class="line">    ax = fig.add_subplot(<span class="number">111</span>)</span><br><span class="line">    ax.scatter(x1, y1, s = <span class="number">30</span>, c = <span class="string">'red'</span>, marker = <span class="string">'o'</span>)</span><br><span class="line">    ax.scatter(x2, y2, s = <span class="number">30</span>, c = <span class="string">'blue'</span>, marker = <span class="string">'x'</span>)</span><br><span class="line">	<span class="comment"># 创建等差数列，设定x的取值范围为-3.0到3.0</span></span><br><span class="line">    x = arange(<span class="number">-3.0</span>, <span class="number">3.0</span>, <span class="number">0.1</span>)</span><br><span class="line">    y = (-theta[<span class="number">0</span>] - theta[<span class="number">1</span>] * x) / theta[<span class="number">2</span>]</span><br><span class="line">    ax.plot(x,y)</span><br><span class="line">    plt.xlabel(<span class="string">'X1'</span>);plt.ylabel(<span class="string">'X2'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line">plotfit(theta)</span><br></pre></td></tr></table></figure>
+<script type="math/tex; mode=display">
+\frac{\partial}{\partial{w}_j}J(w) = \frac{\partial{J(w)}}{\partial{h_w(x)}} \cdot \frac{\partial{h_w(x)}}{\partial{w}_j} \\
+= [y^{(i)}+(y^{(i)}-1)/(1-h_w(x^{(i)})]\cdot [h_w(x^{(i)})(1-h_w(x^{(i)}))] x^{(i)}\\
+= [(y^{(i)}h_w(x^{(i)})(1-h_w(x^{(i)}))+h_w(x^{(i)}(1-y^{(i)}))]\cdot x^{(i)}\\
+= (h_{w}(x^{(i)})-y^{(i)})\cdot x_j^{(i)}</script><p>总的来说，logistic regression 是一类比较简单的分类算法，可以把它看做是一类广义线性模型，即线性模型的延伸即可。logistic regression 能够很好地胜任二分类问题，logistic regression 中关键的问题在于参数优化，传统的0-1损失函数非凸，我们不能对其进行优化以得到一个较优参数，log 损失函数是一个不错的选择，它使得损失函数呈凸函数形状（本身并非平方损失函数），这就让梯度下降算法有了施展的空间。</p>
+<h4 id="5-Python-代码实现-LR-及分析"><a href="#5-Python-代码实现-LR-及分析" class="headerlink" title="5. Python 代码实现 LR 及分析"></a>5. Python 代码实现 LR 及分析</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> numpy <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载数据集，loadDataSet()函数的主要功能是打开文本文件，并逐行读取；</span></span><br><span class="line"><span class="comment"># 每行的前两列分别为X1,X2，除此以外，还为偏置项设置一列X0</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">loadDataSet</span><span class="params">()</span>:</span></span><br><span class="line">    data = []; label = []</span><br><span class="line">    fr = open(<span class="string">'E:/Python/data/testSet.txt'</span>)</span><br><span class="line">    <span class="keyword">for</span> line <span class="keyword">in</span> fr.readlines():</span><br><span class="line">        lineArr = line.strip().split()</span><br><span class="line">        data.append([<span class="number">1.0</span>, float(lineArr[<span class="number">0</span>]), float(lineArr[<span class="number">1</span>])])</span><br><span class="line">        label.append(int(lineArr[<span class="number">2</span>]))</span><br><span class="line">    <span class="keyword">return</span> data, label</span><br><span class="line">data, label = loadDataSet()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义sigmoid函数</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span><span class="params">(z)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">1.0</span> / (<span class="number">1</span> + exp(-z))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义梯度下降算法</span></span><br><span class="line"><span class="comment"># 设定步长alpha为0.001，迭代次数为500次，初始权重theta为长度为n个值全为1的向量</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">gradDscent</span><span class="params">(data, label)</span>:</span></span><br><span class="line">    dataMatrix = np.matrix(data); labelMatrix = np.matrix(label).T</span><br><span class="line">    m, n = shape(dataMatrix)</span><br><span class="line">    alpha = <span class="number">0.001</span></span><br><span class="line">    iters = <span class="number">500</span></span><br><span class="line">    theta = ones((n, <span class="number">1</span>))</span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> range(iters):</span><br><span class="line">		<span class="comment"># 梯度下降算法，因为要求损失函数的最小值</span></span><br><span class="line">		<span class="comment"># 对应公式（12）</span></span><br><span class="line">        h = sigmoid(dataMatrix * theta)</span><br><span class="line">        error = (h - labelMatrix)</span><br><span class="line">        theta = theta - alpha * dataMatrix.T * error</span><br><span class="line">    <span class="keyword">return</span> theta</span><br><span class="line"></span><br><span class="line">theta = gradDscent(data, label)</span><br><span class="line">theta = array(theta)</span><br><span class="line">dataArr = array(data)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 画出决策边界</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plotfit</span><span class="params">(theta)</span>:</span></span><br><span class="line">    n = dataArr.shape[<span class="number">0</span>]</span><br><span class="line">    x1 = []; y1 = []</span><br><span class="line">    x2 = []; y2 = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">        <span class="keyword">if</span> int(label[i]) == <span class="number">1</span>:</span><br><span class="line">            x1.append(dataArr[i,<span class="number">1</span>]); y1.append(dataArr[i,<span class="number">2</span>])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            x2.append(dataArr[i,<span class="number">1</span>]); y2.append(dataArr[i,<span class="number">2</span>])</span><br><span class="line">    fig = plt.figure()</span><br><span class="line">    ax = fig.add_subplot(<span class="number">111</span>)</span><br><span class="line">    ax.scatter(x1, y1, s = <span class="number">30</span>, c = <span class="string">'red'</span>, marker = <span class="string">'o'</span>)</span><br><span class="line">    ax.scatter(x2, y2, s = <span class="number">30</span>, c = <span class="string">'blue'</span>, marker = <span class="string">'x'</span>)</span><br><span class="line">	<span class="comment"># 创建等差数列，设定x的取值范围为-3.0到3.0</span></span><br><span class="line">    x = arange(<span class="number">-3.0</span>, <span class="number">3.0</span>, <span class="number">0.1</span>)</span><br><span class="line">    y = (-theta[<span class="number">0</span>] - theta[<span class="number">1</span>] * x) / theta[<span class="number">2</span>]</span><br><span class="line">    ax.plot(x,y)</span><br><span class="line">    plt.xlabel(<span class="string">'X1'</span>);plt.ylabel(<span class="string">'X2'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line">plotfit(theta)</span><br></pre></td></tr></table></figure>
 <p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gw1faaas4iaxij20ew0ahmy4.jpg" alt="迭代500次之后得到的拟合曲线"></p>
 <p>分类的结果看起来还不错，从图上看，只有4个点被错分。</p>
-<h1 id="6-继续优化：随机梯度下降（SGD）"><a href="#6-继续优化：随机梯度下降（SGD）" class="headerlink" title="6. 继续优化：随机梯度下降（SGD）"></a>6. 继续优化：随机梯度下降（SGD）</h1><p>梯度下降算法在每次更新系数时都需要遍历整个数据集，这样就带来了训练速度变慢的问题，改进的办法是每一次只用一个样本点来更新回归系数，这样的办法被称为随机梯度下降算法。不同于梯度下降算法，在随机梯度下降算法中，</p>
+<h4 id="6-继续优化：随机梯度下降（SGD）"><a href="#6-继续优化：随机梯度下降（SGD）" class="headerlink" title="6. 继续优化：随机梯度下降（SGD）"></a>6. 继续优化：随机梯度下降（SGD）</h4><p>梯度下降算法在每次更新系数时都需要遍历整个数据集，这样就带来了训练速度变慢的问题，改进的办法是每一次只用一个样本点来更新回归系数，这样的办法被称为随机梯度下降算法。不同于梯度下降算法，在随机梯度下降算法中，</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stoGradDscent0</span><span class="params">(dataMatrix, labelMatrix)</span>:</span></span><br><span class="line">    m, n = shape(dataMatrix)</span><br><span class="line">    alpha = mat([<span class="number">0.01</span>])</span><br><span class="line">    theta = mat(ones(n)) </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">        h = sigmoid(sum(dataMatrix[i] * theta.T))</span><br><span class="line">        error =  h - labelMatrix[i]</span><br><span class="line">        theta = theta - alpha * error * dataMatrix[i]</span><br><span class="line">    <span class="keyword">return</span> theta</span><br><span class="line"></span><br><span class="line">theta = stoGradDscent0(data, label)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plotfit1</span><span class="params">(theta)</span>:</span></span><br><span class="line">    <span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">    <span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line">    dataArr = array(dataMatrix)</span><br><span class="line">    n = dataArr.shape[<span class="number">0</span>]</span><br><span class="line">    x1 = []; y1 = []</span><br><span class="line">    x2 = []; y2 = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">        <span class="keyword">if</span> int(label[i]) == <span class="number">1</span>:</span><br><span class="line">            x1.append(dataArr[i,<span class="number">1</span>]); y1.append(dataArr[i,<span class="number">2</span>])</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            x2.append(dataArr[i,<span class="number">1</span>]); y2.append(dataArr[i,<span class="number">2</span>])</span><br><span class="line">    fig = plt.figure()</span><br><span class="line">    ax = fig.add_subplot(<span class="number">111</span>)</span><br><span class="line">    ax.scatter(x1, y1, s = <span class="number">30</span>, c = <span class="string">'red'</span>, marker = <span class="string">'o'</span>)</span><br><span class="line">    ax.scatter(x2, y2, s = <span class="number">30</span>, c = <span class="string">'blue'</span>, marker = <span class="string">'x'</span>)</span><br><span class="line">    x = arange(<span class="number">-3.0</span>, <span class="number">3.0</span>, <span class="number">0.1</span>)  <span class="comment">#创建等差数列</span></span><br><span class="line">    y = (-theta[<span class="number">0</span>,<span class="number">0</span>] - theta[<span class="number">0</span>,<span class="number">1</span>] * x) / theta[<span class="number">0</span>,<span class="number">2</span>]</span><br><span class="line">    ax.plot(x,y)</span><br><span class="line">    plt.xlabel(<span class="string">'X1'</span>);plt.ylabel(<span class="string">'X2'</span>)</span><br><span class="line">    plt.show()</span><br><span class="line"></span><br><span class="line">plotfit1(theta)</span><br></pre></td></tr></table></figure>
 <p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffkx1382lhj20m80gkglz.jpg" alt=""></p>
 <p>第一次优化的效果不佳，有差不多三分之一的点被误分类，为此进行第二次算法优化</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">stoGradDscent1</span><span class="params">(dataMatrix, labelMatrix, iters = <span class="number">150</span>)</span>:</span></span><br><span class="line">    m, n = shape(dataMatrix)</span><br><span class="line">    theta = mat(ones(n))</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(iters):</span><br><span class="line">        dataIndex = range(m)  <span class="comment"># m = 100</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(m):</span><br><span class="line">	<span class="comment"># 因为alpha在每次迭代的时候都会调整，这可以缓解数据的波动，alpha会减小，但不会到零</span></span><br><span class="line">	<span class="comment"># 通过随机选取样本来更新回归系数，这种方法可以减少周期性的波动</span></span><br><span class="line">	<span class="comment"># uniform()方法将随机生成下一个实数，它在[x,y]范围内</span></span><br><span class="line">            alpha = <span class="number">4</span> / (<span class="number">1.0</span>+j+i) + <span class="number">0.01</span></span><br><span class="line">            randIndex = int(random.uniform(<span class="number">0</span>,len(dataIndex)))</span><br><span class="line">            h = sigmoid(sum(dataMatrix[randIndex]*theta.T))</span><br><span class="line">            error =  h - label[randIndex]</span><br><span class="line">            theta = theta - alpha * error * dataMatrix[randIndex]</span><br><span class="line">    <span class="keyword">return</span> theta</span><br><span class="line"></span><br><span class="line">theta = stoGradDscent1(dataMatrix, labelMatrix, iters = <span class="number">150</span>)</span><br><span class="line">theta</span><br><span class="line"></span><br><span class="line">plotfit1(theta)</span><br></pre></td></tr></table></figure>
 <p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9gy1ffkx12m0t0j20m80gkdg4.jpg" alt=""></p>
 <p>优化参数后的算法可以明显看出分类效果提升了不少，仅仅只有两个点被误分类。</p>
-<h1 id="关于-Logistic-Regression-的讨论"><a href="#关于-Logistic-Regression-的讨论" class="headerlink" title="关于 Logistic Regression 的讨论"></a>关于 Logistic Regression 的讨论</h1><ol>
+<h4 id="关于-Logistic-Regression-的讨论"><a href="#关于-Logistic-Regression-的讨论" class="headerlink" title="关于 Logistic Regression 的讨论"></a>关于 Logistic Regression 的讨论</h4><ol>
 <li>为什么 LR 模型要使用 sigmoid 函数？</li>
 </ol>
 <blockquote>
@@ -597,10 +607,10 @@
 <p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fw4hik16a1j20cd04igls.jpg" alt=""></p>
 <p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fw4hj5wpu3j20kl030dfw.jpg" alt=""></p>
 <p><img src="https://raw.githubusercontent.com/swordspoet/i/img/778d5ca9ly1fw4hjple6ij20ci07xjrp.jpg" alt=""></p>
-<p>以上推导来自<a href="https://blog.csdn.net/huangjx36/article/details/78056375" target="_blank" rel="noopener">多类别逻辑回归（Multinomial Logistic Regression） - huangjx36的博客 - CSDN博客</a>，我就不造轮子了。</p>
-<h1 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a>推荐阅读</h1><ol>
-<li><a href="https://www.zhihu.com/question/35322351/answer/221189863" target="_blank" rel="noopener">为什么 LR 模型要使用 sigmoid 函数，背后的数学原理是什么？</a></li>
+<ol>
+<li>为什么逻辑回归支持并行化？</li>
 </ol>
+<p>逻辑回归的并行化最主要的就是对<strong>目标函数梯度计算</strong>的并行化：$(h_{w}(x^{(i)})-y^{(i)})\cdot x_j^{(i)}$，在计算梯度下降的时候只需要做向量之间的点乘和相加即可，这个过程可以把数据分解到不同的机器上，在各个机器上计算完成之后再汇总梯度下降的计算结果就行了。</p>
 
       
     </div>
@@ -632,13 +642,6 @@
        <li class="popular-posts-item">
          
          
-         <div class="popular-posts-title"><a href="\2016\2016-11-12-machine-learning-algorithm-series-linearing-regression\" rel="bookmark">机器学习算法系列（2）多元线性回归</a></div>
-         
-       </li>
-     
-       <li class="popular-posts-item">
-         
-         
          <div class="popular-posts-title"><a href="\2016\2016-11-09-machine-learning-algorithm-series-decision-tree\" rel="bookmark">机器学习算法系列（1）决策树</a></div>
          
        </li>
@@ -646,7 +649,7 @@
        <li class="popular-posts-item">
          
          
-         <div class="popular-posts-title"><a href="\2017\2017-03-02-machine-learning-algorithm-series-svm-3\" rel="bookmark">机器学习算法系列（6）支持向量机（三）</a></div>
+         <div class="popular-posts-title"><a href="\2016\2016-11-12-machine-learning-algorithm-series-linearing-regression\" rel="bookmark">机器学习算法系列（2）多元线性回归</a></div>
          
        </li>
      
@@ -654,6 +657,13 @@
          
          
          <div class="popular-posts-title"><a href="\2017\2017-02-26-machine-learning-algorithm-series-svm-2\" rel="bookmark">机器学习算法系列（5）支持向量机（二）</a></div>
+         
+       </li>
+     
+       <li class="popular-posts-item">
+         
+         
+         <div class="popular-posts-title"><a href="\2017\2017-03-02-machine-learning-algorithm-series-svm-3\" rel="bookmark">机器学习算法系列（6）支持向量机（三）</a></div>
          
        </li>
      
@@ -1621,7 +1631,7 @@
               </ul>
             </div>
 			<div class="theme-info">
-				<span class="post-count">全站共211.1k字</span>
+				<span class="post-count">全站共210.8k字</span>
 			</div>
 			
 			
@@ -1646,7 +1656,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#目录"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-Logistic-分布"><span class="nav-text">1. Logistic 分布</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-Logistic-函数"><span class="nav-text">2. Logistic 函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-极大似然估计-MLE"><span class="nav-text">3. 极大似然估计(MLE)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-梯度下降算法-Gradient-Descent"><span class="nav-text">4. 梯度下降算法(Gradient Descent)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-Python-代码实现-LR-及分析"><span class="nav-text">5. Python 代码实现 LR 及分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-继续优化：随机梯度下降（SGD）"><span class="nav-text">6. 继续优化：随机梯度下降（SGD）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于-Logistic-Regression-的讨论"><span class="nav-text">关于 Logistic Regression 的讨论</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#推荐阅读"><span class="nav-text">推荐阅读</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#目录"><span class="nav-text">目录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Logistic-分布"><span class="nav-text">1. Logistic 分布</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Logistic-函数"><span class="nav-text">2. Logistic 函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-极大似然估计-MLE"><span class="nav-text">3. 极大似然估计(MLE)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-梯度下降算法-Gradient-Descent"><span class="nav-text">4. 梯度下降算法(Gradient Descent)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-Python-代码实现-LR-及分析"><span class="nav-text">5. Python 代码实现 LR 及分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-继续优化：随机梯度下降（SGD）"><span class="nav-text">6. 继续优化：随机梯度下降（SGD）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#关于-Logistic-Regression-的讨论"><span class="nav-text">关于 Logistic Regression 的讨论</span></a></li></ol></div>
             
 
           </div>

@@ -432,8 +432,8 @@
       </categories>
       <tags>
         <tag>架构</tag>
-        <tag>循环神经网络</tag>
         <tag>RNN</tag>
+        <tag>循环神经网络</tag>
         <tag>分类模型</tag>
       </tags>
   </entry>
@@ -497,8 +497,8 @@
       </categories>
       <tags>
         <tag>机器学习算法系列</tag>
-        <tag>循环神经网络</tag>
         <tag>RNN</tag>
+        <tag>循环神经网络</tag>
         <tag>长短时记忆网络</tag>
         <tag>LSTM</tag>
       </tags>
@@ -656,10 +656,10 @@
         <category>Python</category>
       </categories>
       <tags>
-        <tag>flask</tag>
-        <tag>网络框架</tag>
         <tag>软技能</tag>
         <tag>程序员</tag>
+        <tag>flask</tag>
+        <tag>网络框架</tag>
       </tags>
   </entry>
   <entry>
@@ -1200,8 +1200,8 @@
         <category>Machine-Learning</category>
       </categories>
       <tags>
-        <tag>机器学习算法系列</tag>
         <tag>决策树</tag>
+        <tag>机器学习算法系列</tag>
         <tag>Machine-Learning</tag>
         <tag>梯度提升</tag>
       </tags>
@@ -1648,9 +1648,9 @@
         <category>Machine-Learning</category>
       </categories>
       <tags>
+        <tag>机器学习</tag>
         <tag>数据分析</tag>
         <tag>R</tag>
-        <tag>机器学习</tag>
         <tag>Machine-Learning</tag>
         <tag>xgboost</tag>
         <tag>mlr</tag>
@@ -1692,8 +1692,8 @@
         <category>Machine-Learning</category>
       </categories>
       <tags>
-        <tag>Machine-Learning</tag>
         <tag>Python</tag>
+        <tag>Machine-Learning</tag>
         <tag>深度学习</tag>
         <tag>图像处理</tag>
         <tag>卷积神经网络</tag>
@@ -1720,9 +1720,9 @@
         <category>Machine-Learning</category>
       </categories>
       <tags>
+        <tag>机器学习</tag>
         <tag>数据分析</tag>
         <tag>R</tag>
-        <tag>机器学习</tag>
         <tag>Machine-Learning</tag>
       </tags>
   </entry>
@@ -1734,8 +1734,8 @@
         <category>Machine-Learning</category>
       </categories>
       <tags>
-        <tag>Machine-Learning</tag>
         <tag>Python</tag>
+        <tag>Machine-Learning</tag>
         <tag>深度学习</tag>
         <tag>图像处理</tag>
         <tag>正则化</tag>
@@ -1761,8 +1761,8 @@
         <category>Machine-Learning</category>
       </categories>
       <tags>
-        <tag>Machine-Learning</tag>
         <tag>Python</tag>
+        <tag>Machine-Learning</tag>
         <tag>深度学习</tag>
         <tag>图像处理</tag>
       </tags>
@@ -1775,8 +1775,8 @@
         <category>Machine-Learning</category>
       </categories>
       <tags>
-        <tag>Machine-Learning</tag>
         <tag>Python</tag>
+        <tag>Machine-Learning</tag>
         <tag>深度学习</tag>
         <tag>图像处理</tag>
       </tags>
@@ -2007,7 +2007,7 @@
   <entry>
     <title><![CDATA[机器学习算法系列（3）Logistic Regression]]></title>
     <url>%2F2016%2F2016-11-29-machine-learning-algorithm-series-logistic-regression%2F</url>
-    <content type="text"><![CDATA[上一篇文章讲到了线性模型，线性模型形式十分简单，却有丰富的变化。一般线性模型有一定的缺陷，那就是$y=w^Tx+b$的预测值是为数值型的，当面对要求预测值为离散型就有些力不从心了，它会很容易受到异常值的影响，从而导致误差。那么，可不可以令预测值$y$变成另外一种形式呢？比如，在分类任务里，我们要求预测值为离散型的，得到一个是或否的答案，不再是原来的连续性预测值。这里就要用到机器学习中的一个重要的模型——Logistic Regression，即逻辑斯蒂回归或对数线性回归(log-linear regression) \begin{equation}\mathrm{ln}y=w^Tx+b\end{equation} 实际上是在试图让$e^{w^T+b}$逼近$y$，形式上仍然是线性回归，但实质上是在求线性空间到非线性空间的映射。 目录 Logistic 分布 Logistic 函数 极大似然估计(MLE) 梯度下降算法(Gradient Descent) Python代码实现及分析 1. Logistic 分布在学习 Logistic regression 之前，我们有必要了解一下 logistic 分布函数和密度函数 \begin{equation}F(x)=P(X\le{x})=\frac{1}{1+e^{-(x-\mu)/\gamma}}\end{equation} \begin{equation}f(x)=F’(x)=\frac{e^{-(x-\mu)/\gamma}}{\gamma{(1+e^{-(x-\mu)/\gamma})}^2}\end{equation} 式中，$\mu$为位置参数，$\gamma\gt0$是形状参数 逻辑斯蒂函数实际上是线性回归模型的预测结果取逼近真实标记的对数几率，其对应的模型是对数几率回归 2. Logistic 函数考虑一个二分类任务，其输出标记为$y∈{0,1}$，而线性回归模型产生的预测值z是实数值，于是我们需要将z转换为0/1值，理想的方法是logistic函数 \begin{equation}y=\frac{1}{1+e^{-z}}\end{equation} logistic 函数是一种“Sigmoid函数”，它将$z$值转化为一个接近 0 或 1 的$y$值，并且输出值在$z=0$附近的变化很陡峭，若预测值大于零就判为正例，小于零就判为反例，预测值为临界值零则可任意判别 如果我们将线性模型$z=w^Tx+b$代入上式，得 \begin{equation}y=\frac{1}{1+e^{-(w^Tx+b)}}\end{equation} 变形 \begin{equation}\mathrm{ln}\frac{y}{1-y}=w^Tx+b\label{zheng}\end{equation} 若将$y$视为$x$作为正例的可能性，$1-y$视为反例的可能性，两者的比值称为“对数几率”(logit odds)，反映了$x$作为正例的可能性。 由此可以看出，实际上是在用线性回归的模型的预测结果去逼近真实标记的对数几率，因此其对应的模型称为“对数几率回归”(logistic regression)。 3. 极大似然估计(MLE)类似线性回归，我们需要定义一个损失函数(loss function)，然后通过最小化损失函数来训练出一个分类器，对于logistic regression，哪种损失函数表现最好？假设选用0-1损失函数，考虑1000个样本，用训练得到的分类器分类，960个被分在了正确的一类，其余40个划分错误，那么这里损失函数的大小就是40。考虑调整$w$的大小，得到的损失函数值可能仍然是相同的，没有可以优化的空间。0-1损失函数看来是行不通，不妨看看log损失函数，为什么选择log损失函数，考虑-log(x)函数图像，这个函数图像在趋近于0的地方函数值趋于无穷大。相比0-1损失函数，它的惩罚性能实在太好，考虑公式（10），假设预测值$h_w(x^{(i)})$为1，而实际标签$y^{(i)}$为0，结果便是损失函数会变得很大。并且它的损失函数还是凸函数，存在可优化的空间。 由 logistic 函数，建立如下表达式 \begin{equation}h_w(x)=g(w^Tx)=\frac{1}{1+e^{-w^Tx}}\end{equation} 根据$\eqref{zheng}$，$p(y=1|x)$为正例的概率 $y$，解之，显然有 \begin{equation}\begin{aligned}p(y=1|x)&amp;=h_w(x)\p(y=0|x)&amp;=1-h_w(x)\p(y|x)&amp;={h_w(x)}^y{(1-h_w(x))}^{1-y}, y=0, 1\end{aligned}\end{equation} 于是，我们可以通过极大似然估计法(maximum likelihood method)来估计$w$（为了计算的方便，将偏置项$b$的权重设为1，记为$w_0$） 给定数据集${(xi,y_i)}{i=1}^m$，写出对应极大似然函数 \begin{equation}\begin{aligned}L(w)&amp;=\prod{i=1}^{m}p(y^{(i)}|x^{(i)};\theta) \&amp;=\prod{i=1}^{m}h_w{(x^{(i)})}^{y^{(i)}}{(1-h_w(x^{(i)}))}^{1-y^{(i)}}\end{aligned}\end{equation} 再对两边取对数 \begin{equation}logL(w)=\sum_{i=1}^{m}[y^{(i)}logh_w(x^{(i)})+(1-y^{(i)})log(1-h_w(x^{(i)}))]\end{equation} 因此最优解可以通过最大化负的似然函数得到 \begin{equation}J(w)=-\frac{1}{m}\sum{i=1}^{m}[y^{(i)}logh_w(x^{(i)})+(1-y^{(i)})log(1-h_w(x^{(i)}))]\J(w)=-\frac{1}{m}\sum{i=1}^{m}[y^{(i)}log\frac{hw(x^{(i)})}{1-h_w(x^{(i)})}+log(1-h_w(x^{(i)}))]\J(w)=-\frac{1}{m}\sum{i=1}^{m}[y^{(i)}(w^Tx)-log(1+e^{w^Tx})]\end{equation} 4. 梯度下降算法(Gradient Descent)上式中$J(w)$是一个关于$\theta$的高阶可导连续凸函数，根据凸优化理论，采用梯度下降法求最优解，令$\theta=(w,b),minJ(\theta)$ \begin{equation}{\theta}_j:={\theta}_j-\alpha\frac{\partial}{\partial{\theta}_j}J(\theta)\end{equation} 其中，$\frac{\partial}{\partial{\theta}j}J(\theta)=\frac{1}{m}\sum{i=1}^{m}(h_{\theta}(x^{(i)})-y^{(i)})x_j^{(i)}$，$\alpha$是步长，当然经过化简之后，上式对$w$的求导是很方便的。 推导过程如下，分部求导。$h(w)$ 对 $w$ 求导的结果是 $-h(w)(1-h(w))x$ \begin{equation}\begin{split}\frac{\partial}{\partial{w}j}J(w) =&amp; \frac{\partial{J(w)}}{\partial{h_w(x)}} \cdot \frac{\partial{h_w(x)}}{\partial{w}_j} \=&amp; [y^{(i)}+(y^{(i)}-1)/(1-h_w(x^{(i)})]\cdot [h_w(x^{(i)})(1-h_w(x^{(i)}))] x^{(i)}\=&amp; [(y^{(i)}h_w(x^{(i)})(1-h_w(x^{(i)}))+h_w(x^{(i)}(1-y^{(i)}))]\cdot x^{(i)}\=&amp; (h{w}(x^{(i)})-y^{(i)})\cdot x_j^{(i)}\end{split}\end{equation} 总的来说，logistic regression 是一类比较简单的分类算法，可以把它看做是一类广义线性模型，即线性模型的延伸即可。logistic regression 能够很好地胜任二分类问题，logistic regression 中关键的问题在于参数优化，传统的0-1损失函数非凸，我们不能对其进行优化以得到一个较优参数，log 损失函数是一个不错的选择，它使得损失函数呈凸函数形状（本身并非平方损失函数），这就让梯度下降算法有了施展的空间。 5. Python 代码实现 LR 及分析12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061from numpy import *import numpy as npimport matplotlib.pyplot as plt# 加载数据集，loadDataSet()函数的主要功能是打开文本文件，并逐行读取；# 每行的前两列分别为X1,X2，除此以外，还为偏置项设置一列X0def loadDataSet(): data = []; label = [] fr = open('E:/Python/data/testSet.txt') for line in fr.readlines(): lineArr = line.strip().split() data.append([1.0, float(lineArr[0]), float(lineArr[1])]) label.append(int(lineArr[2])) return data, labeldata, label = loadDataSet()# 定义sigmoid函数def sigmoid(z): return 1.0 / (1 + exp(-z))# 定义梯度下降算法# 设定步长alpha为0.001，迭代次数为500次，初始权重theta为长度为n个值全为1的向量def gradDscent(data, label): dataMatrix = np.matrix(data); labelMatrix = np.matrix(label).T m, n = shape(dataMatrix) alpha = 0.001 iters = 500 theta = ones((n, 1)) for k in range(iters): # 梯度下降算法，因为要求损失函数的最小值 # 对应公式（12） h = sigmoid(dataMatrix * theta) error = (h - labelMatrix) theta = theta - alpha * dataMatrix.T * error return thetatheta = gradDscent(data, label)theta = array(theta)dataArr = array(data)# 画出决策边界def plotfit(theta): n = dataArr.shape[0] x1 = []; y1 = [] x2 = []; y2 = [] for i in range(n): if int(label[i]) == 1: x1.append(dataArr[i,1]); y1.append(dataArr[i,2]) else: x2.append(dataArr[i,1]); y2.append(dataArr[i,2]) fig = plt.figure() ax = fig.add_subplot(111) ax.scatter(x1, y1, s = 30, c = 'red', marker = 'o') ax.scatter(x2, y2, s = 30, c = 'blue', marker = 'x') # 创建等差数列，设定x的取值范围为-3.0到3.0 x = arange(-3.0, 3.0, 0.1) y = (-theta[0] - theta[1] * x) / theta[2] ax.plot(x,y) plt.xlabel('X1');plt.ylabel('X2') plt.show()plotfit(theta) 分类的结果看起来还不错，从图上看，只有4个点被错分。 6. 继续优化：随机梯度下降（SGD）梯度下降算法在每次更新系数时都需要遍历整个数据集，这样就带来了训练速度变慢的问题，改进的办法是每一次只用一个样本点来更新回归系数，这样的办法被称为随机梯度下降算法。不同于梯度下降算法，在随机梯度下降算法中， 1234567891011121314151617181920212223242526272829303132333435def stoGradDscent0(dataMatrix, labelMatrix): m, n = shape(dataMatrix) alpha = mat([0.01]) theta = mat(ones(n)) for i in range(n): h = sigmoid(sum(dataMatrix[i] * theta.T)) error = h - labelMatrix[i] theta = theta - alpha * error * dataMatrix[i] return thetatheta = stoGradDscent0(data, label)def plotfit1(theta): import matplotlib.pyplot as plt import numpy as np dataArr = array(dataMatrix) n = dataArr.shape[0] x1 = []; y1 = [] x2 = []; y2 = [] for i in range(n): if int(label[i]) == 1: x1.append(dataArr[i,1]); y1.append(dataArr[i,2]) else: x2.append(dataArr[i,1]); y2.append(dataArr[i,2]) fig = plt.figure() ax = fig.add_subplot(111) ax.scatter(x1, y1, s = 30, c = 'red', marker = 'o') ax.scatter(x2, y2, s = 30, c = 'blue', marker = 'x') x = arange(-3.0, 3.0, 0.1) #创建等差数列 y = (-theta[0,0] - theta[0,1] * x) / theta[0,2] ax.plot(x,y) plt.xlabel('X1');plt.ylabel('X2') plt.show()plotfit1(theta) 第一次优化的效果不佳，有差不多三分之一的点被误分类，为此进行第二次算法优化 1234567891011121314151617181920def stoGradDscent1(dataMatrix, labelMatrix, iters = 150): m, n = shape(dataMatrix) theta = mat(ones(n)) for j in range(iters): dataIndex = range(m) # m = 100 for i in range(m): # 因为alpha在每次迭代的时候都会调整，这可以缓解数据的波动，alpha会减小，但不会到零 # 通过随机选取样本来更新回归系数，这种方法可以减少周期性的波动 # uniform()方法将随机生成下一个实数，它在[x,y]范围内 alpha = 4 / (1.0+j+i) + 0.01 randIndex = int(random.uniform(0,len(dataIndex))) h = sigmoid(sum(dataMatrix[randIndex]*theta.T)) error = h - label[randIndex] theta = theta - alpha * error * dataMatrix[randIndex] return thetatheta = stoGradDscent1(dataMatrix, labelMatrix, iters = 150)thetaplotfit1(theta) 优化参数后的算法可以明显看出分类效果提升了不少，仅仅只有两个点被误分类。 关于 Logistic Regression 的讨论 为什么 LR 模型要使用 sigmoid 函数？ 最大熵原理是概率模型学习的一个准则，最大熵原理认为，熵最大的模型是最好的模型。 逻辑斯蒂回归？ Logistic Regression 中文翻译为“逻辑斯谛回归”，梳理了一下周志华老师在微博上的叙述，整理如下：Logistic Regression 与中文的“逻辑”没有半点关系，不是 logic，而是 logit，logistic 大概的意思是“logit 的”，而不是“log 的”，所以周老师将 Logistic Regression 翻译为对数几率回归。感兴趣的同学可以继续阅读这篇文章：趣谈“logistic”：物流？后勤？还是“逻辑斯谛”？ 逻辑回归如何进行多分类？ 如果我们要用逻辑回归进行多分类任务，那么权重矩阵不再是$m × 1$，而是 $m × n$，并且需要用到 softmax 函数来进行归一化。softmax 函数能将 k 维数组中的元素压缩到 0-1 之间，并且所有元素的和为 1，所以考虑到逻辑回归的输出实际上是该分类的可能性估计，对于多分类问题，sigmoid 函数无法将多分类的输出映射到 0-1 之间，而 softmax 正好可以满足这个要求。 假设现有一个 $K$ 类的数据集，我们先模拟二分类时的处理办法，设第 K 类为主要类别，所有前 K-1 类为次要类别，由公式（6）： 以上推导来自多类别逻辑回归（Multinomial Logistic Regression） - huangjx36的博客 - CSDN博客，我就不造轮子了。 推荐阅读 为什么 LR 模型要使用 sigmoid 函数，背后的数学原理是什么？]]></content>
+    <content type="text"><![CDATA[上一篇文章讲到了线性模型，线性模型形式十分简单，却有丰富的变化。一般线性模型有一定的缺陷，那就是$y=w^Tx+b$的预测值是为数值型的，当面对要求预测值为离散型就有些力不从心了，它会很容易受到异常值的影响，从而导致误差。那么，可不可以令预测值$y$变成另外一种形式呢？比如，在分类任务里，我们要求预测值为离散型的，得到一个是或否的答案，不再是原来的连续性预测值。这里就要用到机器学习中的一个重要的模型——Logistic Regression，即逻辑斯蒂回归或对数线性回归(log-linear regression)。 \mathrm{ln}y=w^Tx+b实际上是在试图让$e^{w^T+b}$逼近$y$，形式上仍然是线性回归，但实质上是在求线性空间到非线性空间的映射。 目录 Logistic 分布 Logistic 函数 极大似然估计(MLE) 梯度下降算法(Gradient Descent) Python代码实现及分析 关于 Logistic Regression 的讨论 1. Logistic 分布在学习 Logistic regression 之前，我们有必要了解一下 logistic 分布函数和密度函数 F(x)=P(X\le{x})=\frac{1}{1+e^{-(x-\mu)/\gamma}} f(x)=F'(x)=\frac{e^{-(x-\mu)/\gamma}}{\gamma{(1+e^{-(x-\mu)/\gamma})}^2}式中，$\mu$为位置参数，$\gamma\gt0$是形状参数 逻辑斯蒂函数实际上是线性回归模型的预测结果取逼近真实标记的对数几率，其对应的模型是对数几率回归。 2. Logistic 函数考虑一个二分类任务，其输出标记为$y∈{0,1}$，而线性回归模型产生的预测值z是实数值，于是我们需要将z转换为0/1值，理想的方法是对数几率函数 y=\frac{1}{1+e^{-z}}对数几率函数是一种“Sigmoid函数”，它将$z$值转化为一个接近 0 或 1 的$y$值，并且输出值在$z=0$附近的变化很陡峭，若预测值大于零就判为正例，小于零就判为反例，预测值为临界值零则可任意判别 如果我们将线性模型$z=w^Tx+b$代入上式，得 y=\frac{1}{1+e^{-(w^Tx+b)}}变形 \mathrm{ln}\frac{y}{1-y}=w^Tx+b若将$y$视为$x$作为正例的可能性，$1-y$视为反例的可能性，两者的比值称为“对数几率”(logit odds)，反映了$x$作为正例的可能性。 由此可以看出，实际上是在用线性回归的模型的预测结果去逼近真实标记的对数几率，因此其对应的模型也被称为“对数几率回归”(logistic regression)。 3. 极大似然估计(MLE)类似线性回归，我们需要定义一个损失函数(loss function)，然后通过最小化损失函数来训练出一个分类器，对于logistic regression，哪种损失函数表现最好？假设选用0-1损失函数，考虑1000个样本，用训练得到的分类器分类，960个被分在了正确的一类，其余40个划分错误，那么这里损失函数的大小就是40。考虑调整$w$的大小，得到的损失函数值可能仍然是相同的，没有可以优化的空间。 0-1损失函数看来是行不通，不妨看看log损失函数，为什么选择log损失函数，考虑-log(x)函数图像，这个函数图像在趋近于0的地方函数值趋于无穷大。相比0-1损失函数，它的惩罚性能实在太好，考虑公式（10），假设预测值$h_w(x^{(i)})$为1，而实际标签$y^{(i)}$为0，结果便是损失函数会变得很大。并且它的损失函数还是凸函数，存在可优化的空间。 由 logistic 函数，建立如下表达式 h_w(x)=g(w^Tx)=\frac{1}{1+e^{-w^Tx}}根据前文，$p(y=1|x)$为正例的概率 $y$，解之，显然有 p(y=1|x)=h_w(x)\\ p(y=0|x)=1-h_w(x)\\ p(y|x)={h_w(x)}^y{(1-h_w(x))}^{1-y}, y=0, 1于是，我们可以通过极大似然估计法(maximum likelihood method)来估计$w$（为了计算的方便，将偏置项$b$的权重设为1，记为$w_0$） 给定数据集${(xi,y_i)}{i=1}^m$，写出对应极大似然函数 L(w)=\prod_{i=1}^{m}p(y^{(i)}|x^{(i)};\theta) \\ =\prod_{i=1}^{m}h_w{(x^{(i)})}^{y^{(i)}}{(1-h_w(x^{(i)}))}^{1-y^{(i)}}再对两边取对数 logL(w)=\sum_{i=1}^{m}[y^{(i)}logh_w(x^{(i)})+(1-y^{(i)})log(1-h_w(x^{(i)}))]因此最优解可以通过最大化负的似然函数得到 J(w)=-\frac{1}{m}\sum_{i=1}^{m}[y^{(i)}logh_w(x^{(i)})+(1-y^{(i)})log(1-h_w(x^{(i)}))]\\ J(w)=-\frac{1}{m}\sum_{i=1}^{m}[y^{(i)}log\frac{h_w(x^{(i)})}{1-h_w(x^{(i)})}+log(1-h_w(x^{(i)}))]\\ J(w)=-\frac{1}{m}\sum_{i=1}^{m}[y^{(i)}(w^Tx)-log(1+e^{w^Tx})]4. 梯度下降算法(Gradient Descent)上式中$J(w)$是一个关于$\theta$的高阶可导连续凸函数，根据凸优化理论，采用梯度下降法求最优解，令$\theta=(w,b),minJ(\theta)$ {\theta}_j:={\theta}_j-\alpha\frac{\partial}{\partial{\theta}_j}J(\theta)其中，$\frac{\partial}{\partial{\theta}j}J(\theta)=\frac{1}{m}\sum{i=1}^{m}(h_{\theta}(x^{(i)})-y^{(i)})x_j^{(i)}$，$\alpha$是步长，当然经过化简之后，上式对$w$的求导是很方便的。 推导过程如下，分部求导。$h(w)$ 对 $w$ 求导的结果是 $-h(w)(1-h(w))x$ \frac{\partial}{\partial{w}_j}J(w) = \frac{\partial{J(w)}}{\partial{h_w(x)}} \cdot \frac{\partial{h_w(x)}}{\partial{w}_j} \\ = [y^{(i)}+(y^{(i)}-1)/(1-h_w(x^{(i)})]\cdot [h_w(x^{(i)})(1-h_w(x^{(i)}))] x^{(i)}\\ = [(y^{(i)}h_w(x^{(i)})(1-h_w(x^{(i)}))+h_w(x^{(i)}(1-y^{(i)}))]\cdot x^{(i)}\\ = (h_{w}(x^{(i)})-y^{(i)})\cdot x_j^{(i)}总的来说，logistic regression 是一类比较简单的分类算法，可以把它看做是一类广义线性模型，即线性模型的延伸即可。logistic regression 能够很好地胜任二分类问题，logistic regression 中关键的问题在于参数优化，传统的0-1损失函数非凸，我们不能对其进行优化以得到一个较优参数，log 损失函数是一个不错的选择，它使得损失函数呈凸函数形状（本身并非平方损失函数），这就让梯度下降算法有了施展的空间。 5. Python 代码实现 LR 及分析12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061from numpy import *import numpy as npimport matplotlib.pyplot as plt# 加载数据集，loadDataSet()函数的主要功能是打开文本文件，并逐行读取；# 每行的前两列分别为X1,X2，除此以外，还为偏置项设置一列X0def loadDataSet(): data = []; label = [] fr = open('E:/Python/data/testSet.txt') for line in fr.readlines(): lineArr = line.strip().split() data.append([1.0, float(lineArr[0]), float(lineArr[1])]) label.append(int(lineArr[2])) return data, labeldata, label = loadDataSet()# 定义sigmoid函数def sigmoid(z): return 1.0 / (1 + exp(-z))# 定义梯度下降算法# 设定步长alpha为0.001，迭代次数为500次，初始权重theta为长度为n个值全为1的向量def gradDscent(data, label): dataMatrix = np.matrix(data); labelMatrix = np.matrix(label).T m, n = shape(dataMatrix) alpha = 0.001 iters = 500 theta = ones((n, 1)) for k in range(iters): # 梯度下降算法，因为要求损失函数的最小值 # 对应公式（12） h = sigmoid(dataMatrix * theta) error = (h - labelMatrix) theta = theta - alpha * dataMatrix.T * error return thetatheta = gradDscent(data, label)theta = array(theta)dataArr = array(data)# 画出决策边界def plotfit(theta): n = dataArr.shape[0] x1 = []; y1 = [] x2 = []; y2 = [] for i in range(n): if int(label[i]) == 1: x1.append(dataArr[i,1]); y1.append(dataArr[i,2]) else: x2.append(dataArr[i,1]); y2.append(dataArr[i,2]) fig = plt.figure() ax = fig.add_subplot(111) ax.scatter(x1, y1, s = 30, c = 'red', marker = 'o') ax.scatter(x2, y2, s = 30, c = 'blue', marker = 'x') # 创建等差数列，设定x的取值范围为-3.0到3.0 x = arange(-3.0, 3.0, 0.1) y = (-theta[0] - theta[1] * x) / theta[2] ax.plot(x,y) plt.xlabel('X1');plt.ylabel('X2') plt.show()plotfit(theta) 分类的结果看起来还不错，从图上看，只有4个点被错分。 6. 继续优化：随机梯度下降（SGD）梯度下降算法在每次更新系数时都需要遍历整个数据集，这样就带来了训练速度变慢的问题，改进的办法是每一次只用一个样本点来更新回归系数，这样的办法被称为随机梯度下降算法。不同于梯度下降算法，在随机梯度下降算法中， 1234567891011121314151617181920212223242526272829303132333435def stoGradDscent0(dataMatrix, labelMatrix): m, n = shape(dataMatrix) alpha = mat([0.01]) theta = mat(ones(n)) for i in range(n): h = sigmoid(sum(dataMatrix[i] * theta.T)) error = h - labelMatrix[i] theta = theta - alpha * error * dataMatrix[i] return thetatheta = stoGradDscent0(data, label)def plotfit1(theta): import matplotlib.pyplot as plt import numpy as np dataArr = array(dataMatrix) n = dataArr.shape[0] x1 = []; y1 = [] x2 = []; y2 = [] for i in range(n): if int(label[i]) == 1: x1.append(dataArr[i,1]); y1.append(dataArr[i,2]) else: x2.append(dataArr[i,1]); y2.append(dataArr[i,2]) fig = plt.figure() ax = fig.add_subplot(111) ax.scatter(x1, y1, s = 30, c = 'red', marker = 'o') ax.scatter(x2, y2, s = 30, c = 'blue', marker = 'x') x = arange(-3.0, 3.0, 0.1) #创建等差数列 y = (-theta[0,0] - theta[0,1] * x) / theta[0,2] ax.plot(x,y) plt.xlabel('X1');plt.ylabel('X2') plt.show()plotfit1(theta) 第一次优化的效果不佳，有差不多三分之一的点被误分类，为此进行第二次算法优化 1234567891011121314151617181920def stoGradDscent1(dataMatrix, labelMatrix, iters = 150): m, n = shape(dataMatrix) theta = mat(ones(n)) for j in range(iters): dataIndex = range(m) # m = 100 for i in range(m): # 因为alpha在每次迭代的时候都会调整，这可以缓解数据的波动，alpha会减小，但不会到零 # 通过随机选取样本来更新回归系数，这种方法可以减少周期性的波动 # uniform()方法将随机生成下一个实数，它在[x,y]范围内 alpha = 4 / (1.0+j+i) + 0.01 randIndex = int(random.uniform(0,len(dataIndex))) h = sigmoid(sum(dataMatrix[randIndex]*theta.T)) error = h - label[randIndex] theta = theta - alpha * error * dataMatrix[randIndex] return thetatheta = stoGradDscent1(dataMatrix, labelMatrix, iters = 150)thetaplotfit1(theta) 优化参数后的算法可以明显看出分类效果提升了不少，仅仅只有两个点被误分类。 关于 Logistic Regression 的讨论 为什么 LR 模型要使用 sigmoid 函数？ 最大熵原理是概率模型学习的一个准则，最大熵原理认为，熵最大的模型是最好的模型。 逻辑斯蒂回归？ Logistic Regression 中文翻译为“逻辑斯谛回归”，梳理了一下周志华老师在微博上的叙述，整理如下：Logistic Regression 与中文的“逻辑”没有半点关系，不是 logic，而是 logit，logistic 大概的意思是“logit 的”，而不是“log 的”，所以周老师将 Logistic Regression 翻译为对数几率回归。感兴趣的同学可以继续阅读这篇文章：趣谈“logistic”：物流？后勤？还是“逻辑斯谛”？ 逻辑回归如何进行多分类？ 如果我们要用逻辑回归进行多分类任务，那么权重矩阵不再是$m × 1$，而是 $m × n$，并且需要用到 softmax 函数来进行归一化。softmax 函数能将 k 维数组中的元素压缩到 0-1 之间，并且所有元素的和为 1，所以考虑到逻辑回归的输出实际上是该分类的可能性估计，对于多分类问题，sigmoid 函数无法将多分类的输出映射到 0-1 之间，而 softmax 正好可以满足这个要求。 假设现有一个 $K$ 类的数据集，我们先模拟二分类时的处理办法，设第 K 类为主要类别，所有前 K-1 类为次要类别，由公式（6）： 为什么逻辑回归支持并行化？ 逻辑回归的并行化最主要的就是对目标函数梯度计算的并行化：$(h_{w}(x^{(i)})-y^{(i)})\cdot x_j^{(i)}$，在计算梯度下降的时候只需要做向量之间的点乘和相加即可，这个过程可以把数据分解到不同的机器上，在各个机器上计算完成之后再汇总梯度下降的计算结果就行了。]]></content>
       <categories>
         <category>Machine-Learning</category>
       </categories>
@@ -2084,8 +2084,8 @@
       <tags>
         <tag>机器学习</tag>
         <tag>算法</tag>
-        <tag>线性回归</tag>
         <tag>机器学习算法系列</tag>
+        <tag>线性回归</tag>
       </tags>
   </entry>
   <entry>
@@ -2098,8 +2098,8 @@
       <tags>
         <tag>机器学习</tag>
         <tag>算法</tag>
-        <tag>机器学习算法系列</tag>
         <tag>决策树</tag>
+        <tag>机器学习算法系列</tag>
       </tags>
   </entry>
 </search>
